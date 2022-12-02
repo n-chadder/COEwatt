@@ -1,0 +1,19 @@
+{
+  "name": "coedecoupling",
+  "version": "1.0.0",
+  "description": "Web accessibility testing tool for GOC",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://CSC-SCC@dev.azure.com/CSC-SCC/IMSIS/_git/coeDecoupling"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "pug": "^3.0.2"
+  }
+}

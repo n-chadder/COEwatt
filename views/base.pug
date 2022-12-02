@@ -1,0 +1,68 @@
+
+doctype html
+html(lang="en-US")
+  head
+    meta(charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0")
+    title COE
+    link(rel="icon" type="image/x-icon" href="../static/themes-cdn-4.0.27-theme-gc-intranet/assets/favicon.ico")
+    link(rel="stylesheet" href="../static/themes-cdn-4.0.27-theme-gc-intranet/css/theme.min.css")
+    noscript
+      link(rel="stylesheet" href="../static/wet-boew-dist-4.0.56.1/wet-boew/css/noscript.css")
+  body 
+    header(role="banner")
+      div(id="wb-bnr")
+        div(id="wb-bar")
+          div(class="container")
+            div(class="row")
+              img(id="gcwu-sig", src="../static/themes-cdn-4.0.27-theme-gc-intranet/assets/sig-blk-en.svg", alt="Government of Canada / Gouvernement du Canada")
+              section(id="wb-lng") 
+                ul(class="list-inline")
+                  li
+                    a(lang="fr" href="#") Français
+              section(class="wb-mb-links col-xs-12 visible-sm visible-xs" id="wb-glb-mn")
+                h2 Search and menus 
+                ul(class="pnl-btn list-inline text-right")
+                  li
+                    a(href="#mb-pnl" title="Search and menus" aria-controls="mb-pnl" class="overlay-lnk btn btn-sm btn-default" role="button")
+                      span(class="glyphicon glyphicon-search")
+                        span(class="glyphicon glyphicon-th-list")
+                          span(class="wb-inv") Search and menus 
+                div(id="mb-pnl")
+        div(class="container")
+          div(class="row")
+            div(id="wb-sttl" class="col-md-12")
+              a(href="#")
+                span COE Accessibility Checker
+              img(id="wmms" src="../static/themes-cdn-4.0.27-theme-gc-intranet/assets/wmms-intra.svg" alt="Symbol of the Government of Canada")
+              section(id="wb-srch" class="visible-md visible-lg")
+                h2 Search
+                form(action="#" method="get" role="search" class="form-inline")
+                  div(class="form-group")
+                    label(for="wb-srch-q") Search Website
+                    input(id="wb-srch-q" class="form-control" name="q" type="search" value="" size="27" maxlength="150")
+                  button(type="submit" id="wb-srch-sub" class="btn btn-default") Search
+      nav(role="navigation" id="wb-sm" data-ajax-replace="#" data-trgt="mb-pnl" class="wb-menu visible-md visible-lg" typeof="SiteNavigationElement")
+        div(class="container nvbar")
+          h2 Topics Menu 
+          div(class="row")
+            ul(class="list-inline menu")
+              li
+                a(href="applications") Application List
+              li
+                a(href="crawler") Web Crawler
+              li
+                a(href="tester") Accessibility Tester
+      nav(role="navigation" id="wb-bc" property="breadcrumb")
+        h2 You are here: 
+        div(class="container")
+          div(class="row")
+            ol(class="breadcrumb")
+    main(role="main" property="mainContentOfPage" class="container")
+      block content
+
+
+
+    script(type="text/javascript" src="static/themes-dist-12.2.1-gcweb/wet-boew/js/jquery/2.2.4/jquery.js")
+    script(type="text/javascript" src="static/themes-dist-12.2.1-gcweb/wet-boew/js/wet-boew.min.js")
+    script(type="text/javascript" src="static/themes-dist-12.2.1-gcweb/GCWeb/js/theme.min.js")
+
