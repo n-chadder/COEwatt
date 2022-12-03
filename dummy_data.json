@@ -1,39 +1,39 @@
 {
     "applications": [
         {
-            "id"  : "1",
+            "id"  : 1,
             "name": "Dummy app 1"
         },
         {
-            "id"  : "2",
+            "id"  : 2,
             "name": "Dummy app 2"
         },
         {
-            "id"  : "3",
+            "id"  : 3,
             "name": "Dummy app 3"
         },
         {
-            "id"  : "4",
+            "id"  : 4,
             "name": "Dummy app 4"
         },
         {
-            "id"  : "5",
+            "id"  : 5,
             "name": "Dummy app 5"
         },
         {
-            "id"  : "6",
+            "id"  : 6,
             "name": "Dummy app 6"
         },
         {
-            "id"  : "7",
+            "id"  : 7,
             "name": "Dummy app 7"
         },
         {
-            "id"  : "8",
+            "id"  : 8,
             "name": "Dummy app 8"
         },
         {
-            "id"  : "9",
+            "id"  : 9,
             "name": "Dummy app 9"
         }
     ]

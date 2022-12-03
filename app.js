@@ -32,7 +32,7 @@ let apps = JSON.parse(rawdata).applications;
 // If the request is coming from 'text/html' that means its coming from
 // a web browser so we send back the complied pug file with the required
 // data. (when pug file is compiled it is compiled into html)
-app.get('/', function(req, res, next) {
+app.get('/', function(req, res) {
   res.format({
     'application/json': function(){
       res.status(200).json();
@@ -48,7 +48,7 @@ app.get('/', function(req, res, next) {
 
 
 // Path for getting a list of applications existing in the db
-app.get('/applications', function(req, res, next) {
+app.get('/applications', function(req, res) {
   let applications = apps; // return a object containing the application list
   res.format({
     'application/json': function(){
@@ -61,7 +61,37 @@ app.get('/applications', function(req, res, next) {
       return;
     }
   });
-})
+});
+
+// Get specific application details using application id as the
+// request parameter. Uses the app.param({}) function below
+app.get('/applications/:applicationID', function(req, res) {
+  let application = req.post;
+  console.log(req.post);
+  res.format({
+    'application/json': function(){
+      res.status(200).json(application);
+      return;
+    },
+    'text/html': function(){
+      let page = null; //TO_DO
+      res.status(200).send(page);
+      return;
+    }
+  });
+});
+
+// Gets the application with the requested app ID
+app.param('applicationID', function(req, res, next) {
+  // would be replaced with a db query when we have a db
+  for (let item = 0; item < apps.length; item++) {
+    if (parseInt(req.params.applicationID) == parseInt(apps[item].id)) {
+      req.post = apps[item];
+      next();
+    }
+  }
+  return;
+});
 
 
 

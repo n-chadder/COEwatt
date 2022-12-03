@@ -8,5 +8,6 @@ block content
             th Application ID 
         each app in applications
             tr 
-                td #{app.name} 
+                td 
+                    a(href=`${'applications/' + app.id}`) #{app.name} 
                 td #{app.id}
