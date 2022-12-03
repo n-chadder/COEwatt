@@ -1,4 +1,12 @@
 extends base.pug
 
 block content
-    h1(id="wb-cont" property="name") test
+    h1(id="wb-cont" property="name") Application List
+    table(class="wb-tables table table-striped table-hover" data-wb-tables='{ "ordering" : false }')
+        tr
+            th Application Name 
+            th Application ID 
+        each app in applications
+            tr 
+                td #{app.name} 
+                td #{app.id}

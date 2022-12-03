@@ -17,6 +17,11 @@ app.use('/static', express.static(path.join(__dirname, 'static')));
 const compiledBase            = pug.compileFile('./views/base.pug');
 const compiledApplicationList = pug.compileFile('./views/application_list.pug');
 
+// until we set up a db get dummy data from dummy_data.json
+const fs = require('fs');
+let rawdata = fs.readFileSync('dummy_data.json');
+let apps = JSON.parse(rawdata).applications;
+
 // Not sure if this should exist, here for now, not sure what to show
 // as content for here. maybe an few paragraphs explaining what this
 // application is
@@ -44,14 +49,14 @@ app.get('/', function(req, res, next) {
 
 // Path for getting a list of applications existing in the db
 app.get('/applications', function(req, res, next) {
-  let applications = {}; // return a object containing the application list
+  let applications = apps; // return a object containing the application list
   res.format({
     'application/json': function(){
       res.status(200).json(applications);
       return;
     },
     'text/html': function(){
-      let page = compiledApplicationList(applications);
+      let page = compiledApplicationList({applications});
       res.status(200).send(page);
       return;
     }
