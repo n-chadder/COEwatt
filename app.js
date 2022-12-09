@@ -14,8 +14,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 // Compiled pug templates
-const compiledBase            = pug.compileFile('./views/base.pug');
-const compiledApplicationList = pug.compileFile('./views/application_list.pug');
+const compiledBase              = pug.compileFile('./views/base.pug');
+const compiledApplicationList   = pug.compileFile('./views/application_list.pug');
+const compiledApplicationDetail = pug.compileFile('./views/application_details.pug');
 
 // until we set up a db get dummy data from dummy_data.json
 const fs = require('fs');
@@ -67,14 +68,13 @@ app.get('/applications', function(req, res) {
 // request parameter. Uses the app.param({}) function below
 app.get('/applications/:applicationID', function(req, res) {
   let application = req.post;
-  console.log(req.post);
   res.format({
     'application/json': function(){
       res.status(200).json(application);
       return;
     },
     'text/html': function(){
-      let page = null; //TO_DO
+      let page = compiledApplicationDetail({application}); //TO_DO
       res.status(200).send(page);
       return;
     }
@@ -93,8 +93,39 @@ app.param('applicationID', function(req, res, next) {
   return;
 });
 
+// Path for accessing the web crawler
+app.get('/crawler', function(req, res) {
+  // TO_DO
+  res.format({
+    'application/json': function(){
+      // do we even allow get requests here?
+      // maybe send json instructing how to make
+      // a post req with info on what site to crawl?
+      // might be unnecessary. 
+      return;
+    },
+    'text/html': function(){
+      return;
+    }
+  });
+});
 
-
+// Path for accessing the accessibility tester
+app.get('/tester', function(req, res) {
+  // TO_DO
+  res.format({
+    'application/json': function(){
+      // do we even allow get requests here?
+      // maybe send json instructing how to make
+      // a post req with info on what site to test?
+      // probably unnecessary. 
+      return;
+    },
+    'text/html': function(){
+      return;
+    }
+  });
+});
 
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`)
