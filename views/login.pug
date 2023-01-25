@@ -1,0 +1,67 @@
+extends base.pug
+
+block content
+  //- div.container
+  //-   h4 Log in
+  //-   div.col-sm-12.col-md-10.col-lg-11.panel.panel-default
+  //-     div.panel-body
+  //-       form(role="form" method="post" action="login")
+  //-         div.form-group
+  //-           label(for="username") Username 
+  //-           input(type="username" id="username" name="username" placeholder="Enter Username").form-control
+  //-         div.form-group
+  //-           label(for="password") Password 
+  //-           input(type="password" id="password" name="password" placeholder="Enter Password").form-control
+  //-         button(type="submit").btn.btn-default Submit
+  div(id="loginbox" style="margin-top:50px").mainbox.col-md-10.col-md-offset-1.col-sm-8.col-sm-offset-2
+    div.panel.panel-info
+      div.panel-heading
+        div.panel-title Log In
+          div(style="float:right; font-size: 85%; position: relative; top:-10px")
+            a(href="#") Forgot password?
+      div(style="padding-top:30px").panel-body
+        form(id="loginform" class="form-horizontal" role="form")
+          div(style="margin-bottom: 25px").input-group
+            span.input-group-addon 
+              i.glyphicon.glyphicon-user
+            input(id="login-username", type="text", name="username", placeholder="Username").form-control 
+          div(style="margin-bottom: 25px").input-group
+            span.input-group-addon 
+              i.glyphicon.glyphicon-user
+            input(id="login-password", type="password", name="password", placeholder="Password").form-control
+          div(style="margin-top:10px").form-group 
+            div.col-sm-12.control 
+              a(id="btn-login" type="submit").btn.btn-default Login 
+          div.form-group 
+            div.col-md-12.control 
+              div(style="border-top: 1px solid#888; padding-top:15px; font-size:85%") Don't have an account! 
+                a(href="signup/") Sign Up Here
+  div(id="signupbox" style="display:none; margin-top:50px").mainbox.col-md-10.col-md-offset-1.col-sm-8.col-sm-offset-2
+    div.panel.panel-info 
+      div.panel-heading 
+        div.panel-title Sign Up 
+        div(style="float:right; font-size: 85%; position: relative; top:-10px")
+          a(id="signinlink" href="#" onclick="$('#signupbox').hide(); $('#loginbox').show()") Sign In 
+      div.panel-body 
+        form(id="signupform").form-horizontal
+          div(id="signupalert" style="display:none").alert.alert-danger
+            p 
+            span 
+          div.form-group 
+            label(for="email").col-md-3.control-label Email 
+            div.col-md-9 
+              input(type="text", name="email", placeholder="Email Address").form-control
+          div.form-group 
+            label(for="password").col-md-3.control-label Password 
+            div.col-md-9 
+              input(type="password", name="passwd", placeholder="Password")
+          div.form-group 
+            label(for="re-enter-password").col-md-3.control-label Re-Enter Password 
+            div.col-md-9 
+              input(type="password", name="passwd2", placeholder="Password")
+          div.form-group 
+            div.col-md-offset-3.col-md-9 
+              button(id="btn-signup" type="button").btn.btn-info Sign Up 
+                i.icon-hand-right
+                span(style="margin-left:8px;") Or 
+

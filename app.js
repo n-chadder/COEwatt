@@ -17,6 +17,7 @@ app.use('/static', express.static(path.join(__dirname, 'static')));
 const compiledBase              = pug.compileFile('./views/base.pug');
 const compiledApplicationList   = pug.compileFile('./views/application_list.pug');
 const compiledApplicationDetail = pug.compileFile('./views/application_details.pug');
+const compliedLogin             = pug.compileFile('./views/login.pug');
 
 // until we set up a db get dummy data from dummy_data.json
 const fs = require('fs');
@@ -122,6 +123,33 @@ app.get('/tester', function(req, res) {
       return;
     },
     'text/html': function(){
+      return;
+    }
+  });
+});
+
+app.get('/login', function(req, res) {
+  res.format({
+    'application/json': function(){
+      //
+      return;
+    },
+    'text/html': function(){
+      res.status(200).send(compliedLogin({}));
+      return;
+    }
+  });
+});
+
+app.post('/login', function(req, res){
+  console.log(req.body);
+  res.format({
+    'application/json': function(){
+      //
+      return;
+    },
+    'text/html': function(){
+      res.status(200).send(compliedLogin({}));
       return;
     }
   });
