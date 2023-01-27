@@ -43,7 +43,7 @@ app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => 
 
 
 app.use(express.json());
-app.use(express.static('./static'));
+app.use('/static', express.static(path.join(__dirname, 'static')));
 
 app.use('/roles', roles)
 app.use('/users', users);
