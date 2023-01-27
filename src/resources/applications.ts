@@ -1,6 +1,13 @@
 import * as express from "express";
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient, Prisma } from '@prisma/client';
+import * as pug from "pug";
+
+// Compiled pug templates
+const compiledBase = pug.compileFile("src/static/base.pug");
+const compiledApplicationList = pug.compileFile("src/static/application_list.pug");
+const compiledApplicationDetail = pug.compileFile("src/static/application_details.pug");
+
 
 const prisma = new PrismaClient()
 const router = express.Router()
@@ -14,7 +21,17 @@ router.use((req, res, next) => {
 router.get('/', async (req: Request, res: Response) => {
     const applications = await prisma.application.findMany({
     })
-    res.json(applications)
+    res.format({
+        'application/json': function(){
+            res.status(200).json(applications);
+            return;
+        },
+        'text/html': function(){
+            let page = compiledApplicationList({applications});
+            res.status(200).send(page);
+            return;
+        }
+    });
 })
 
 router.get('/:id', async (req: Request, res: Response) => {
@@ -24,7 +41,22 @@ router.get('/:id', async (req: Request, res: Response) => {
             id: Number(id),
         },
     })
-    res.json(applications)
+    res.format({
+        'application/json': function(){
+            res.status(200).json(applications);
+            return;
+        },
+        'text/html': function(){
+            if (!applications) {
+                res.status(404).json(applications);
+                // 404 page here
+                return;
+            }
+            let page = compiledApplicationList({applications});
+            res.status(200).send(page);
+            return;
+        }
+    });
 })
 
 // Name    String
