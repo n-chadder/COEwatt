@@ -1,0 +1,19 @@
+extends base.pug
+
+block content
+  br
+  div.content-section
+    legend(id="wb-cont" property="name", style="margin-top: 5px; margin-bottom: 25px;").border-bottom Add an Application
+    div.container
+      form(action="/applications", method="post")
+        div.form-group
+          label(for="name") Application Name 
+          input(type="text", id="name", placeholder="Enter application name", style="width: 90%;", required).form-control 
+        div.form-group
+          label(for="desc") Description 
+          input(type="text", id="desc", placeholder="Small description of the application", style="width: 90%;").form-control
+        div.form-group
+          label(for="owner") Owner 
+          input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", required).form-control
+        div.form-group
+          button(type="submit").btn.btn-primary Save
