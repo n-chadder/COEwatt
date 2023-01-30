@@ -7,6 +7,7 @@ import * as pug from "pug";
 const compiledBase = pug.compileFile("src/static/base.pug");
 const compiledApplicationList = pug.compileFile("src/static/application_list.pug");
 const compiledApplicationDetail = pug.compileFile("src/static/application_details.pug");
+const compliedAddApplication = pug.compileFile("src/static/add_application.pug");
 
 
 const prisma = new PrismaClient()
@@ -33,6 +34,12 @@ router.get('/', async (req: Request, res: Response) => {
         }
     });
 })
+
+router.get('/add', (req: Request, res: Response) => {
+    let page = compliedAddApplication({});
+    res.status(200).send(page);
+})
+
 
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
