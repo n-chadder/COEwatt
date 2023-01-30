@@ -35,7 +35,7 @@ router.get('/', async (req: Request, res: Response) => {
     });
 })
 
-router.get('/add', (req: Request, res: Response) => {
+router.get('/addform', (req: Request, res: Response) => {
     let page = compliedAddApplication({});
     res.status(200).send(page);
 })
