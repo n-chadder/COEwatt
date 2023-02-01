@@ -15,5 +15,20 @@ block content
         div.form-group
           label(for="owner") Owner 
           input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", required).form-control
+        label Pages
+        div(style="width: 90%").content-section
+          div.form-group
+            label Name
+            input(type="text", id="page1-name", placeholder="Page name", style="width: 100%").form-control 
+          div.form-group
+            label URL
+            input(type="text", id="page1-URL", placeholder="Page URL", style="width: 100%").form-control
+          div.form-group
+            label Actions
+            input(type="text", id="page1-action", placeholder="Page action", style="width: 100%").form-control
+          div.form-group
+            label Authentication 
+            input(type="text", id="page1-auth", placeholder="Page authentication", style="width: 100%").form-control
+          
         div.form-group
           button(type="submit").btn.btn-primary Save
