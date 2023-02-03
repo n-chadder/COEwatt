@@ -71,6 +71,9 @@ router.get('/:id', async (req: Request, res: Response) => {
 // Owner   Int
 
 router.post('/', async (req: Request, res: Response) => {
+    console.log(req.body);
+    return;
+    
     try {
         const Name: string = req.body.name;
         const Desc: string = req.body.Desc;
