@@ -43,23 +43,24 @@ router.get('/addform', (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const applications = await prisma.application.findUnique({
+    const application = await prisma.application.findUnique({
         where: {
             id: Number(id),
         },
     })
+
     res.format({
         'application/json': function(){
-            res.status(200).json(applications);
+            res.status(200).json(application);
             return;
         },
         'text/html': function(){
-            if (!applications) {
-                res.status(404).json(applications);
+            if (!application) {
+                res.status(404).json(application);
                 // 404 page here
                 return;
             }
-            let page = compiledApplicationList({applications});
+            let page = compiledApplicationDetail({application});
             res.status(200).send(page);
             return;
         }
