@@ -15,6 +15,7 @@ import {pages} from "./resources/webpages";
 import { hostname } from "os";
 import * as pug from "pug";
 import axios, { AxiosError } from 'axios';
+import * as methodOverride from "method-override";
 
 const prisma = new PrismaClient();
 const app: any = express();
@@ -49,6 +50,7 @@ app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => 
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(methodOverride('_method'));
 
 app.get('/edit/application/:id', async (req: Request, res: Response) =>{
   const id = req.params.id;
