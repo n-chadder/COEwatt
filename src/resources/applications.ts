@@ -8,7 +8,6 @@ const compiledBase = pug.compileFile("src/static/base.pug");
 const compiledApplicationList = pug.compileFile("src/static/application_list.pug");
 const compiledApplicationDetail = pug.compileFile("src/static/application_details.pug");
 const compliedAddApplication = pug.compileFile("src/static/add_application.pug");
-const compiledApplicationUpdate = pug.compileFile("src/static/application_update.pug");
 
 
 const prisma = new PrismaClient()

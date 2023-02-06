@@ -13,6 +13,8 @@ import { applications } from './resources/applications'
 import { appElements } from "./resources/appElement";
 import {pages} from "./resources/webpages";
 import { hostname } from "os";
+import * as pug from "pug";
+import axios, { AxiosError } from 'axios';
 
 const prisma = new PrismaClient();
 const app: any = express();
@@ -21,6 +23,9 @@ expressws(app, server);
 
 const port = process.env.PORT || 3000;
 const host =process.env.HOST || "127.0.0.1";
+
+
+const compiledApplicationUpdate = pug.compileFile("src/static/application_update.pug");
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
     console.log("Got websocket connection")
@@ -44,6 +49,29 @@ app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => 
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+
+app.get('/edit/application/:id', async (req: Request, res: Response) =>{
+  const id = req.params.id;
+  try {
+    // maybe https if that is avaliable?
+    const response = await axios.get(`http://${host}:${port}/applications/${id}`);
+    let application = response.data;
+    let page = compiledApplicationUpdate({application});
+    res.status(200).send(page);
+    return;
+  }
+  catch(err: any | AxiosError) {
+    // temp pages, need to build templates for 404 and 500
+    if (axios.isAxiosError(err)){
+      if (err.response?.status == 404) {
+        res.status(404).send('<h1>Sorry the page you are looking for does not exist</h1>');
+        return;
+      }
+    }
+    res.status(500).send('<h1>Sorry, something went wrong</h1>');
+  }
+});
+
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
 app.use('/roles', roles);
