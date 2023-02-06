@@ -24,24 +24,28 @@ block content
           input(type="text", id="desc", placeholder="Small description of the application", style="width: 90%;", name="Desc", value=`${application.Desc}`).form-control
         div.form-group
           label(for="owner") Owner 
-          input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", name="OwnerId", value=`${application.OwnerID}`, required).form-control
-        //- label Pages
-        //- div(style="width: 90%", id="page1").content-section.addPage
-        //-   div.form-group
-        //-     label Name
-        //-     input(type="text", id="page1-name", placeholder="Page name", style="width: 100%", name="page-name").form-control 
-        //-   div.form-group
-        //-     label URL
-        //-     input(type="text", id="page1-URL", placeholder="Page URL", style="width: 100%", name="page-url").form-control
-        //-   div.form-group
-        //-     label Actions
-        //-     input(type="text", id="page1-action", placeholder="Page action", style="width: 100%", name="page-actions").form-control
-        //-   div.form-group
-        //-     label Authentication 
-        //-     input(type="text", id="page1-auth", placeholder="Page authentication", style="width: 100%", name="page-auth").form-control
-        //-   div.form-group 
-        //-     button(type="button").btn.btn-danger.removePage Remove Page
+          input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", name="OwnerId", value=`${application.OwnerId}`, required).form-control
+        label Pages
+        each page, index in application.pages
+          div(style="width: 90%", id=`page${index + 1}`).content-section.addPage
+            div.form-group
+              label Name
+              input(type="text", id=`page${index + 1}-name`, placeholder="Page name", style="width: 100%", name="page-name", value=`${page.name}`).form-control 
+            div.form-group
+              label URL
+              input(type="text", id=`page${index + 1}-url`, placeholder="Page URL", style="width: 100%", name="page-url", value=`${page.url}`).form-control
+            div.form-group
+              label Actions
+              input(type="text", id=`page${index + 1}-actions`, placeholder="Page action", style="width: 100%", name="page-actions", value=`${page.actions}`).form-control
+            div.form-group
+              label Authentication 
+              input(type="text", id=`page${index + 1}-auth`, placeholder="Page authentication", style="width: 100%", name="page-auth", value=`${page.auth}`).form-control
+            div.form-group 
+              button(type="button").btn.btn-danger.removePage Remove Page
           
         div.form-group.AddPageButtonDiv
           button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
           button(type="button").btn.btn-primary.addPageButton Add another page
+
+block script
+  <script src="/static/js/addPageForm.js"></script>
