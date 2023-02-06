@@ -25,7 +25,8 @@ block content
             input(type="text", id="page1-URL", placeholder="Page URL", style="width: 100%", name="page-url").form-control
           div.form-group
             label Actions
-            input(type="text", id="page1-action", placeholder="Page action", style="width: 100%", name="page-actions").form-control
+            textarea(type="text", id="page1-action", placeholder="Page actions", style="width: 100%", name="page-actions").form-control
+            small(id="page1-action-help", class="form-text text-muted") Please enter page actions seperated by commas
           div.form-group
             label Authentication 
             input(type="text", id="page1-auth", placeholder="Page authentication", style="width: 100%", name="page-auth").form-control

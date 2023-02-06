@@ -38,7 +38,8 @@ function buildForm(id) {
                     </div>
                     <div class="form-group">
                         <label>Actions</label>
-                        <input class="form-control" type="text" id="page${id}-action" placeholder="Page action" style="width: 100%" name="page-actions">
+                        <textarea class="form-control" type="text" id="page${id}-action" placeholder="Page action" style="width: 100%" name="page-actions"></textarea>
+                        <small id="page${id}-action-help", class="form-text text-muted">Please enter page actions seperated by commas</small>
                     </div>
                     <div class="form-group">
                         <label>Authentication </label>
