@@ -1,7 +1,16 @@
 const addPageButton = document.querySelector(".addPageButton");
 const addApplicationForm = document.querySelector("#addApplicationForm");
+const updateApplicationForm = document.querySelector("#UpdateApplicationForm");
 addPageButton.addEventListener("click", cloneAddPageForm);
-addApplicationForm.addEventListener("click", removePage);
+if (addApplicationForm) {
+    // addApplicationForm will be undefined if we're in the update app form page.
+    // Vice versa. In either case running both of these lines will cause a TypeError.
+    // So, the conditional helps to aviod that. 
+    addApplicationForm.addEventListener("click", removePage);
+}
+else{
+    updateApplicationForm.addEventListener("click", removePage); // maybe I can make a call to api instead in this case?
+}
 
 function removePage(e) {
     if (e.target.matches(".removePage")) {
