@@ -26,7 +26,7 @@ const port = process.env.PORT || 3000;
 const host =process.env.HOST || "127.0.0.1";
 
 
-const compiledApplicationUpdate = pug.compileFile("src/static/application_update.pug");
+const compiledApplicationEdit   = pug.compileFile("src/static/application_edit.pug");
 const compiledApplicationDelete = pug.compileFile("src/static/application_confirm_delete.pug");
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
@@ -71,7 +71,7 @@ app.get('/edit/application/:id', async (req: Request, res: Response) =>{
   let result = res.locals.axios; 
   if (result.status == 200) {
     let application = result.data;
-    let page = compiledApplicationUpdate({application});
+    let page = compiledApplicationEdit({application});
     res.status(200).send(page);
     return; // res.end() ? 
   }
