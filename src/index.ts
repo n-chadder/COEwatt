@@ -52,26 +52,38 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride('_method'));
 
-app.get('/edit/application/:id', async (req: Request, res: Response) =>{
+app.param('id', async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id;
   try {
     // maybe https if that is avaliable?
     const response = await axios.get(`http://${host}:${port}/applications/${id}`);
-    let application = response.data;
-    let page = compiledApplicationUpdate({application});
-    res.status(200).send(page);
-    return;
+    res.locals.axios = response;
+    next();
   }
   catch(err: any | AxiosError) {
-    // temp pages, need to build templates for 404 and 500
-    if (axios.isAxiosError(err)){
-      if (err.response?.status == 404) {
-        res.status(404).send('<h1>Sorry the page you are looking for does not exist</h1>');
-        return;
-      }
-    }
-    res.status(500).send('<h1>Sorry, something went wrong</h1>');
+    res.locals.axios = err;
+    next();
   }
+});
+
+app.get('/edit/application/:id', async (req: Request, res: Response) =>{
+  let result = res.locals.axios; 
+  if (result.status == 200) {
+    let application = result.data;
+    let page = compiledApplicationUpdate({application});
+    res.status(200).send(page);
+    return; // res.end() ? 
+  }
+  else if(axios.isAxiosError(result)){
+    // temp pages, need to build templates for 404 and 500
+    if(result.response?.status == 404) {
+      res.status(404).send('<h1>Sorry the page you are looking for does not exist</h1>');
+      return;
+    }
+  }
+  res.status(500).send('<h1>Sorry, something went wrong</h1>');
+  return;
+
 });
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
