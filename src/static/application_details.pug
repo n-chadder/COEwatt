@@ -3,16 +3,15 @@ extends base.pug
 block content 
   div.row 
     div.col-md-10 
-      h2 #{application.name}
+      h2 #{application.name} - Details 
   div.row
     ul.nav.nav-tabs.mrgn-lft-md.mrgn-bttm-md
       li.active
         a(href=`/applications/${application.id}`) Application Details 
       li 
-        a(href="#") Edit Application
-      li 
-        //- Ask Jim about router.delete
-        a(href="#") Delete Application 
+        a(href=`/edit/application/${application.id}`) Edit Application
+      li
+        a(href=`/delete/application/${application.id}`) Delete Application 
   div(class="panel panel-default")
     div(class="panel-heading")
       strong Details

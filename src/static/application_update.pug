@@ -3,16 +3,15 @@ extends base.pug
 block content 
   div.row 
     div.col-md-10 
-      h2 #{application.name} Update
+      h2 #{application.name} - Edit
   div.row
     ul.nav.nav-tabs.mrgn-lft-md.mrgn-bttm-md
       li
         a(href=`/applications/${application.id}`) Application Details 
       li.active 
-        a(href="#") Edit Application
+        a(href=`/edit/application/${application.id}`) Edit Application
       li 
-        //- Ask Jim about router.delete
-        a(href="#") Delete Application 
+        a(href=`/delete/application/${application.id}`) Delete Application 
   div.content-section
     div.container
       form(id="UpdateApplicationForm", action=`/applications/${application.id}?_method=PATCH`, method="post")

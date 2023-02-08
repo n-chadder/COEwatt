@@ -27,6 +27,7 @@ const host =process.env.HOST || "127.0.0.1";
 
 
 const compiledApplicationUpdate = pug.compileFile("src/static/application_update.pug");
+const compiledApplicationDelete = pug.compileFile("src/static/application_confirm_delete.pug");
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
     console.log("Got websocket connection")
@@ -85,6 +86,25 @@ app.get('/edit/application/:id', async (req: Request, res: Response) =>{
   return;
 
 });
+
+app.get('/delete/application/:id',async (req: Request, res: Response) => {
+  let result = res.locals.axios;
+  if (result.status == 200) {
+    let application = result.data;
+    let page = compiledApplicationDelete({application});
+    res.status(200).send(page);
+    return; // res.end() ? 
+  }
+  else if(axios.isAxiosError(result)){
+    // temp pages, need to build templates for 404 and 500
+    if(result.response?.status == 404) {
+      res.status(404).send('<h1>Sorry the page you are looking for does not exist</h1>');
+      return;
+    }
+  }
+  res.status(500).send('<h1>Sorry, something went wrong</h1>');
+  return;
+})
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
