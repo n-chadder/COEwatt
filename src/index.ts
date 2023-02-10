@@ -108,10 +108,10 @@ app.get('/delete/application/:id',async (req: Request, res: Response) => {
 
 app.use('/static', express.static(path.join(__dirname, 'static')));
 
-app.use('/roles', roles);
-app.use('/users', users);
+// app.use('/roles', roles);
+// app.use('/users', users);
 app.use('/applications', applications);
-app.use('/appelements', appElements);
+// app.use('/appelements', appElements);
 // app.use('/pages', pages);
 
 

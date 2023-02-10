@@ -73,19 +73,21 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
     console.log(req.body);
-    return;
+    
     
     try {
-        const Name: string = req.body.name;
+        const Name: string = req.body.Name;
         const Desc: string = req.body.Desc;
-        const Owner: number = req.body.OwnerId;
+        const Owner: number = req.body.Owner;
+        console.log(Name, Desc, Owner);
         const result = await prisma.application.create({
             data: {
-                Name,
-                Desc,
-                Owner
+                Name: Name,
+                Desc: Desc,
+                Owner: Owner
             },
         })
+        console.log("We made it - I think.", result);
         res.json(result)
     } catch (e: any) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {

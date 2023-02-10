@@ -7,35 +7,35 @@ block content
     div.container
       form(id="addApplicationForm", action="/applications", method="post")
         div.form-group
-          label(for="name") Application Name 
-          input(type="text", id="name", placeholder="Enter application name", style="width: 90%;", name="name", required).form-control 
+          label(for="Name") Application Name 
+          input(type="text", id="Name", placeholder="Enter application name", style="width: 90%;", name="Name", required).form-control 
         div.form-group
           label(for="desc") Description 
-          input(type="text", id="desc", placeholder="Small description of the application", style="width: 90%;", name="Desc").form-control
+          input(type="text", id="Desc", placeholder="Small description of the application", style="width: 90%;", name="Desc").form-control
         div.form-group
           label(for="owner") Owner 
-          input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", name="OwnerId" required).form-control
-        label Pages
-        div(style="width: 90%", id="page1").content-section.addPage
-          div.form-group
-            label Name
-            input(type="text", id="page1-name", placeholder="Page name", style="width: 100%", name="page-name").form-control 
-          div.form-group
-            label URL
-            input(type="text", id="page1-URL", placeholder="Page URL", style="width: 100%", name="page-url").form-control
-          div.form-group
-            label Actions
-            textarea(type="text", id="page1-action", placeholder="Page actions", style="width: 100%", name="page-actions").form-control
-            small(id="page1-action-help", class="form-text text-muted") Please enter page actions seperated by commas
-          div.form-group
-            label Authentication 
-            input(type="text", id="page1-auth", placeholder="Page authentication", style="width: 100%", name="page-auth").form-control
-          div.form-group 
-            button(type="button").btn.btn-danger.removePage Remove Page
+          input(type="text", id="Owner", placeholder="Enter owner name", style="width: 90%;", name="Owner" required).form-control
+        //- label Pages
+        //- div(style="width: 90%", id="page1").content-section.addPage
+        //-   div.form-group
+        //-     label Name
+        //-     input(type="text", id="page1-name", placeholder="Page name", style="width: 100%", name="page-name").form-control 
+        //-   div.form-group
+        //-     label URL
+        //-     input(type="text", id="page1-URL", placeholder="Page URL", style="width: 100%", name="page-url").form-control
+        //-   div.form-group
+        //-     label Actions
+        //-     textarea(type="text", id="page1-action", placeholder="Page actions", style="width: 100%", name="page-actions").form-control
+        //-     small(id="page1-action-help", class="form-text text-muted") Please enter page actions seperated by commas
+        //-   div.form-group
+        //-     label Authentication 
+        //-     input(type="text", id="page1-auth", placeholder="Page authentication", style="width: 100%", name="page-auth").form-control
+        //-   div.form-group 
+        //-     button(type="button").btn.btn-danger.removePage Remove Page
           
         div.form-group.AddPageButtonDiv
           button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
-          button(type="button").btn.btn-primary.addPageButton Add another page
+          //- button(type="button").btn.btn-primary.addPageButton Add another page
 
 block script
-  <script src="/static/js/applicationForm.js"></script>
+  //- <script src="/static/js/applicationForm.js"></script>
