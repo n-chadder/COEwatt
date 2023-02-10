@@ -43,13 +43,11 @@ router.get('/addform', (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
-    console.log(id);
-    
     const application = await prisma.application.findUnique({
         where: {
             id: Number(id),
         },
-    })
+    });
 
     res.format({
         'application/json': function(){
@@ -71,26 +69,31 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 // Name    String
 // Desc    String
-// Owner   Int
+// Owner   String
 
 router.post('/', async (req: Request, res: Response) => {
-    console.log(req.body);
-    
-    
+
     try {
         const Name: string = req.body.Name;
         const Desc: string = req.body.Desc;
         const Owner: string = req.body.Owner;
-        console.log(Name, Desc, Owner);
         const result = await prisma.application.create({
             data: {
                 Name,
                 Desc,
                 Owner
             },
-        })
-        console.log("We made it - I think.", result);
-        res.json(result)
+        });
+        res.format({
+            'application/json': function(){
+                res.status(200).json(result);
+                return;
+            },
+            'text/html': function(){
+                res.redirect(`/applications/${result.id}`)
+                return;
+            }
+        });
     } catch (e: any) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             // If it exists, no hard no foul. Say nothing.
@@ -121,7 +124,16 @@ router.patch('/:id', async (req: Request, res: Response) => {
                 Owner
             },
         })
-        res.json(result)
+        res.format({
+            'application/json': function(){
+                res.status(200).json(result);
+                return;
+            },
+            'text/html': function(){
+                res.redirect(`/applications/${id}`)
+                return;
+            }
+        });
     } catch (e: any) {
         if (e instanceof Prisma.PrismaClientKnownRequestError) {
             // If it exists, no hard no foul. Say nothing.
