@@ -14,12 +14,15 @@ block content
         a(href=`/delete/application/${application.id}`) Delete Application 
   div(class="panel panel-default")
     div(class="panel-heading")
-      strong Details
+      strong Application Details
     table(class="wb-tables table table-bordered table-hover" data-wb-tables='{ "ordering" : false }')
       tbody
         tr 
-          th Application Name:
+          th Name:
           td #{application.Name}
         tr 
-          th Application ID: 
-          td #{application.id}
+          th Description: 
+          td #{application.Desc}
+        tr 
+          th Owner: 
+          td #{application.Owner}

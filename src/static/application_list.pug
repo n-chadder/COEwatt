@@ -5,9 +5,11 @@ block content
   table(class="wb-tables table table-bordered table-striped table-hover" data-wb-tables='{ "ordering" : false }')
     tr
       th Application Name 
-      th Application ID 
+      th Description
+      th Owner
     each app in applications
       tr 
         td 
           a(href=`/applications/${app.id}`) #{app.Name} 
-        td #{app.id}
+        td #{app.Desc}
+        td #{app.Owner}
