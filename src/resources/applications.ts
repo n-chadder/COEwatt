@@ -43,6 +43,8 @@ router.get('/addform', (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
+    console.log(id);
+    
     const application = await prisma.application.findUnique({
         where: {
             id: Number(id),
@@ -78,13 +80,13 @@ router.post('/', async (req: Request, res: Response) => {
     try {
         const Name: string = req.body.Name;
         const Desc: string = req.body.Desc;
-        const Owner: number = req.body.Owner;
+        const Owner: string = req.body.Owner;
         console.log(Name, Desc, Owner);
         const result = await prisma.application.create({
             data: {
-                Name: Name,
-                Desc: Desc,
-                Owner: Owner
+                Name,
+                Desc,
+                Owner
             },
         })
         console.log("We made it - I think.", result);

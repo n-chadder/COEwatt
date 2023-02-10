@@ -16,7 +16,7 @@ model Application {
   id       Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
   Name    String
   Desc    String
-  Owner   Int
+  Owner   String
 }
 
 model Page {
