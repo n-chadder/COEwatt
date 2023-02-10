@@ -108,16 +108,17 @@ router.post('/', async (req: Request, res: Response) => {
 router.patch('/:id', async (req: Request, res: Response) => {
     try {
         const id = req.params.id;
-        const Name: string = req.body.name;
+        const Name: string = req.body.Name;
         const Desc: string = req.body.Desc;
-        const Owner: Number = req.body.OwnerId;
+        const Owner: string = req.body.Owner;
         const result = await prisma.application.update({
             where: {
                 id: Number(id),
             },
             data: {
                 Name,
-                Desc
+                Desc, 
+                Owner
             },
         })
         res.json(result)
