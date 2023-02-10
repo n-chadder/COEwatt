@@ -156,7 +156,16 @@ router.delete('/:id', async (req: any, res: any) => {
                 id: Number(id),
             },
         })
-        res.json(application)
+        res.format({
+            'application/json': function(){
+                res.status(200).json(application);
+                return;
+            },
+            'text/html': function(){
+                res.redirect(`/applications/`)
+                return;
+            }
+        });
     } catch (e: any) {
         res.send(e.code)
     }
