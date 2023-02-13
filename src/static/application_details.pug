@@ -1,17 +1,18 @@
 extends base.pug
 
 block content 
+  include messages.pug
   div.row 
     div.col-md-10 
-      h2 #{application.Name} - Details 
+      h2 #{result.application.Name} - Details 
   div.row
     ul.nav.nav-tabs.mrgn-lft-md.mrgn-bttm-md
       li.active
-        a(href=`/applications/${application.id}`) Application Details 
+        a(href=`/applications/${result.application.id}`) Application Details 
       li 
-        a(href=`/edit/application/${application.id}`) Edit Application
+        a(href=`/edit/application/${result.application.id}`) Edit Application
       li
-        a(href=`/delete/application/${application.id}`) Delete Application 
+        a(href=`/delete/application/${result.application.id}`) Delete Application 
   div(class="panel panel-default")
     div(class="panel-heading")
       strong Application Details
@@ -19,10 +20,10 @@ block content
       tbody
         tr 
           th Name:
-          td #{application.Name}
+          td #{result.application.Name}
         tr 
           th Description: 
-          td #{application.Desc}
+          td #{result.application.Desc}
         tr 
           th Owner: 
-          td #{application.Owner}
+          td #{result.application.Owner}

@@ -1,13 +1,14 @@
 extends base.pug
 
 block content
+  include messages.pug
   h1(id="wb-cont" property="name") Application List
   table(class="wb-tables table table-bordered table-striped table-hover" data-wb-tables='{ "ordering" : false }')
     tr
       th Application Name 
       th Description
       th Owner
-    each app in applications
+    each app in result.applications
       tr 
         td 
           a(href=`/applications/${app.id}`) #{app.Name} 

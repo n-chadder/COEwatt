@@ -20,15 +20,25 @@ router.use((req, res, next) => {
 })
 
 router.get('/', async (req: Request, res: Response) => {
+
     const applications = await prisma.application.findMany({
-    })
+    });
+
+    let success = req.flash('success');
+    let error   = req.flash('error'); 
+    let result = {
+        "applications": applications,
+        "success" : success,
+        "error" : error
+    }  
+    
     res.format({
         'application/json': function(){
             res.status(200).json(applications);
             return;
         },
         'text/html': function(){
-            let page = compiledApplicationList({applications});
+            let page = compiledApplicationList({result});
             res.status(200).send(page);
             return;
         }
@@ -49,6 +59,14 @@ router.get('/:id', async (req: Request, res: Response) => {
         },
     });
 
+    let success = req.flash('success');
+    let error   = req.flash('error'); 
+    let result = {
+        "application": application,
+        "success" : success,
+        "error" : error
+    }
+
     res.format({
         'application/json': function(){
             res.status(200).json(application);
@@ -60,7 +78,7 @@ router.get('/:id', async (req: Request, res: Response) => {
                 // 404 page here
                 return;
             }
-            let page = compiledApplicationDetail({application});
+            let page = compiledApplicationDetail({result});
             res.status(200).send(page);
             return;
         }
@@ -90,7 +108,8 @@ router.post('/', async (req: Request, res: Response) => {
                 return;
             },
             'text/html': function(){
-                res.redirect(`/applications/${result.id}`)
+                req.flash("success", "Application was created successfully");
+                res.redirect(`/applications/${result.id}`);
                 return;
             }
         });
@@ -130,7 +149,8 @@ router.patch('/:id', async (req: Request, res: Response) => {
                 return;
             },
             'text/html': function(){
-                res.redirect(`/applications/${id}`)
+                req.flash("success", "Application was edited successfully");
+                res.redirect(`/applications/${id}`);
                 return;
             }
         });
@@ -162,7 +182,8 @@ router.delete('/:id', async (req: any, res: any) => {
                 return;
             },
             'text/html': function(){
-                res.redirect(`/applications/`)
+                req.flash('success', 'Application was deleted successfully');
+                res.redirect(`/applications/`);
                 return;
             }
         });
