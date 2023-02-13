@@ -16,6 +16,8 @@ import { hostname } from "os";
 import * as pug from "pug";
 import axios, { AxiosError } from 'axios';
 import * as methodOverride from "method-override";
+import flash = require('connect-flash');
+import * as session from "express-session";
 
 const prisma = new PrismaClient();
 const app: any = express();
@@ -52,6 +54,12 @@ app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use('/static', express.static(path.join(__dirname, 'static')));
+app.use(session({
+  secret:'flash',
+  saveUninitialized: true,
+  resave: true
+}));
+app.use(flash());
 app.use(methodOverride('_method'));
 app.use('/applications', applications);
 
