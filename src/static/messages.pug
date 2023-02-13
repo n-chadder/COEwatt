@@ -1,0 +1,6 @@
+if result.success
+  if result.success != ''
+    div(style="border-radius: 5px;").alert.alert-success.mrgn-bttm-0.mrgn-tp-sm #{result.success}
+if result.error
+  if result.error != ''
+    div(style="border-radius: 5px;").alert.alert-danger.mrgn-bttm-0.mrgn-tp-sm #{result.error}
