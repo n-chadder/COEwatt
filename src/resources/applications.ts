@@ -53,6 +53,7 @@ router.get('/addform', (req: Request, res: Response) => {
 
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
+    // this should probably be a try catch block
     const application = await prisma.application.findUnique({
         where: {
             id: Number(id),

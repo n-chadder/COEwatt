@@ -30,6 +30,7 @@ const host =process.env.HOST || "127.0.0.1";
 
 const compiledApplicationEdit   = pug.compileFile("src/static/application_edit.pug");
 const compiledApplicationDelete = pug.compileFile("src/static/application_confirm_delete.pug");
+const compiledSchedule  = pug.compileFile('src/static/schedule.pug');
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
     console.log("Got websocket connection")
@@ -114,6 +115,12 @@ app.get('/delete/application/:id',async (req: Request, res: Response) => {
   }
   res.status(500).send('<h1>Sorry, something went wrong</h1>');
   return;
+});
+
+// temp endpoint to display calendar
+app.get('/schedule',async (req: Request, res: Response) => {
+  let page = compiledSchedule({});
+  res.status(200).send(page);
 });
 
 // app.use('/roles', roles);

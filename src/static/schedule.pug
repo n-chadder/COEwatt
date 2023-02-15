@@ -1,0 +1,32 @@
+extends base.pug
+
+block content
+  //- h1(id="wb-cont" property="name") Schedule
+  div(id='calendar').mrgn-bttm-md.mrgn-tp-md
+
+  block script 
+    script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js")
+
+  script. 
+    // Axios call here to get schedule data then load/build 
+    // the calendar or just pass schedule events from server when 
+    // template is rendred and hadle events here. Either will work.
+    document.addEventListener('DOMContentLoaded', function() {
+      let calendarEl = document.getElementById('calendar');
+      let calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        customButtons: {
+          addEventButton: {
+            text: "Add New Event",
+            hint: "Add New Event",
+            click: function() {
+              window.location.href = '#'
+            } 
+          }
+        },
+        headerToolbar: {
+          right: 'addEventButton today prev,next'
+        }
+      });
+      calendar.render();
+    });
