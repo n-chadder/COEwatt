@@ -14,7 +14,19 @@ block content
     document.addEventListener('DOMContentLoaded', function() {
       let calendarEl = document.getElementById('calendar');
       let calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth'
+        initialView: 'dayGridMonth',
+        customButtons: {
+          addEventButton: {
+            text: "Add New Event",
+            hint: "Add New Event",
+            click: function() {
+              window.location.href = '#'
+            } 
+          }
+        },
+        headerToolbar: {
+          right: 'addEventButton today prev,next'
+        }
       });
       calendar.render();
     });
