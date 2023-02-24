@@ -2,42 +2,126 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
 </head>
 
 <body>
-    <!-- HTML Templates-->
+        <!-- HTML Templates-->
+        <template id="deleteApp">
+                <pp-modal method="delete" dataurl="/applications" id="deleteApp" itemId="0">
+                        <span slot="buttonText">Delete</span>
+                        <span slot="formContent">
+                                <form id="UpdateApplicationForm" action="/applications/1?_method=DELETE" method="post">
+                                        <fieldset class="form-group">
+                                                <legend class="border-bottom mrgn-bttm-mb">Delete Application</legend>
+                                                <h2>Are you sure you want to delete this application? "Jim Cassidy"</h2>
+                                        </fieldset>
+                                        <div class="form-group"> <button class="btn btn-danger" type="submit">Yes I am
+                                                        sure!</button><a class="btn btn default"
+                                                        href="/applications/1">Cancel</a></div>
+                                </form>
+                        </span>
+                </pp-modal>
+
+        </template>
+        <template id="createApp">
+                <pp-modal method="post" dataurl="/applications" id="createApp">
+                        <span slot="buttonText">Create Application</span>
+                        <p slot="header">Create Application</p>
+                        <form id="UpdateApplicationForm" action="/applications/?_method=PATCH" method="post">
+                                <div class="form-group"><label for="Name">Application Name </label><input
+                                                class="form-control" type="text" id="Name"
+                                                placeholder="Enter application name" style="width: 90%;" name="Name"
+                                                value="" required="">
+                                </div>
+                                <div class="form-group"><label for="desc">Description </label><input
+                                                class="form-control" type="text" id="desc"
+                                                placeholder="Small description of the application" style="width: 90%;"
+                                                name="Desc" value=""></div>
+                                <div class="form-group"><label for="owner">Owner </label><input class="form-control"
+                                                type="text" id="owner" placeholder="Enter owner name"
+                                                style="width: 90%;" name="Owner" value="" required=""></div>
+                                <div class="form-group AddPageButtonDiv"><button class="btn btn-success mrgn-rght-sm"
+                                                type="submit">Save</button></div>
+                        </form>
+                </pp-modal>
+        </template>
+        <template id="editApp">
+                <pp-modal dataurl="/applications">
+                        <span slot="buttonText">Edit</span>
+                        <p slot="header">Edit Application</p>
+                        <form id="UpdateApplicationForm" action="/applications/1?_method=PATCH" method="post">
+                                <div class="form-group"><label for="Name">Application Name </label><input
+                                                class="form-control" type="text" id="Name"
+                                                placeholder="Enter application name" style="width: 90%;" name="Name"
+                                                value="aaaaaa" required=""></div>
+                                <div class="form-group"><label for="desc">Description </label><input
+                                                class="form-control" type="text" id="desc"
+                                                placeholder="Small description of the application" style="width: 90%;"
+                                                name="Desc" value="sssss"></div>
+                                <div class="form-group"><label for="owner">Owner </label><input class="form-control"
+                                                type="text" id="owner" placeholder="Enter owner name"
+                                                style="width: 90%;" name="Owner" value="dddd" required=""></div>
+                                <div class="form-group AddPageButtonDiv"><button class="btn btn-success mrgn-rght-sm"
+                                                type="submit" style="true">Save</button></div>
+                        </form>
+                </pp-modal>
+
+        </template>
 
 
+        <!-- End Templates-->
 
-    <!-- End Templates-->
+        <div id="grid">
+                <data-grid dataurl="/applications"
+                        dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" ]'>
+                </data-grid>
+        </div>
 
-    <!-- <pp-modal>
-        <h1 slot="header">Information Box</h1>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
-        magna
-        aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-        consequat.
-    </pp-modal>
+        <pp-modal dataurl="/applications">
+                <span slot="buttonText">Edit Application, eh?</span>
+                <p slot="header">Edit Application</p>
+                <form id="UpdateApplicationForm" action="/applications/1?_method=PATCH" method="post">
+                        <div class="form-group"><label for="Name">Application Name </label><input class="form-control"
+                                        type="text" id="Name" placeholder="Enter application name" style="width: 90%;"
+                                        name="Name" value="aaaaaa" required=""></div>
+                        <div class="form-group"><label for="desc">Description </label><input class="form-control"
+                                        type="text" id="desc" placeholder="Small description of the application"
+                                        style="width: 90%;" name="Desc" value="sssss"></div>
+                        <div class="form-group"><label for="owner">Owner </label><input class="form-control" type="text"
+                                        id="owner" placeholder="Enter owner name" style="width: 90%;" name="Owner"
+                                        value="dddd" required=""></div>
+                        <div class="form-group AddPageButtonDiv"><button class="btn btn-success mrgn-rght-sm"
+                                        type="submit" style="true">Save</button></div>
+                </form>
+        </pp-modal>
 
-    <pp-modal>
-        <h1 slot="header">2nd Information Box</h1>
-        This is another.
-    </pp-modal> -->
-    <div id="grid" style="">
-        <data-grid></data-grid>
-    </div>
+        <pp-modal method="post" dataurl="/applications" id="createApp">
+                <span slot="buttonText">Create Application</span>
+                <p slot="header">Create Application</p>
+                <form id="UpdateApplicationForm" action="/applications" method="post">
+                        <div class="form-group"><label for="Name">Application Name </label><input class="form-control"
+                                        type="text" id="Name" placeholder="Enter application name" style="width: 90%;"
+                                        name="Name" value="" required="">
+                        </div>
+                        <div class="form-group"><label for="desc">Description </label><input class="form-control"
+                                        type="text" id="desc" placeholder="Small description of the application"
+                                        style="width: 90%;" name="Desc" value=""></div>
+                        <div class="form-group"><label for="owner">Owner </label><input class="form-control" type="text"
+                                        id="owner" placeholder="Enter owner name" style="width: 90%;" name="Owner"
+                                        value="" required=""></div>
+                        <div class="form-group AddPageButtonDiv"><button class="btn btn-success mrgn-rght-sm"
+                                        type="submit">Save</button></div>
+                </form>
+        </pp-modal>
 
-    <pp-modal>Put some content here - using slots.</pp-modal>
-
-
-    <script type="text/javascript" src="components/modal.js"></script>
-    <script type="text/javascript" src="components/datagrid.js"></script>
-    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+        <script type="text/javascript" src="components/modal.js"></script>
+        <script type="text/javascript" src="components/datagrid.js"></script>
+        <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+        <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 </body>
 
 </html>

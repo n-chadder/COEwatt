@@ -64,25 +64,58 @@ class DataGrid extends HTMLElement {
                 text-align: center;
             }
         </style>
-
+        <div id='gridlocation'></div>
         `
     }
     connectedCallback() {
-        let data = [
-            ['r1d1', 'r1d2', 'r1d3', 'r1d4'],
-            ['r2d1', 'r2d2', 'r2d3', 'r2d4'],
-            ['r3d1', 'r3d2', 'r3d3', 'r3d4'],
-            ['<p>r4d1</p>', 'r4d2', 'r4d3', 'r4d4'],
-            ['r5d1', 'r5d2', 'r5d3', 'r5d4 nnnnnnnnnnn'],
-        ]
-        this._createTable("Applications", ["Application Name", "Desc", "URL", "Owner", "gg", "gg"], data);
+        this._createTable("Applications", eval(this["dataheaders"]));
         // this._createButton("jim")
     }
     disconnectedCallback() {
 
     }
 
-    _createTable(tableTitle, columnHeaders, tableRows) {
+    static get observedAttributes() {
+        return ['dataurl', 'dataheaders'];
+    }
+
+    attributeChangedCallback(attrName, oldVaule, newValue) {
+        if (oldVaule !== newValue) {
+            this[attrName] = newValue;
+        }
+    }
+
+
+    get dataurl() {
+        return this.getAttribute("dataurl");
+    }
+
+    set dataurl(value) {
+
+        if (value) {
+            this.setAttribute('dataurl', value);
+        } else {
+            this.removeAttribute('dataurl');
+        }
+    }
+
+    get dataheaders() {
+        return this.getAttribute("dataheaders");
+    }
+
+    set dataheaders(value) {
+
+        if (value) {
+            this.setAttribute('dataheaders', value);
+        } else {
+            this.removeAttribute('dataheaders');
+        }
+    }
+
+    async _createTable(tableTitle, columnHeaders) {
+        const response = await fetch(this["dataurl"]);
+        const data = await response.json();
+
         let table = document.createElement('table');
         let caption = table.createCaption();
         caption.innerHTML = `<strong>${tableTitle}</strong>`;
@@ -95,20 +128,26 @@ class DataGrid extends HTMLElement {
             cell.innerHTML = `<strong>${columnHeaders[columnHeaderIndex]}</string>`;
         }
 
-        for (let row in tableRows) {
+        for (let row in data) {
             let newRow = tableBody.insertRow(row);
-            for (let col in tableRows[row]) {
-                let cell = newRow.insertCell(col);
-                cell.innerHTML = tableRows[row][col];
+            for (let col in data[row]) {
+                let cell = newRow.insertCell(newRow.length);
+                cell.innerHTML = data[row][col];
             }
 
-            console.log(columnHeaders.length);
             let cell = newRow.insertCell(columnHeaders.length - 2);
-            cell.innerHTML = `<button><ion-icon name="trash"></ion-icon> Delete</button>`;
+            let deleteButton = document.getElementById("deleteApp");
+            // cell.innerHTML = `<button delete-id=${data[row]['id']}><ion-icon name="trash"></ion-icon> Delete</button>`;
+            cell.innerHTML = `${deleteButton.innerHTML}`.replace('Delete', `Delete ${data[row]['id']}`);
+            // alert(cell.innerHTML);
+            // cell.setAttribute('itemID', `${data[row]['id']}`)
             cell.classList.add("center");
 
+            let editButton = document.getElementById("editApp");
             cell = newRow.insertCell(columnHeaders.length - 1);
-            cell.innerHTML = `<button><ion-icon name="pencil"></ion-icon> Edit</button>`;
+            // cell.innerHTML = `<button edit-id=${data[row]['id']}><ion-icon name="pencil"></ion-icon> Edit</button>`;
+            cell.innerHTML = `${editButton.innerHTML}`.replace('Edit', `Edit ${data[row]['id']}`);
+            // cell.appendChild(editButton.content);
             cell.classList.add("center");
 
             if (this._numberIsEven(row)) {
@@ -117,9 +156,9 @@ class DataGrid extends HTMLElement {
                 newRow.classList.add("unshaded");
             }
         }
-        let lastRow = tableBody.insertRow(tableRows.length);
+        let lastRow = tableBody.insertRow(data.length);
         let cell = lastRow.insertCell(0);
-        cell.outerHTML = `<td colspan=${tableRows.length + 1}>
+        cell.outerHTML = `<td colspan=${data.length + 1}>
         <div style="float: left;">
             <button><ion-icon name="play-back"></ion-icon> Beginning</button>
             <button><ion-icon name="play-skip-back"></ion-icon> Previous</button>
@@ -129,11 +168,7 @@ class DataGrid extends HTMLElement {
             <button><ion-icon name="play-skip-forward"></ion-icon> Next</button>
             <button><ion-icon name="play-forward"></ion-icon> End</button>
         </div>
-    
         </td>`;
-
-
-        console.log(table.outerHTML);
         this.shadowRoot.appendChild(table);
     }
 

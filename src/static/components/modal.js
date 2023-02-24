@@ -6,16 +6,6 @@ class Modal extends HTMLElement {
         this.attachShadow({ mode: 'open' });
         this.shadowRoot.innerHTML = `
         <style>
-            table {
-                border-collapse: collapse;
-                margin: 25px 0;
-                font-size: 0.9em;
-                font-family: sans-serif;
-                min-width: 400px;
-                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-                margin-left: auto;
-                margin-right: auto;
-            }
             /* The Modal (background) */
             .modal {
                 display: none; 
@@ -38,7 +28,7 @@ class Modal extends HTMLElement {
                 margin: auto;
                 padding: 0;
                 border: 1px solid #888;
-                width: 80%;
+                width: 40%;
                 box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
                 -webkit-animation-name: animatetop;
                 -webkit-animation-duration: 0.4s;
@@ -67,7 +57,7 @@ class Modal extends HTMLElement {
 
             .close:hover,
             .close:focus {
-            color: #000;
+            color: #ccc;
             text-decoration: none;
             cursor: pointer;
             }
@@ -81,7 +71,7 @@ class Modal extends HTMLElement {
             .modal-body {padding: 2px 16px; margin: 20px 2px}
 
         </style>
-        <button>Open Modal</button>
+        <button><slot name="buttonText">Button Text</button>
         <div class="modal">
             <div class="modal-content">
                 <div class="modal-header">
@@ -89,12 +79,16 @@ class Modal extends HTMLElement {
                     <slot name="header"><h1>Default text</h1></slot>
                 </div>
                 <div class="modal-body">
-                    <slot><slot>
+                    <slot name="formContent"><slot>
                 </div>
             </div>
         </div>
         `
     }
+
+    // static get observedAttributes() {
+    //     return ['itemId'];
+    // }
     connectedCallback() {
         this._modal = this.shadowRoot.querySelector(".modal");
         this.shadowRoot.querySelector("button").addEventListener('click', this._showModal.bind(this));
@@ -109,6 +103,7 @@ class Modal extends HTMLElement {
         this._modal.style.display = 'block';
     }
     _hideModal() {
+        console.log(this.shadowRoot.innerHTML);
         this._modalVisible = false;
         this._modal.style.display = 'none';
     }
