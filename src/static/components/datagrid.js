@@ -20,7 +20,7 @@ class DataGrid extends HTMLElement {
                 border-radius:6px;
                 margin-left: auto;
                 margin-right: auto;
-                min-width: 60%;
+                min-width: 100%;
                 box-shadow: 5px 10px #ccc;
                 background-color: #ccf;
             }
@@ -137,8 +137,10 @@ class DataGrid extends HTMLElement {
 
             let cell = newRow.insertCell(columnHeaders.length - 2);
             let deleteButton = document.getElementById("deleteApp");
+            let currentID = data[row]['id'];
             // cell.innerHTML = `<button delete-id=${data[row]['id']}><ion-icon name="trash"></ion-icon> Delete</button>`;
-            cell.innerHTML = `${deleteButton.innerHTML}`.replace('Delete', `Delete ${data[row]['id']}`);
+            // cell.innerHTML = `${deleteButton.innerHTML}`.replace('Delete', `Delete ${data[row]['id']}`);
+            cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('"#"', `/applications/${currentID}?_method=DELETE`);
             // alert(cell.innerHTML);
             // cell.setAttribute('itemID', `${data[row]['id']}`)
             cell.classList.add("center");
@@ -146,7 +148,9 @@ class DataGrid extends HTMLElement {
             let editButton = document.getElementById("editApp");
             cell = newRow.insertCell(columnHeaders.length - 1);
             // cell.innerHTML = `<button edit-id=${data[row]['id']}><ion-icon name="pencil"></ion-icon> Edit</button>`;
-            cell.innerHTML = `${editButton.innerHTML}`.replace('Edit', `Edit ${data[row]['id']}`);
+            // cell.innerHTML = `${editButton.innerHTML}`.replace('Edit', `Edit ${data[row]['id']}`);
+            cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('"#"', `/applications/${currentID}?_method=PATCH`);
+            // console.log(cell.innerHTML);
             // cell.appendChild(editButton.content);
             cell.classList.add("center");
 
@@ -158,7 +162,7 @@ class DataGrid extends HTMLElement {
         }
         let lastRow = tableBody.insertRow(data.length);
         let cell = lastRow.insertCell(0);
-        cell.outerHTML = `<td colspan=${data.length + 1}>
+        cell.outerHTML = `<td colspan=${this.dataheaders.length}>
         <div style="float: left;">
             <button><ion-icon name="play-back"></ion-icon> Beginning</button>
             <button><ion-icon name="play-skip-back"></ion-icon> Previous</button>

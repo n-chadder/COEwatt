@@ -93,17 +93,19 @@ class Modal extends HTMLElement {
         this._modal = this.shadowRoot.querySelector(".modal");
         this.shadowRoot.querySelector("button").addEventListener('click', this._showModal.bind(this));
         this.shadowRoot.querySelector(".close").addEventListener('click', this._hideModal.bind(this));
+        console.log(this.getAttribute("dataurl"));
     }
     disconnectedCallback() {
         this.shadowRoot.querySelector("button").removeEventListener('click', this._showModal);
         this.shadowRoot.querySelector(".close").removeEventListener('click', this._hideModal);
     }
     _showModal() {
+        // console.log(this);
         this._modalVisible = true;
         this._modal.style.display = 'block';
     }
     _hideModal() {
-        console.log(this.shadowRoot.innerHTML);
+        // console.log(this.shadowRoot.innerHTML);
         this._modalVisible = false;
         this._modal.style.display = 'none';
     }
