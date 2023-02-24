@@ -140,7 +140,8 @@ class DataGrid extends HTMLElement {
             let currentID = data[row]['id'];
             // cell.innerHTML = `<button delete-id=${data[row]['id']}><ion-icon name="trash"></ion-icon> Delete</button>`;
             // cell.innerHTML = `${deleteButton.innerHTML}`.replace('Delete', `Delete ${data[row]['id']}`);
-            cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('"#"', `/applications/${currentID}?_method=DELETE`);
+            cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=DELETE"`);
+            cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this application?</h2>', `<h2>Are you sure you want to delete this application? ${data[row]['Name']}</h2>`);
             // alert(cell.innerHTML);
             // cell.setAttribute('itemID', `${data[row]['id']}`)
             cell.classList.add("center");
@@ -149,7 +150,10 @@ class DataGrid extends HTMLElement {
             cell = newRow.insertCell(columnHeaders.length - 1);
             // cell.innerHTML = `<button edit-id=${data[row]['id']}><ion-icon name="pencil"></ion-icon> Edit</button>`;
             // cell.innerHTML = `${editButton.innerHTML}`.replace('Edit', `Edit ${data[row]['id']}`);
-            cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('"#"', `/applications/${currentID}?_method=PATCH`);
+            cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=PATCH"`);
+            cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Name"', `<input class="form-control" type="text" id="Name" value="${data[row]['Name']}"`);
+            cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="desc"', `<input class="form-control" type="text" id="desc" value="${data[row]['Desc']}"`);
+            cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="owner"', `<input class="form-control" type="text" id="owner" value="${data[row]['Owner']}"`);
             // console.log(cell.innerHTML);
             // cell.appendChild(editButton.content);
             cell.classList.add("center");

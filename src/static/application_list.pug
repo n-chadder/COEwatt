@@ -27,10 +27,10 @@ block content
         form(id="UpdateApplicationForm", action="#", method="post")
           fieldset.form-group 
             legend.border-bottom.mrgn-bttm-mb Delete Application
-            h2 Are you sure you want to delete this application? "temp name"
+            h2 Are you sure you want to delete this application?
           div.form-group 
             button(type="submit").btn.btn-danger Yes I am sure!
-            a(href=`/applications/1`).btn.btn.default Cancel
+            a(href="/applications").btn.btn.default Cancel
   
   div(id="grid")
     data-grid(dataurl="/applications", 
