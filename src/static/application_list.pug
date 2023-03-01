@@ -11,14 +11,17 @@ block content
         form(id="UpdateApplicationForm", action="#", method="post")
           div.form-group
             label(for="Name") Application Name 
+            br
             input(type="text", id="Name", placeholder="Enter application name", style="width: 90%;", name="Name", required).form-control 
           div.form-group
             label(for="desc") Description 
+            br
             input(type="text", id="desc", placeholder="Small description of the application", style="width: 90%;", name="Desc").form-control
           div.form-group
-            label(for="owner") Owner 
+            label(for="owner") Owner
+            br
             input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", name="Owner", required).form-control
-          div.form-group.AddPageButtonDiv
+          div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="deleteApp")
     pp-modal(method="delete", dataurl="/applications", id="deleteApp", itemId="0")
