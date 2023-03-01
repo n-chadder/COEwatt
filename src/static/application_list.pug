@@ -26,6 +26,7 @@ block content
   template(id="deleteApp")
     pp-modal(method="delete", dataurl="/applications", id="deleteApp", itemId="0")
       span(slot="buttonText") Delete 
+      p(slot="header") Delete Appliction
       span(slot="formContent")
         form(id="UpdateApplicationForm", action="#", method="post")
           fieldset.form-group 

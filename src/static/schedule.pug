@@ -2,10 +2,41 @@ extends base.pug
 
 block content
   //- h1(id="wb-cont" property="name") Schedule
-  div(id='calendar').mrgn-bttm-md.mrgn-tp-md
+  //- for some reason the css of the modal gets messed up when the modal div is added
+  //- before the calendar div...
+  div(id='calendar').mrgn-bttm-md.mrgn-tp-md  
+  div(id="addEvent")
+    pp-modal(dataurl="/schedule")
+      span(slot="buttonText") Add Event
+      p(slot="header") Schedule Event
+      span(slot="formContent")
+        form(id="addSceduleEventForm", action="#", method="post")
+          div.form-group
+            label(for="Title") Event Title 
+            br
+            input(type="text", id="Title", placeholder="Enter event title", style="width: 90%;", name="title", required).form-control 
+          div.form-group
+            label(for="Desc") Description
+            br 
+            input(type="text", id="Desc", placeholder="Small description of the event", style="width: 90%;", name="Desc").form-control
+          div.form-group
+            label(for="start") Event start date 
+            br
+            input(type="date", id="start", style="width: 90%;", name="start", min="2018-01-01", max="2050-01-01", required).form-control
+          div.form-group
+            label(for="end") Event end date 
+            br
+            input(type="date", id="end", style="width: 90%;", name="end", min="2018-01-01", max="2050-01-01", required).form-control
+          
+          div(style="padding-top: 10px").form-group.AddEventButtonDiv
+            button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
+
 
   block script 
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js")
+    script(type="text/javascript", src="static/components/modal.js") 
+    script(type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js")
+    script(nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js")
 
   script. 
     // Axios call here to get schedule data then load/build 
@@ -15,17 +46,17 @@ block content
       let calendarEl = document.getElementById('calendar');
       let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        customButtons: {
-          addEventButton: {
-            text: "Add New Event",
-            hint: "Add New Event",
-            click: function() {
-              window.location.href = '#'
-            } 
-          }
-        },
+        //- customButtons: {
+        //-   addEventButton: {
+        //-     text: "Add New Event",
+        //-     hint: "Add New Event",
+        //-     click: function() {
+        //-       window.location.href = '#'
+        //-     } 
+        //-   }
+        //- },
         headerToolbar: {
-          right: 'addEventButton today prev,next'
+          right: 'today prev,next'
         }
       });
       calendar.render();

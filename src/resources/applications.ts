@@ -151,7 +151,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
             },
             'text/html': function(){
                 req.flash("success", "Application was edited successfully");
-                res.redirect(`/applications/${id}`);
+                res.redirect(`/applications`);
                 return;
             }
         });
@@ -184,7 +184,7 @@ router.delete('/:id', async (req: any, res: any) => {
             },
             'text/html': function(){
                 req.flash('success', 'Application was deleted successfully');
-                res.redirect(`/applications/`);
+                res.redirect(`/applications`);
                 return;
             }
         });
