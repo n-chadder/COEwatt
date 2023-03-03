@@ -36,3 +36,11 @@ model Report {
 
   @@unique([DataTime, PageId], map: "sqlite_autoindex_Report_2")
 }
+
+model Event {
+  id      Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
+  Title   String
+  Start   DateTime
+  End     DateTime
+  Notes   String
+}

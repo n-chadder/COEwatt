@@ -10,39 +10,42 @@ block content
       span(slot="buttonText") Add Event
       p(slot="header") Schedule Event
       span(slot="formContent")
-        form(id="addSceduleEventForm", action="#", method="post")
+        form(id="addSceduleEventForm", action="/events", method="post")
           div.form-group
             label(for="Title") Event Title 
             br
-            input(type="text", id="Title", placeholder="Enter event title", style="width: 100%;", name="title", required).form-control 
-          div.form-group
-            label(for="Desc") Description
-            br 
-            input(type="text", id="Desc", placeholder="Small description of the event", style="width: 100%;", name="Desc").form-control
+            input(type="text", id="Title", placeholder="Enter event title", style="width: 100%;", name="Title", required).form-control 
           div.form-group
             label(for="start") Event start date 
             br
-            input(type="date", id="start", style="width: 100%;", name="start", min="2018-01-01", max="2050-01-01", required).form-control
+            input(type="date", id="start", style="width: 100%;", name="Start", min="2018-01-01", max="2050-01-01", required).form-control
           div.form-group
             label(for="end") Event end date 
             br
-            input(type="date", id="end", style="width: 100%;", name="end", min="2018-01-01", max="2050-01-01", required).form-control
-          
+            input(type="date", id="end", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
+          div.form-group
+            label(for="Desc") Notes
+            br 
+            textarea(type="text", id="Desc", placeholder="Small description of the event", style="width: 100%;", name="Notes").form-control
           div(style="padding-top: 10px").form-group.AddEventButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
 
 
   block script 
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js")
-    script(type="text/javascript", src="static/components/modal.js") 
+    script(type="text/javascript", src="../static/components/modal.js") 
     script(type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js")
     script(nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js")
 
   script. 
     let modal = document.getElementById("modal");
-    // Axios call here to get schedule data then load/build 
-    // the calendar or just pass schedule events from server when 
-    // template is rendred and hadle events here. Either will work.
+    // Arrow functions doesnt work on IE
+    fetch('/events')
+      .then(function(response){ return response.json(); })
+      .then(function(data){
+        console.log(data);
+        //TO_DO have to add the data to the calendar
+      })
     document.addEventListener('DOMContentLoaded', function() {
       let calendarEl = document.getElementById('calendar');
       let calendar = new FullCalendar.Calendar(calendarEl, {

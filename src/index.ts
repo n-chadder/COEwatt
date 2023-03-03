@@ -9,7 +9,8 @@ import * as http from "http";
 import { PrismaClient, Prisma } from '@prisma/client';
 import { roles } from './resources/roles';
 import { users } from './resources/users';
-import { applications } from './resources/applications'
+import { applications } from './resources/applications';
+import { events } from './resources/events';
 import { appElements } from "./resources/appElement";
 import {pages} from "./resources/webpages";
 import { hostname } from "os";
@@ -31,7 +32,6 @@ const host =process.env.HOST || "127.0.0.1";
 const compiledApplicationEdit   = pug.compileFile("src/static/application_edit.pug");
 const compiledApplicationDelete = pug.compileFile("src/static/application_confirm_delete.pug");
 const compiledSchedule  = pug.compileFile('src/static/schedule.pug');
-const compiledAddScheduleEvent = pug.compileFile('src/static/add_schedule_event.pug');
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
     console.log("Got websocket connection")
@@ -64,6 +64,7 @@ app.use(session({
 app.use(flash());
 app.use(methodOverride('_method'));
 app.use('/applications', applications);
+app.use('/events', events);
 
 app.param('id', async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id;
@@ -118,17 +119,7 @@ app.get('/delete/application/:id',async (req: Request, res: Response) => {
   return;
 });
 
-// temp endpoint to display calendar
-app.get('/schedule',async (req: Request, res: Response) => {
-  let page = compiledSchedule({});
-  res.status(200).send(page);
-});
 
-// temp endpoint to add schedule event
-app.get('/schedule/add',async (req: Request, res: Response) => {
-  let page = compiledAddScheduleEvent({});
-  res.status(200).send(page);
-});
 // app.use('/roles', roles);
 // app.use('/users', users);
 // app.use('/appelements', appElements);
