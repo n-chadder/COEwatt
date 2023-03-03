@@ -6,7 +6,7 @@ block content
   //- before the calendar div...
   div(id='calendar').mrgn-bttm-md.mrgn-tp-md  
   div(id="addEvent")
-    pp-modal(dataurl="/schedule")
+    pp-modal(dataurl="/schedule", id="modal", buttonDisplay="none")
       span(slot="buttonText") Add Event
       p(slot="header") Schedule Event
       span(slot="formContent")
@@ -39,6 +39,7 @@ block content
     script(nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js")
 
   script. 
+    let modal = document.getElementById("modal");
     // Axios call here to get schedule data then load/build 
     // the calendar or just pass schedule events from server when 
     // template is rendred and hadle events here. Either will work.
@@ -46,17 +47,17 @@ block content
       let calendarEl = document.getElementById('calendar');
       let calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
-        //- customButtons: {
-        //-   addEventButton: {
-        //-     text: "Add New Event",
-        //-     hint: "Add New Event",
-        //-     click: function() {
-        //-       window.location.href = '#'
-        //-     } 
-        //-   }
-        //- },
+        customButtons: {
+          addEventButton: {
+            text: "Add New Event",
+            hint: "Add New Event",
+            click: function() {
+              modal._showModal();
+            } 
+          }
+        },
         headerToolbar: {
-          right: 'today prev,next'
+          right: 'addEventButton today prev,next'
         }
       });
       calendar.render();

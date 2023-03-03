@@ -90,10 +90,13 @@ class Modal extends HTMLElement {
     //     return ['itemId'];
     // }
     connectedCallback() {
+        if (this.getAttribute("dataurl") == "/schedule") {
+          this.shadowRoot.querySelector("button").style.display = "none";
+        }
         this._modal = this.shadowRoot.querySelector(".modal");
         this.shadowRoot.querySelector("button").addEventListener('click', this._showModal.bind(this));
         this.shadowRoot.querySelector(".close").addEventListener('click', this._hideModal.bind(this));
-        console.log(this.getAttribute("dataurl"));
+        // console.log(this.getAttribute("dataurl"));
     }
     disconnectedCallback() {
         this.shadowRoot.querySelector("button").removeEventListener('click', this._showModal);
