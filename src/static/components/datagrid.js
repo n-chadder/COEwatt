@@ -22,7 +22,7 @@ class DataGrid extends HTMLElement {
                 margin-right: auto;
                 min-width: 100%;
                 box-shadow: 5px 10px #ccc;
-                background-color: #ccf;
+                background-color: #29527d;
             }
 
             tbody td{

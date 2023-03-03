@@ -110,7 +110,7 @@ router.post('/', async (req: Request, res: Response) => {
             },
             'text/html': function(){
                 req.flash("success", "Application was created successfully");
-                res.redirect(`/applications/${result.id}`);
+                res.redirect(`/applications`);
                 return;
             }
         });

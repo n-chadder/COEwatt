@@ -90,7 +90,7 @@ class Modal extends HTMLElement {
     //     return ['itemId'];
     // }
     connectedCallback() {
-        if (this.getAttribute("dataurl") == "/schedule") {
+        if (this.getAttribute("buttonDisplay") == "none") {
           this.shadowRoot.querySelector("button").style.display = "none";
         }
         this._modal = this.shadowRoot.querySelector(".modal");
