@@ -1,7 +1,7 @@
 extends base.pug
 
 block content
-  //- h1(id="wb-cont" property="name") Schedule
+  include messages.pug
   //- for some reason the css of the modal gets messed up when the modal div is added
   //- before the calendar div...
   div(id='calendar').mrgn-bttm-md.mrgn-tp-md  
@@ -43,25 +43,71 @@ block content
     fetch('/events')
       .then(function(response){ return response.json(); })
       .then(function(data){
-        console.log(data);
-        //TO_DO have to add the data to the calendar
-      })
-    document.addEventListener('DOMContentLoaded', function() {
-      let calendarEl = document.getElementById('calendar');
-      let calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        customButtons: {
-          addEventButton: {
-            text: "Add New Event",
-            hint: "Add New Event",
-            click: function() {
-              modal._showModal();
-            } 
+        // fullcalendar requires the following object keys to be lowercase:
+        // "start", "end", "title". In the coe database the first letter of  
+        // each of these object keys are in upper case, so the loop below 
+        // creates a new array with the object keys properly parsed.
+        // 'T00:00:00.000Z' is replaced from the time because fullcalendar
+        // tries to convert UTC time to local time, which seems to bring more
+        // complications than necessary as we are not worried about exact times
+        // we really just care about the dates here.
+        // 'T23:59:59' is added to the end date because the fullcalendar event
+        // will not cover the end date without it. Ex/ if the end date 
+        // is May 02, the event will only span up to May 01, it wont span May 02.
+        let parsedData = [];
+        for (let i = 0; i < data.length; i++) {
+          let currEvent = { 
+            id: data[i].id, 
+            "title": data[i].Title,
+            "start": data[i].Start.replace('T00:00:00.000Z', ''),
+            "end":   data[i].End.replace('T00:00:00.000Z', 'T23:59:59'),
+          };
+          // if it is a single day event, then adding 'T23:59:59' messes it up
+          if (currEvent.start == currEvent.end.replace('T23:59:59', '')) {
+            currEvent.end = currEvent.end.replace('T23:59:59', '');
           }
-        },
-        headerToolbar: {
-          right: 'addEventButton today prev,next'
+          parsedData.push(currEvent);
         }
-      });
-      calendar.render();
-    });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+          let calendarEl = document.getElementById('calendar');
+          let calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            nextDayThreshold: '00:00:00',
+            displayEventTime: false,
+            events: parsedData,
+            customButtons: {
+              addEventButton: {
+                text: "Add New Event",
+                hint: "Add New Event",
+                click: function() {
+                  modal._showModal();
+                } 
+              }
+            },
+            headerToolbar: {
+              right: 'addEventButton today prev,next'
+            }
+          });
+          calendar.render();
+        });
+      })
+    //- document.addEventListener('DOMContentLoaded', function() {
+    //-   let calendarEl = document.getElementById('calendar');
+    //-   let calendar = new FullCalendar.Calendar(calendarEl, {
+    //-     initialView: 'dayGridMonth',
+    //-     customButtons: {
+    //-       addEventButton: {
+    //-         text: "Add New Event",
+    //-         hint: "Add New Event",
+    //-         click: function() {
+    //-           modal._showModal();
+    //-         } 
+    //-       }
+    //-     },
+    //-     headerToolbar: {
+    //-       right: 'addEventButton today prev,next'
+    //-     }
+    //-   });
+    //-   calendar.render();
+    //- });

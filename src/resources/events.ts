@@ -26,7 +26,7 @@ router.get('/', async (req: Request, res: Response) => {
       return;
     },
     'text/html': function(){
-      let page = compiledSchedule({});
+      let page = compiledSchedule({result});
       res.status(200).send(page);
       return;
     }
