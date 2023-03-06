@@ -24,12 +24,36 @@ block content
             br
             input(type="date", id="end", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
           div.form-group
-            label(for="Desc") Notes
+            label(for="notes") Notes
             br 
-            textarea(type="text", id="Desc", placeholder="Small description of the event", style="width: 100%;", name="Notes").form-control
+            textarea(type="text", id="notes", placeholder="Any notes about the event", style="width: 100%;", name="Notes").form-control
           div(style="padding-top: 10px").form-group.AddEventButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
 
+  div(id="editEvent")
+    pp-modal(dataurl="/schedule", id="editModal", buttonDisplay="none")
+      span(slot="buttonText") Edit Event
+      p(slot="header") Edit Event
+      span(slot="formContent")
+        form(id="editSceduleEventForm", action="/events", method="post")
+          div.form-group
+            label(for="Title") Event Title 
+            br
+            input(type="text", id="editTitle", placeholder="Enter event title", style="width: 100%;", name="Title", required).form-control 
+          div.form-group
+            label(for="start") Event start date 
+            br
+            input(type="date", id="editStart", style="width: 100%;", name="Start", min="2018-01-01", max="2050-01-01", required).form-control
+          div.form-group
+            label(for="end") Event end date 
+            br
+            input(type="date", id="editEnd", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
+          div.form-group
+            label(for="Desc") Notes
+            br 
+            textarea(type="text", id="editNotes", placeholder="Any notes about the event", style="width: 100%;", name="Notes").form-control
+          div(style="padding-top: 10px").form-group.AddEventButtonDiv
+            button(type="submit" style).btn.btn-success.mrgn-rght-sm Update
 
   block script 
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js")
@@ -39,6 +63,7 @@ block content
 
   script. 
     let modal = document.getElementById("modal");
+    let editModal = document.getElementById("editModal");
     // Arrow functions doesnt work on IE
     fetch('/events')
       .then(function(response){ return response.json(); })
@@ -61,6 +86,7 @@ block content
             "title": data[i].Title,
             "start": data[i].Start.replace('T00:00:00.000Z', ''),
             "end":   data[i].End.replace('T00:00:00.000Z', 'T23:59:59'),
+            "notes": data[i].Notes
           };
           // if it is a single day event, then adding 'T23:59:59' messes it up
           if (currEvent.start == currEvent.end.replace('T23:59:59', '')) {
@@ -87,27 +113,20 @@ block content
             },
             headerToolbar: {
               right: 'addEventButton today prev,next'
+            },
+            eventClick: function(info) {
+              document.getElementById("editSceduleEventForm").action = document.getElementById("editSceduleEventForm").action + `/${info.event.id}?_method=PATCH`;
+              fetch(`/events/${info.event.id}`)
+                .then(function(response){   return response.json();   })
+                .then(function(data){   
+                  document.getElementById("editTitle").value = data.Title; 
+                  document.getElementById("editStart").value = data.Start.replace('T00:00:00.000Z', '');
+                  document.getElementById("editEnd").value   = data.End.replace('T00:00:00.000Z', ''); 
+                  document.getElementById("editNotes").value = data.Notes;
+                  editModal._showModal();
+                });
             }
           });
           calendar.render();
         });
-      })
-    //- document.addEventListener('DOMContentLoaded', function() {
-    //-   let calendarEl = document.getElementById('calendar');
-    //-   let calendar = new FullCalendar.Calendar(calendarEl, {
-    //-     initialView: 'dayGridMonth',
-    //-     customButtons: {
-    //-       addEventButton: {
-    //-         text: "Add New Event",
-    //-         hint: "Add New Event",
-    //-         click: function() {
-    //-           modal._showModal();
-    //-         } 
-    //-       }
-    //-     },
-    //-     headerToolbar: {
-    //-       right: 'addEventButton today prev,next'
-    //-     }
-    //-   });
-    //-   calendar.render();
-    //- });
+      });

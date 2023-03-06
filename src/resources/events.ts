@@ -71,4 +71,56 @@ router.post('/', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/:id', async (req: Request, res: Response) => {
+  const id = req.params.id;
+  try{
+    const event = await prisma.event.findUnique({
+      where: {
+          id: Number(id),
+      },
+    });
+    res.status(200).json(event);
+    return;
+  }
+  catch (e: any){
+    res.status(404).json({});
+  }
+
+});
+
+router.patch('/:id', async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const Title: string = req.body.Title;
+    const Start: Date   = new Date(req.body.Start);
+    const End: Date     = new Date(req.body.End);
+    const Notes: string = req.body.Notes;
+
+    const result = await prisma.event.update({
+      where: {
+          id: Number(id),
+      },
+      data: {
+          Title,
+          Start, 
+          End,
+          Notes
+      },
+    });
+    res.format({
+      'application/json': function(){
+        res.status(200).json(result);
+        return;
+      },
+      'text/html': function(){
+        req.flash("success", "Event was edited successfully");
+        res.redirect(`/events`);
+        return;
+      }
+    });
+  }
+  catch (e:any) {
+    res.status(500).json(req.body);
+  }
+});
 export { router as events }
