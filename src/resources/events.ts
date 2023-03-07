@@ -123,4 +123,30 @@ router.patch('/:id', async (req: Request, res: Response) => {
     res.status(500).json(req.body);
   }
 });
+
+router.delete('/:id', async (req: any, res: any) => {
+  try {
+    const id = req.params.id
+    const event = await prisma.event.delete({
+      where: {
+        id: Number(id),
+      },
+    });
+    res.format({
+      'application/json': function(){
+        res.status(200).json(event);
+        return;
+      },
+      'text/html': function(){
+        req.flash('success', 'Event was deleted successfully');
+        res.redirect(`/events`);
+        return;
+      }
+    });
+  }
+  catch (e: any) {
+    res.status(500).send(e.code)
+  }
+});
+
 export { router as events }

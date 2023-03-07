@@ -39,7 +39,8 @@ block content
           div.form-group
             label(for="Title") Event Title 
             br
-            input(type="text", id="editTitle", placeholder="Enter event title", style="width: 100%;", name="Title", required).form-control 
+            input(type="text", id="editTitle", placeholder="Enter event title", style="width: 100%;", name="Title", required).form-control
+            input(type="hidden", id="editID") 
           div.form-group
             label(for="start") Event start date 
             br
@@ -53,7 +54,20 @@ block content
             br 
             textarea(type="text", id="editNotes", placeholder="Any notes about the event", style="width: 100%;", name="Notes").form-control
           div(style="padding-top: 10px").form-group.AddEventButtonDiv
-            button(type="submit" style).btn.btn-success.mrgn-rght-sm Update
+            button(type="submit").btn.btn-success.mrgn-rght-sm Update
+            button(type="button", id="deleteButton").btn.btn-danger Delete
+  div(id="deleteEvent")
+    pp-modal(method="delete", id="deleteModal", buttonDisplay="none")
+      span(slot="buttonText") Delete Event
+      p(slot="header") Delete Event
+      span(slot="formContent")
+        form(id="deleteSceduleEventForm", action="/events", method="post")
+          fieldset.form-group 
+            legend.border-bottom.mrgn-bttm-mb Delete Event
+            h2(id="deleteEventText") Are you sure you want to delete this event?
+          div.form-group 
+            button(type="submit").btn.btn-danger.mrgn-rght-sm Yes I am sure!
+            button(type="button", id="cancelDeleteButton").btn.btn.default Cancel
 
   block script 
     script(src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.4/index.global.min.js")
@@ -64,6 +78,26 @@ block content
   script. 
     let modal = document.getElementById("modal");
     let editModal = document.getElementById("editModal");
+    let deleteModal = document.getElementById("deleteModal");
+    let deleteButton = document.getElementById("deleteButton");
+    let cancelDeleteButton = document.getElementById("cancelDeleteButton");
+    deleteButton.addEventListener('click', deleteEvent);
+    cancelDeleteButton.addEventListener('click', cancelDelete);
+
+    function deleteEvent(e){
+      let eventID = document.getElementById("editID").value;
+      let eventTitle = document.getElementById("editTitle").value;
+      let deleteEventText = document.getElementById("deleteEventText");
+      let deleteSceduleEventForm = document.getElementById("deleteSceduleEventForm");
+      deleteSceduleEventForm.action = `/events/${eventID}?_method=DELETE`;
+      deleteEventText.innerHTML = 'Are you sure you want to delete this event? ' + eventTitle;
+      editModal._hideModal();
+      deleteModal._showModal();
+    }
+    
+    function cancelDelete(e) {
+      deleteModal._hideModal();
+    }
     // Arrow functions doesnt work on IE
     fetch('/events')
       .then(function(response){ return response.json(); })
@@ -115,7 +149,7 @@ block content
               right: 'addEventButton today prev,next'
             },
             eventClick: function(info) {
-              document.getElementById("editSceduleEventForm").action = document.getElementById("editSceduleEventForm").action + `/${info.event.id}?_method=PATCH`;
+              document.getElementById("editSceduleEventForm").action = `/events/${info.event.id}?_method=PATCH`;
               fetch(`/events/${info.event.id}`)
                 .then(function(response){   return response.json();   })
                 .then(function(data){   
@@ -123,6 +157,7 @@ block content
                   document.getElementById("editStart").value = data.Start.replace('T00:00:00.000Z', '');
                   document.getElementById("editEnd").value   = data.End.replace('T00:00:00.000Z', ''); 
                   document.getElementById("editNotes").value = data.Notes;
+                  document.getElementById("editID").value    = data.id;
                   editModal._showModal();
                 });
             }
