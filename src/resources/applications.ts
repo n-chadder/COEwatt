@@ -24,6 +24,15 @@ router.get('/', async (req: Request, res: Response) => {
     const applications = await prisma.application.findMany({
     });
 
+    applications.sort((a,b) => {
+
+        if(a.Name.toUpperCase() < b.Name.toUpperCase()) {
+            return -1;
+        } else {
+            return 0;
+        }
+    })
+
     let success = req.flash('success');
     let error   = req.flash('error'); 
     let result = {
