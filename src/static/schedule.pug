@@ -102,11 +102,12 @@ block content
 
     function deleteEvent(e){
       let eventID = document.getElementById("editID").value;
-      let eventTitle = document.getElementById("editTitle").value;
+      //- let eventTitle = document.getElementById("editTitle").value;
+      let eventApp = editAppSelect.options[editAppSelect.selectedIndex].text;
       let deleteEventText = document.getElementById("deleteEventText");
       let deleteSceduleEventForm = document.getElementById("deleteSceduleEventForm");
       deleteSceduleEventForm.action = `/events/${eventID}?_method=DELETE`;
-      deleteEventText.innerHTML = 'Are you sure you want to delete this event? ' + eventTitle;
+      deleteEventText.innerHTML = 'Are you sure you want to delete this event? ' + eventApp;
       editModal._hideModal();
       deleteModal._showModal();
     }
