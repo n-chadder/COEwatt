@@ -17,6 +17,7 @@ model Application {
   Name    String
   Desc    String
   Owner   String
+  Events  Event[] 
 }
 
 model Page {
@@ -39,7 +40,9 @@ model Report {
 
 model Event {
   id      Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
-  Title   String
+  // Title   String
+  App     Application @relation(fields: [AppID], references: [id])
+  AppID   Int
   Start   DateTime
   End     DateTime
   Notes   String

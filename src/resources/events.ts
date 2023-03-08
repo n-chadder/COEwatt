@@ -10,7 +10,11 @@ const router = express.Router()
 
 
 router.get('/', async (req: Request, res: Response) => {
-  const events = await prisma.event.findMany({});  
+  const events = await prisma.event.findMany({
+    include: {
+      App: true,
+    },
+  });  
 
   let success = req.flash('success');
   let error   = req.flash('error');
@@ -36,18 +40,22 @@ router.get('/', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   
   try {
-    const Title: string = req.body.Title;
+    // const Title: string = req.body.Title;
+    const App: number   = Number(req.body.App);
     const Start: Date   = new Date(req.body.Start);
     const End: Date     = new Date(req.body.End);
     const Notes: string = req.body.Notes;
     
     const result = await prisma.event.create({
       data: {
-        Title,
-        Start,
-        End,
-        Notes
-      },
+        // Title: Title,
+        App: {
+          connect: { id: App },
+        },
+        Start: Start,
+        End: End,
+        Notes: Notes
+      }
     });
     
     res.format({
@@ -91,7 +99,8 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.patch('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    const Title: string = req.body.Title;
+    // const Title: string = req.body.Title;
+    const App: number   = Number(req.body.App);
     const Start: Date   = new Date(req.body.Start);
     const End: Date     = new Date(req.body.End);
     const Notes: string = req.body.Notes;
@@ -101,7 +110,10 @@ router.patch('/:id', async (req: Request, res: Response) => {
           id: Number(id),
       },
       data: {
-          Title,
+          // Title,
+          App: {
+            connect: { id: App },
+          },
           Start, 
           End,
           Notes
