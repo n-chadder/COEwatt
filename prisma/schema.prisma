@@ -18,6 +18,7 @@ model Application {
   Desc    String
   Owner   String
   Events  Event[] 
+  Pages   Page[]
 }
 
 model Page {
@@ -27,6 +28,8 @@ model Page {
   Action   String?
   Auth     String?
   Report   Report[]
+  App     Application @relation(fields: [AppID], references: [id])
+  AppID   Int
 }
 
 model Report {
@@ -46,4 +49,4 @@ model Event {
   Start   DateTime
   End     DateTime
   Notes   String
-}
+}// Scheduled, Not Started, Completed 

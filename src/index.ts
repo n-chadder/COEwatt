@@ -12,7 +12,7 @@ import { users } from './resources/users';
 import { applications } from './resources/applications';
 import { events } from './resources/events';
 import { appElements } from "./resources/appElement";
-import {pages} from "./resources/webpages";
+import {pages} from "./resources/pages";
 import { hostname } from "os";
 import * as pug from "pug";
 import axios, { AxiosError } from 'axios';
@@ -65,6 +65,7 @@ app.use(flash());
 app.use(methodOverride('_method'));
 app.use('/applications', applications);
 app.use('/events', events);
+app.use('/pages', pages);
 
 app.param('id', async (req: Request, res: Response, next: NextFunction) => {
   const id = req.params.id;
@@ -123,7 +124,6 @@ app.get('/delete/application/:id',async (req: Request, res: Response) => {
 // app.use('/roles', roles);
 // app.use('/users', users);
 // app.use('/appelements', appElements);
-// app.use('/pages', pages);
 
 
 /* tslint:disable:no-unused-variable */

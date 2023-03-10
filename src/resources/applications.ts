@@ -65,7 +65,10 @@ router.get('/:id', async (req: Request, res: Response) => {
     // this should probably be a try catch block
     const application = await prisma.application.findUnique({
         where: {
-            id: Number(id),
+          id: Number(id),
+        },
+        include: {
+          Events: true,
         },
     });
 
