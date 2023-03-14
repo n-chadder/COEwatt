@@ -69,14 +69,13 @@ class DataGrid extends HTMLElement {
     }
     connectedCallback() {
         this._createTable("Applications", eval(this["dataheaders"]));
-        // this._createButton("jim")
     }
     disconnectedCallback() {
 
     }
 
     static get observedAttributes() {
-        return ['dataurl', 'dataheaders'];
+        return ['dataurl', 'dataheaders', 'data'];
     }
 
     attributeChangedCallback(attrName, oldVaule, newValue) {
@@ -115,7 +114,19 @@ class DataGrid extends HTMLElement {
     async _createTable(tableTitle, columnHeaders) {
         const response = await fetch(this["dataurl"]);
         const data = await response.json();
+        this._data = data;
+        this._render(data, tableTitle, columnHeaders);
+    }
 
+    async _filterTable(fieldName, value, tableTitle, columnHeaders) {
+        let filterObj= this._data.filter((item)=>item.Name.toUpperCase().includes(value.toUpperCase()));
+        this._render(filterObj, tableTitle, columnHeaders)
+
+        this.shadowRoot.getElementById("searchBox").value=value;
+        this.shadowRoot.getElementById("searchBox").focus()
+    }
+
+    async _render(data, tableTitle, columnHeaders) {
         let table = document.createElement('table');
         let caption = table.createCaption();
         caption.innerHTML = `<strong>${tableTitle}</strong>`;
@@ -138,24 +149,18 @@ class DataGrid extends HTMLElement {
             let cell = newRow.insertCell(columnHeaders.length - 2);
             let deleteButton = document.getElementById("deleteApp");
             let currentID = data[row]['id'];
-            // cell.innerHTML = `<button delete-id=${data[row]['id']}><ion-icon name="trash"></ion-icon> Delete</button>`;
-            // cell.innerHTML = `${deleteButton.innerHTML}`.replace('Delete', `Delete ${data[row]['id']}`);
+
             cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=DELETE"`);
             cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this application?</h2>', `<h2>Are you sure you want to delete this application? ${data[row]['Name']}</h2>`);
-            // alert(cell.innerHTML);
-            // cell.setAttribute('itemID', `${data[row]['id']}`)
+
             cell.classList.add("center");
 
             let editButton = document.getElementById("editApp");
             cell = newRow.insertCell(columnHeaders.length - 1);
-            // cell.innerHTML = `<button edit-id=${data[row]['id']}><ion-icon name="pencil"></ion-icon> Edit</button>`;
-            // cell.innerHTML = `${editButton.innerHTML}`.replace('Edit', `Edit ${data[row]['id']}`);
             cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=PATCH"`);
             cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Name"', `<input class="form-control" type="text" id="Name" value="${data[row]['Name']}"`);
             cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="desc"', `<input class="form-control" type="text" id="desc" value="${data[row]['Desc']}"`);
             cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="owner"', `<input class="form-control" type="text" id="owner" value="${data[row]['Owner']}"`);
-            // console.log(cell.innerHTML);
-            // cell.appendChild(editButton.content);
             cell.classList.add("center");
 
             if (this._numberIsEven(row)) {
@@ -177,15 +182,25 @@ class DataGrid extends HTMLElement {
             <button><ion-icon name="play-forward"></ion-icon> End</button>
         </div>
         </td>`;
-        this.shadowRoot.appendChild(table);
+        let label = document.createElement("label");
+        label.innerHTML = "Filter By App Name&nbsp; "
+        label.style = "float: right"
+        let filter = document.createElement("input");
+        filter.style = "float: right; padding-left: 10px; margin-right:5px"
+        filter.id = "searchBox";
+        filter.type="text";
+        filter.onkeyup = () => {
+
+           this._filterTable("Name", filter.value, tableTitle, columnHeaders);
+        }
+
+        let gridlocation = this.shadowRoot.getElementById("gridlocation");
+        gridlocation.innerHTML="";
+        gridlocation.appendChild(filter);
+        gridlocation.appendChild(label);
+        gridlocation.appendChild(table);
     }
 
-    _createButton(commandText) {
-        const button = document.createElement("button");
-        button.innerHTML = `<button class="button-12" role="button">Button 12</button>`;
-        this.shadowRoot.appendChild(button);
-
-    }
 
     _numberIsEven(number) {
         if (number % 2 == 0) {
