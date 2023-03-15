@@ -28,7 +28,7 @@ model Page {
   Action   String?
   Auth     String?
   Report   Report[]
-  App     Application @relation(fields: [AppID], references: [id])
+  App     Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
   AppID   Int
 }
 
@@ -44,7 +44,7 @@ model Report {
 model Event {
   id      Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
   // Title   String
-  App     Application @relation(fields: [AppID], references: [id])
+  App     Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
   AppID   Int
   Start   DateTime
   End     DateTime

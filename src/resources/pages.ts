@@ -12,8 +12,25 @@ router.use((req:Request, res:Response, next: NextFunction) => {
 });
 
 router.get('/', async (req: Request, res: Response) => {
-  const pages = await prisma.page.findMany({});
-  res.json(pages);
+  if (req.query.appID) {
+    try {
+      let pages = await prisma.page.findMany({
+        where: {
+          AppID: {
+            equals: Number(req.query.appID),
+          },
+        },
+      });
+      res.status(200).json(pages);
+    } 
+    catch (e: any) {
+      res.status(500).json(e);
+    }
+  }
+  else {
+    let pages = await prisma.page.findMany({});
+    res.status(200).json(pages);
+  }
 });
 
 router.get('/:id', async (req: Request, res: Response) => {
@@ -50,7 +67,15 @@ router.post('/', async (req: Request, res: Response) => {
         } 
       },
     });
-    res.json(result)
+    res.format({
+      'application/json': function(){
+        res.status(200).json(result);
+      },
+      'text/html': function(){
+        req.flash("success", "Page was added successfully");
+        res.redirect('/applications');
+      }
+    });
   } 
   catch (e: any) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -61,7 +86,15 @@ router.post('/', async (req: Request, res: Response) => {
         )
       }
     }
-    res.status(500).json(req.body);
+    res.format({
+      'application/json': function(){
+        res.status(500).json(req.body);
+      },
+      'text/html': function(){
+        req.flash("error", "Something went wrong, page could not be added");
+        res.redirect('/applications');
+      }
+    });
   }
 });
 
@@ -73,6 +106,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
     const Action: string = req.body.Action;
     const Auth: string = req.body.Auth;
     const App: number = Number(req.body.App);
+
     const result = await prisma.page.update({
       where: {
         id: Number(id),
@@ -87,7 +121,16 @@ router.patch('/:id', async (req: Request, res: Response) => {
         } 
       },
     });
-    res.status(200).json(result);
+
+    res.format({
+      'application/json': function(){
+        res.status(200).json(result);
+      },
+      'text/html': function(){
+        req.flash("success", "Page was edited successfully");
+        res.redirect('/applications');
+      }
+    });
   } 
   catch (e: any) {
     if (e instanceof Prisma.PrismaClientKnownRequestError) {
@@ -98,23 +141,46 @@ router.patch('/:id', async (req: Request, res: Response) => {
         )
       }
     }
-    res.status(500).json(req.body);
+    res.format({
+      'application/json': function(){
+        res.status(500).json(req.body);
+      },
+      'text/html': function(){
+        req.flash("error", "Something went wrong, page could not be edited");
+        res.redirect('/applications');
+      }
+    });
   }
-
 });
 
 router.delete('/:id', async (req: any, res: any) => {
   try {
     const id = req.params.id
-    const role = await prisma.page.delete({
+    const result = await prisma.page.delete({
       where: {
         id: Number(id),
       },
     });
-    res.json(role)
+    res.format({
+      'application/json': function(){
+        res.status(200).json(result);
+      },
+      'text/html': function(){
+        req.flash("success", "Page was deleted successfully");
+        res.redirect('/applications');
+      }
+    });
   } 
   catch (e: any) {
-    res.send(e.code)
+    res.format({
+      'application/json': function(){
+        res.status(200).json(e);
+      },
+      'text/html': function(){
+        req.flash("error", "Something went wrong, page could not be deleted");
+        res.redirect('/applications');
+      }
+    });
   }
 });
 

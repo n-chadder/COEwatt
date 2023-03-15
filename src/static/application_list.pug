@@ -19,7 +19,7 @@ block content
             input(type="text", id="Desc", placeholder="Small description of the application", style="width: 100%;", name="Desc").form-control
           div.form-group
             label(for="owner") Owner 
-            input(type="text", id="Owner", placeholder="Enter owner name", style="width: 100%;", name="Owner" required).form-control
+            input(type="text", id="Owner", placeholder="Enter owner name", style="width: 100%;", name="Owner", required).form-control
           div.form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editApp")
@@ -41,6 +41,31 @@ block content
             br
             input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", name="Owner", required).form-control
           div(style="padding-top: 10px").form-group.AddPageButtonDiv
+            button(type="submit", id="test" style).btn.btn-success.mrgn-rght-sm Save
+  template(id="editPage")
+    pp-modal(dataurl="/pages")
+      span(slot="buttonText") Edit 
+      p(slot="header") Edit Page
+      span(slot="formContent")
+        form(id="UpdatePageForm", action="#", method="post")
+          div.form-group
+            label(for="Title") Page Title
+            br
+            input(type="text", id="title", placeholder="Enter page title", style="width: 90%;", name="Title", required).form-control 
+            input(type="hidden", id="app", name="App") 
+          div.form-group
+            label(for="URL") Page URL 
+            br
+            input(type="text", id="url", placeholder="Enter page URL", style="width: 90%;", name="URL").form-control
+          div.form-group
+            label(for="action") Page Action
+            br
+            input(type="text", id="action", placeholder="Enter page action", style="width: 90%;", name="Action", required).form-control
+          div.form-group
+            label(for="Auth") Page Auth
+            br
+            input(type="text", id="auth", placeholder="Enter page auth", style="width: 90%;", name="Auth", required).form-control
+          div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="deleteApp")
     pp-modal(method="delete", dataurl="/applications", id="deleteApp", itemId="0")
@@ -54,10 +79,26 @@ block content
           div.form-group 
             button(type="submit").btn.btn-danger Yes I am sure!
             a(href="/applications").btn.btn.default Cancel
-  
+  template(id="deletePage")
+    pp-modal(method="delete", dataurl="/pages", id="deletePage", itemId="0")
+      span(slot="buttonText") Delete 
+      p(slot="header") Delete Page
+      span(slot="formContent")
+        form(id="deletePageForm", action="#", method="post")
+          fieldset.form-group 
+            legend.border-bottom.mrgn-bttm-mb Delete Page
+            h2 Are you sure you want to delete this page?
+          div.form-group 
+            button(type="submit").btn.btn-danger Yes I am sure!
+            a(href="/applications").btn.btn.default Cancel
+
   div(id="grid")
     data-grid(dataurl="/applications", 
       dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" ]')
+
+  template(id="dataGrid")
+    data-grid(dataurl="/pages",
+      dataheaders='["ID","URL", "Title", "Action" , "Auth", "App ID", "-" , "-" ]')
 
   block script 
     script(type="text/javascript", src="static/components/modal.js") 

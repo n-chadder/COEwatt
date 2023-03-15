@@ -119,7 +119,14 @@ class DataGrid extends HTMLElement {
     }
 
     async _filterTable(fieldName, value, tableTitle, columnHeaders) {
-        let filterObj= this._data.filter((item)=>item.Name.toUpperCase().includes(value.toUpperCase()));
+        let filterObj = null;
+        if (this.getAttribute("dataurl") == "/applications"){
+          filterObj= this._data.filter((item)=>item.Name.toUpperCase().includes(value.toUpperCase()));
+        }
+        else if (this.getAttribute("dataurl").includes("/pages")){
+          filterObj= this._data.filter((item)=>item.Title.toUpperCase().includes(value.toUpperCase()));
+        }
+        
         this._render(filterObj, tableTitle, columnHeaders)
 
         this.shadowRoot.getElementById("searchBox").value=value;
@@ -145,23 +152,45 @@ class DataGrid extends HTMLElement {
                 let cell = newRow.insertCell(newRow.length);
                 cell.innerHTML = data[row][col];
             }
+            if (this.getAttribute("dataurl") == "/applications") {
+                let cell = newRow.insertCell(columnHeaders.length - 2);
+                let deleteButton = document.getElementById("deleteApp");
+                let currentID = data[row]['id'];
+    
+                cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=DELETE"`);
+                cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this application?</h2>', `<h2>Are you sure you want to delete this application? ${data[row]['Name']}</h2>`);
+    
+                cell.classList.add("center");
+    
+                let editButton = document.getElementById("editApp");
+                cell = newRow.insertCell(columnHeaders.length - 1);
+                cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=PATCH"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Name"', `<input class="form-control" type="text" id="Name" value="${data[row]['Name']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="desc"', `<input class="form-control" type="text" id="desc" value="${data[row]['Desc']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="owner"', `<input class="form-control" type="text" id="owner" value="${data[row]['Owner']}"`);
+                cell.classList.add("center");
+            }
+            else if (this.getAttribute("dataurl").includes("/pages")) {
+              let cell = newRow.insertCell(columnHeaders.length - 2);
+              let deleteButton = document.getElementById("deletePage");
+              let currentID = data[row]['id'];
+  
+              cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/pages"', `dataurl="/pages/${currentID}"`).replace('action="#"', `action="/pages/${currentID}?_method=DELETE"`);
+              cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this page?</h2>', `<h2>Are you sure you want to delete this page? ${data[row]['Title']}</h2>`);
+  
+              cell.classList.add("center");
+              let editButton = document.getElementById("editPage");
+              cell = newRow.insertCell(columnHeaders.length - 1);
+              cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/pages"', `dataurl="/pages/${currentID}"`).replace('action="#"', `action="/pages/${currentID}?_method=PATCH"`);
+              cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="title"', `<input class="form-control" type="text" id="title" value="${data[row]['Title']}"`);
+              cell.innerHTML = cell.innerHTML.replace('<input type="hidden" id="app" name="App">', `<input type="hidden" id="APP" name="App" value="${data[row]['AppID']}">`);
+              cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="url"', `<input class="form-control" type="text" id="url" value="${data[row]['URL']}"`);
+              cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="action"', `<input class="form-control" type="text" id="action" value="${data[row]['Action']}"`);
+              cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="auth"', `<input class="form-control" type="text" id="auth" value="${data[row]['Auth']}"`);
 
-            let cell = newRow.insertCell(columnHeaders.length - 2);
-            let deleteButton = document.getElementById("deleteApp");
-            let currentID = data[row]['id'];
+              cell.classList.add("center");
+            }
 
-            cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=DELETE"`);
-            cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this application?</h2>', `<h2>Are you sure you want to delete this application? ${data[row]['Name']}</h2>`);
-
-            cell.classList.add("center");
-
-            let editButton = document.getElementById("editApp");
-            cell = newRow.insertCell(columnHeaders.length - 1);
-            cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=PATCH"`);
-            cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Name"', `<input class="form-control" type="text" id="Name" value="${data[row]['Name']}"`);
-            cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="desc"', `<input class="form-control" type="text" id="desc" value="${data[row]['Desc']}"`);
-            cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="owner"', `<input class="form-control" type="text" id="owner" value="${data[row]['Owner']}"`);
-            cell.classList.add("center");
 
             if (this._numberIsEven(row)) {
                 newRow.classList.add("shaded");
@@ -183,7 +212,12 @@ class DataGrid extends HTMLElement {
         </div>
         </td>`;
         let label = document.createElement("label");
-        label.innerHTML = "Filter By App Name&nbsp; "
+        if (this.getAttribute("dataurl") == "/applications") {
+          label.innerHTML = "Filter By App Name&nbsp; "
+        }
+        else if (this.getAttribute("dataurl").includes("/pages")) {
+          label.innerHTML = "Filter By Page Title&nbsp; "
+        }
         label.style = "float: right"
         let filter = document.createElement("input");
         filter.style = "float: right; padding-left: 10px; margin-right:5px"

@@ -66,7 +66,7 @@ block content
             button(type="submit").btn.btn-success.mrgn-rght-sm Update
             button(type="button", id="deleteButton").btn.btn-danger Delete
   div(id="deleteEvent")
-    pp-modal(method="delete", id="deleteModal", buttonDisplay="none")
+    pp-modal(method="delete", dataurl="/schedule", id="deleteModal", buttonDisplay="none")
       span(slot="buttonText") Delete Event
       p(slot="header") Delete Event
       span(slot="formContent")
