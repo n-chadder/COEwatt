@@ -153,41 +153,47 @@ class DataGrid extends HTMLElement {
                 cell.innerHTML = data[row][col];
             }
             if (this.getAttribute("dataurl") == "/applications") {
-                let cell = newRow.insertCell(columnHeaders.length - 2);
+                let cell = newRow.insertCell(columnHeaders.length - 3);
                 let deleteButton = document.getElementById("deleteApp");
                 let currentID = data[row]['id'];
     
                 cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=DELETE"`);
                 cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this application?</h2>', `<h2>Are you sure you want to delete this application? ${data[row]['Name']}</h2>`);
-    
                 cell.classList.add("center");
     
                 let editButton = document.getElementById("editApp");
-                cell = newRow.insertCell(columnHeaders.length - 1);
+                cell = newRow.insertCell(columnHeaders.length - 2);
                 cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/applications"', `dataurl="/applications/${currentID}"`).replace('action="#"', `action="/applications/${currentID}?_method=PATCH"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Name"', `<input class="form-control" type="text" id="Name" value="${data[row]['Name']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="desc"', `<input class="form-control" type="text" id="desc" value="${data[row]['Desc']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="owner"', `<input class="form-control" type="text" id="owner" value="${data[row]['Owner']}"`);
                 cell.classList.add("center");
+
+                cell = newRow.insertCell(columnHeaders.length - 1);
+                cell.innerHTML = `<button id="button${currentID}" onclick="testApplication(this.id)">Test</button>`;
+                cell.classList.add("center");
             }
             else if (this.getAttribute("dataurl").includes("/pages")) {
-              let cell = newRow.insertCell(columnHeaders.length - 2);
+              let cell = newRow.insertCell(columnHeaders.length - 3);
               let deleteButton = document.getElementById("deletePage");
               let currentID = data[row]['id'];
   
               cell.innerHTML = `${deleteButton.innerHTML}`.replace('dataurl="/pages"', `dataurl="/pages/${currentID}"`).replace('action="#"', `action="/pages/${currentID}?_method=DELETE"`);
               cell.innerHTML = cell.innerHTML.replace('<h2>Are you sure you want to delete this page?</h2>', `<h2>Are you sure you want to delete this page? ${data[row]['Title']}</h2>`);
-  
               cell.classList.add("center");
+
               let editButton = document.getElementById("editPage");
-              cell = newRow.insertCell(columnHeaders.length - 1);
+              cell = newRow.insertCell(columnHeaders.length - 2);
               cell.innerHTML = `${editButton.innerHTML}`.replace('dataurl="/pages"', `dataurl="/pages/${currentID}"`).replace('action="#"', `action="/pages/${currentID}?_method=PATCH"`);
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="title"', `<input class="form-control" type="text" id="title" value="${data[row]['Title']}"`);
               cell.innerHTML = cell.innerHTML.replace('<input type="hidden" id="app" name="App">', `<input type="hidden" id="APP" name="App" value="${data[row]['AppID']}">`);
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="url"', `<input class="form-control" type="text" id="url" value="${data[row]['URL']}"`);
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="action"', `<input class="form-control" type="text" id="action" value="${data[row]['Action']}"`);
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="auth"', `<input class="form-control" type="text" id="auth" value="${data[row]['Auth']}"`);
+              cell.classList.add("center");
 
+              cell = newRow.insertCell(columnHeaders.length - 1);
+              cell.innerHTML = `<button id="button${currentID}" onclick="testPage(this.id)">Test</button>`;
               cell.classList.add("center");
             }
 

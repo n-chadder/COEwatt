@@ -140,6 +140,10 @@ class Modal extends HTMLElement {
       this._modal.style.display = 'block';
   }
   _hideModal() {
+      if (this.id == "testAppModal" || this.id == "testPageModal") {
+        let close = window.confirmExit(this.id);
+        if (!close) {   return;   }
+      }
       // console.log(this.shadowRoot.innerHTML);
       this._modalVisible = false;
       this._modal.style.display = 'none';

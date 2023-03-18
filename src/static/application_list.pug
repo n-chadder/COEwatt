@@ -23,7 +23,7 @@ block content
           div.form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editApp")
-    pp-modal(dataurl="/applications")
+    pp-modal(dataurl="/applications", id="editAppModal")
       span(slot="buttonText") Edit 
       p(slot="header") Edit Application
       span(slot="formContent")
@@ -43,7 +43,7 @@ block content
           div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit", id="test" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editPage")
-    pp-modal(dataurl="/pages")
+    pp-modal(dataurl="/pages", id="editPageModal")
       span(slot="buttonText") Edit 
       p(slot="header") Edit Page
       span(slot="formContent")
@@ -68,7 +68,7 @@ block content
           div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="deleteApp")
-    pp-modal(method="delete", dataurl="/applications", id="deleteApp", itemId="0")
+    pp-modal(method="delete", dataurl="/applications", id="deleteAppModal", itemId="0")
       span(slot="buttonText") Delete 
       p(slot="header") Delete Appliction
       span(slot="formContent")
@@ -80,7 +80,7 @@ block content
             button(type="submit").btn.btn-danger Yes I am sure!
             a(href="/applications").btn.btn.default Cancel
   template(id="deletePage")
-    pp-modal(method="delete", dataurl="/pages", id="deletePage", itemId="0")
+    pp-modal(method="delete", dataurl="/pages", id="deletePageModal", itemId="0")
       span(slot="buttonText") Delete 
       p(slot="header") Delete Page
       span(slot="formContent")
@@ -91,20 +91,35 @@ block content
           div.form-group 
             button(type="submit").btn.btn-danger Yes I am sure!
             a(href="/applications").btn.btn.default Cancel
-
+  div(id="testApp")
+    pp-modal(dataurl="/pages", id="testAppModal", buttonDisplay="none")
+      span(slot="buttonText") Test 
+      p(slot="header") Test Application 
+      span(slot="formContent")
+        div.container
+          strong(id="testingAppName")
+          p(id="currAppURL")
+  div(id="testPage")
+    pp-modal(dataurl="/pages", id="testPageModal", buttonDisplay="none")
+      span(slot="buttonText") Test 
+      p(slot="header") Test Page 
+      span(slot="formContent")
+        div.container
+          p(id="currPageURL")    
   div(id="grid")
     data-grid(dataurl="/applications", 
-      dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" ]')
+      dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" , "-" ]')
 
   template(id="dataGrid")
     data-grid(dataurl="/pages",
-      dataheaders='["ID","URL", "Title", "Action" , "Auth", "App ID", "-" , "-" ]')
+      dataheaders='["ID","URL", "Title", "Action" , "Auth", "App ID", "-" , "-" , "-" ]')
 
   block script 
     script(type="text/javascript", src="static/components/modal.js") 
     script(type="text/javascript" src="static/components/datagrid.js")
     script(type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js")
     script(nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js")
+    script(type="text/javascript" src="static/js/callTester.js") 
 
   script. 
     let addButton = document.getElementById("addButton");

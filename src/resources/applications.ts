@@ -69,6 +69,7 @@ router.get('/:id', async (req: Request, res: Response) => {
         },
         include: {
           Events: true,
+          Pages: true,
         },
     });
 
