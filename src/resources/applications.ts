@@ -6,9 +6,6 @@ import * as pug from "pug";
 // Compiled pug templates
 const compiledBase = pug.compileFile("src/static/base.pug");
 const compiledApplicationList = pug.compileFile("src/static/application_list.pug");
-const compiledApplicationDetail = pug.compileFile("src/static/application_details.pug");
-const compliedAddApplication = pug.compileFile("src/static/add_application.pug");
-
 
 const prisma = new PrismaClient()
 const router = express.Router()
@@ -54,12 +51,6 @@ router.get('/', async (req: Request, res: Response) => {
     });
 })
 
-router.get('/addform', (req: Request, res: Response) => {
-    let page = compliedAddApplication({});
-    res.status(200).send(page);
-})
-
-
 router.get('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     // this should probably be a try catch block
@@ -73,31 +64,8 @@ router.get('/:id', async (req: Request, res: Response) => {
         },
     });
 
-    let success = req.flash('success');
-    let error   = req.flash('error'); 
-    let result = {
-        "application": application,
-        "success" : success,
-        "error" : error
-    }
-
-    res.format({
-        'application/json': function(){
-            res.status(200).json(application);
-            return;
-        },
-        'text/html': function(){
-            if (!application) {
-                res.status(404).json(application);
-                // 404 page here
-                return;
-            }
-            let page = compiledApplicationDetail({result});
-            res.status(200).send(page);
-            return;
-        }
-    });
-})
+    res.status(200).json(application);
+});
 
 // Name    String
 // Desc    String
