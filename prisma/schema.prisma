@@ -42,11 +42,20 @@ model Report {
 }
 
 model Event {
-  id      Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
-  // Title   String
-  App     Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
-  AppID   Int
-  Start   DateTime
-  End     DateTime
-  Notes   String
-}// Scheduled, Not Started, Completed 
+  id       Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
+  App      Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
+  AppID    Int
+  Start    DateTime
+  End      DateTime
+  Notes    String
+  Status   EventStatus @relation(fields: [StatusID], references: [id])
+  StatusID Int   
+}
+
+// run 'npx prisma db seed' to apply the default values - this should be added to the .dockerfile
+// Event has one EventStatus, One EventStatus can be referenced by many Events
+model EventStatus {
+  id      Int      @id @unique(map: "sqlite_autoindex_EventStatus_1") @default(autoincrement())
+  Status  String
+  Events  Event[]
+}
