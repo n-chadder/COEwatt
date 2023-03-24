@@ -115,11 +115,11 @@ block content
           button(type="button" id="testPageCancel") Cancel
   div(id="grid")
     data-grid(dataurl="/applications", 
-      dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" , "-" ]')
+      dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" , "-" ]', tableName="Applications")
 
   template(id="dataGrid")
     data-grid(dataurl="/pages",
-      dataheaders='["ID","URL", "Title", "Action" , "Auth", "App ID", "-" , "-" , "-" ]')
+      dataheaders='["ID","URL", "Title", "Action" , "Auth", "App ID", "-" , "-" , "-" ]', tableName="Pages")
 
   block script 
     script(type="text/javascript", src="static/components/modal.js") 

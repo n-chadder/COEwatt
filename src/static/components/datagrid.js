@@ -68,7 +68,7 @@ class DataGrid extends HTMLElement {
         `
     }
     connectedCallback() {
-        this._createTable("Applications", eval(this["dataheaders"]));
+        this._createTable(this["tableName"], eval(this["dataheaders"]));
     }
     disconnectedCallback() {
 
@@ -84,6 +84,9 @@ class DataGrid extends HTMLElement {
         }
     }
 
+    get tableName() {
+        return this.getAttribute("tableName");
+    }
 
     get dataurl() {
         return this.getAttribute("dataurl");
