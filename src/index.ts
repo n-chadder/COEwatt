@@ -28,6 +28,7 @@ expressws(app, server);
 const port = process.env.PORT || 3000;
 const host =process.env.HOST || "127.0.0.1";
 
+const compiledHome = pug.compileFile("src/static/home.pug");
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
     console.log("Got websocket connection")
@@ -48,6 +49,9 @@ app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => 
 //     rejectUnauthorized: true,
 //   };
 
+app.get('/', async (req: Request, res: Response) => {
+  res.status(200).send(compiledHome({}));
+});
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
