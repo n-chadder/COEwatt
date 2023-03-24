@@ -16,3 +16,26 @@ footer{
 .border-bottom {
     border-bottom: 1px solid #dee2e6!important;
 }
+
+.color-legend { 
+  list-style: none;
+  margin: auto;
+}
+
+.color-legend li { 
+  float: left; 
+  margin: 0 10px;
+}
+
+.color-legend span { 
+  border: 1px solid #ccc; 
+  float: left; 
+  width: 15px; 
+  height: 15px; 
+  margin: 2px; 
+}
+
+ul.color-legend {
+  display: flex;
+  justify-content: center;
+}

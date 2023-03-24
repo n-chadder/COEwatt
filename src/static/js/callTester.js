@@ -53,7 +53,6 @@ async function testApplication(appID){
     // call tester
     await delay(1000);
     let percentDone = Math.round(((i+1) / pages.length) * 100); 
-    // testingAppName.innerHTML = `Testing: ${data.Name} - ${percentDone.toString()}% Done`;
     progressBar.ariaValueNow = percentDone;
     progressBar.style.width = `${percentDone.toString()}%`;
     progressBar.innerHTML = ` ${percentDone.toString()}%`;

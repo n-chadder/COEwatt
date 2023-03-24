@@ -2,8 +2,16 @@ extends base.pug
 
 block content
   include messages.pug
-  //- for some reason the css of the modal gets messed up when the modal div is added
-  //- before the calendar div...
+  div.mrgn-tp-md
+    ul(style="text-align: center;").color-legend
+      li Event Scheduled
+        span(style="background-color: #808080;")
+      li Event In Progress
+        span(style="background-color: #3788d8;")
+      li Event Completed
+        span(style="background-color: #008000;")
+      li Event Past Due
+        span(style="background-color: #D0312D;")
   div(id='calendar').mrgn-bttm-md.mrgn-tp-md  
   div(id="addEvent")
     pp-modal(dataurl="/schedule", id="modal", buttonDisplay="none")
@@ -11,14 +19,10 @@ block content
       p(slot="header") Schedule Event
       span(slot="formContent")
         form(id="addSceduleEventForm", action="/events", method="post")
-          //- div.form-group
-          //-   label(for="Title") Event Title 
-          //-   br
-          //-   input(type="text", id="Title", placeholder="Enter event title", style="width: 100%;", name="Title", required).form-control 
           div.form-group
             label(for="App") Application  
             br
-            select(name="App", style="width: 100%;", id="addAppSelect")
+            select(name="App", style="width: 100%;", id="addAppSelect", required)
               option(disabled selected value) -- select an option -- 
           div.form-group
             label(for="start") Event start date 
@@ -28,6 +32,13 @@ block content
             label(for="end") Event end date 
             br
             input(type="date", id="end", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
+          div.form-group
+            label(for="status") Event Status 
+            br
+            select(name="status", style="width: 100%;", id="addStatusSelect", required)
+              option(value="1" selected) Scheduled
+              option(value="2") In Progress
+              option(value="3") Completed
           div.form-group
             label(for="notes") Notes
             br 
@@ -41,10 +52,6 @@ block content
       p(slot="header") Edit Event
       span(slot="formContent")
         form(id="editSceduleEventForm", action="/events", method="post")
-          //- div.form-group
-          //-   label(for="Title") Event Title 
-          //-   br
-          //-   input(type="text", id="editTitle", placeholder="Enter event title", style="width: 100%;", name="Title", required).form-control
           div.form-group
             label(for="App") Application  
             br
@@ -58,6 +65,13 @@ block content
             label(for="end") Event end date 
             br
             input(type="date", id="editEnd", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
+          div.form-group
+            label(for="status") Event Status 
+            br
+            select(name="status", style="width: 100%;", id="editStatusSelect", required)
+              option(value="1") Scheduled
+              option(value="2") In Progress
+              option(value="3") Completed
           div.form-group
             label(for="Desc") Notes
             br 
@@ -102,7 +116,6 @@ block content
 
     function deleteEvent(e){
       let eventID = document.getElementById("editID").value;
-      //- let eventTitle = document.getElementById("editTitle").value;
       let eventApp = editAppSelect.options[editAppSelect.selectedIndex].text;
       let deleteEventText = document.getElementById("deleteEventText");
       let deleteSceduleEventForm = document.getElementById("deleteSceduleEventForm");
@@ -132,12 +145,22 @@ block content
         // is May 02, the event will only span up to May 01, it wont span May 02.
         let parsedData = [];
         for (let i = 0; i < data.length; i++) {
+          let today = new Date();
+          let endDateArr = data[i].End.replace('T00:00:00.000Z', '').split("-");
+          let endDate = new Date(endDateArr[0], endDateArr[1]-1, endDateArr[2]);
+          
+          let eventColor = '#808080'; // event scheduled
+          if ((today>endDate) && (data[i].StatusID != 3)) {   eventColor = '#D0312D';   } // past due   
+          else if (data[i].StatusID == 2) {   eventColor = '#3788d8';   } // in progress
+          else if (data[i].StatusID == 3) { eventColor = '#008000';   }  // completed
+
           let currEvent = { 
             id: data[i].id, 
             "title": data[i].App.Name,
             "start": data[i].Start.replace('T00:00:00.000Z', ''),
             "end":   data[i].End.replace('T00:00:00.000Z', 'T23:59:59'),
-            "notes": data[i].Notes
+            "notes": data[i].Notes,
+            "color": eventColor
           };
           // if it is a single day event, then adding 'T23:59:59' messes it up
           if (currEvent.start == currEvent.end.replace('T23:59:59', '')) {
@@ -170,12 +193,14 @@ block content
               let selectedAppID = -1;
               fetch(`/events/${info.event.id}`)
                 .then(function(response){   return response.json();   })
-                .then(function(data){   
+                .then(function(data){  
+                  console.log(data); 
                   //- document.getElementById("editTitle").value = data.Title; 
                   document.getElementById("editStart").value = data.Start.replace('T00:00:00.000Z', '');
                   document.getElementById("editEnd").value   = data.End.replace('T00:00:00.000Z', ''); 
                   document.getElementById("editNotes").value = data.Notes;
                   document.getElementById("editID").value    = data.id;
+                  document.getElementById("editStatusSelect").value = data.StatusID;
                   selectedAppID = data.AppID;
                 });
               let numExistingApps = editAppSelect.options.length;
@@ -196,6 +221,7 @@ block content
                   }
                   $(document).ready(function() {
                     $('#editAppSelect').select2();
+                    $('#editStatusSelect').select2();
                     editModal._showModal();
                   });
                 });
@@ -216,5 +242,6 @@ block content
         }
         $(document).ready(function() {
           $('#addAppSelect').select2();
+          $('#addStatusSelect').select2();
         });
       });

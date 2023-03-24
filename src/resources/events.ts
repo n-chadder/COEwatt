@@ -13,6 +13,7 @@ router.get('/', async (req: Request, res: Response) => {
   const events = await prisma.event.findMany({
     include: {
       App: true,
+      Status: true,
     },
   });  
 
@@ -40,21 +41,23 @@ router.get('/', async (req: Request, res: Response) => {
 router.post('/', async (req: Request, res: Response) => {
   
   try {
-    // const Title: string = req.body.Title;
-    const App: number   = Number(req.body.App);
-    const Start: Date   = new Date(req.body.Start);
-    const End: Date     = new Date(req.body.End);
-    const Notes: string = req.body.Notes;
+    const App: number      = Number(req.body.App);
+    const Start: Date      = new Date(req.body.Start);
+    const End: Date        = new Date(req.body.End);
+    const Notes: string    = req.body.Notes;
+    const StatusID: number = Number(req.body.status);
     
     const result = await prisma.event.create({
       data: {
-        // Title: Title,
         App: {
           connect: { id: App },
         },
         Start: Start,
         End: End,
-        Notes: Notes
+        Notes: Notes,
+        Status: {
+          connect: { id: StatusID },
+        }
       }
     });
     
@@ -104,6 +107,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
     const Start: Date   = new Date(req.body.Start);
     const End: Date     = new Date(req.body.End);
     const Notes: string = req.body.Notes;
+    const StatusID: number = Number(req.body.status);
 
     const result = await prisma.event.update({
       where: {
@@ -116,7 +120,10 @@ router.patch('/:id', async (req: Request, res: Response) => {
           },
           Start, 
           End,
-          Notes
+          Notes,
+          Status: {
+            connect: { id: StatusID },
+          }
       },
     });
     res.format({
