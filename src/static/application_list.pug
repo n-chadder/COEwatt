@@ -97,12 +97,20 @@ block content
       p(slot="header") Test Application 
       span(slot="formContent")
         div
-          strong(id="testingAppName")
+          strong(id="testingAppName" style="font-size:20px;")
           br
           div(style="display: none;", id="progress").progress
             div(role="progressbar", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100", style="width:0%;", id="progress-bar").progress-bar 
+          div(id="WCAGSelectDivApp")
+            label(for="WCAG" style="padding-right: 10px;") WCAG Version  
+            select(name="WCAG", style="width: 80%;", id="WCAGAppSelect", required)
+              option(selected value="2.0") WCAG 2.0
+              option(value="2.1") WCAG 2.1 
+          small(id="testAppHelpText") Click start to start testing
           p(id="currAppURL")
-          button(type="button" id="testAppCancel") Cancel
+          div
+            button(type="button" id="testAppStart" style="margin-right: 5px; padding-right: 10px;").btn.btn-success Start 
+            button(type="button" id="testAppCancel").btn.btn-default Cancel
   div(id="testPage")
     pp-modal(dataurl="/pages", id="testPageModal", buttonDisplay="none")
       span(slot="buttonText") Test 
@@ -112,7 +120,15 @@ block content
           p(id="currPageURL")    
           div(style="display: none;", id="page-progress").progress
             div(role="progressbar", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100", style="width:0%;", id="page-progress-bar").progress-bar 
-          button(type="button" id="testPageCancel") Cancel
+          div(id="WCAGSelectDivPage")
+            label(for="WCAG" style="padding-right: 10px;") WCAG Version  
+            select(name="WCAG", style="width: 80%;", id="WCAGPageSelect", required)
+              option(selected value="2.0") WCAG 2.0
+              option(value="2.1") WCAG 2.1 
+          small(id="testPageHelpText") Click start to start testing
+          div
+            button(type="button" id="testPageStart" style="margin-right: 5px; padding-right: 10px;").btn.btn-success Start 
+            button(type="button" id="testPageCancel") Cancel
   div(id="grid")
     data-grid(dataurl="/applications", 
       dataheaders='["ID","Application Name", "Desc", "Owner" , "-" , "-" , "-" ]', tableName="Applications")

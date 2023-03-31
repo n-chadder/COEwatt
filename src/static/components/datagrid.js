@@ -173,7 +173,7 @@ class DataGrid extends HTMLElement {
                 cell.classList.add("center");
 
                 cell = newRow.insertCell(columnHeaders.length - 1);
-                cell.innerHTML = `<button id="button${currentID}" onclick="testApplication(this.id)">Test</button>`;
+                cell.innerHTML = `<button id="button${currentID}" onclick="showAppModal(this.id)">Test</button>`;
                 cell.classList.add("center");
             }
             else if (this.getAttribute("dataurl").includes("/pages")) {
@@ -196,7 +196,7 @@ class DataGrid extends HTMLElement {
               cell.classList.add("center");
 
               cell = newRow.insertCell(columnHeaders.length - 1);
-              cell.innerHTML = `<button id="button${currentID}" onclick="testPage(this.id)">Test</button>`;
+              cell.innerHTML = `<button id="button${currentID}" onclick="showPageModal(this.id)">Test</button>`;
               cell.classList.add("center");
             }
 
