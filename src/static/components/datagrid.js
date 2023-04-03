@@ -152,6 +152,10 @@ class DataGrid extends HTMLElement {
         for (let row in data) {
             let newRow = tableBody.insertRow(row);
             for (let col in data[row]) {
+                let condition =  (col == "id") || (col == "Name") || (col == "Desc") || (col == "Owner");
+                if ((this.dataurl == '/applications') && !condition) {
+                  continue;
+                }
                 let cell = newRow.insertCell(newRow.length);
                 cell.innerHTML = data[row][col];
             }
@@ -170,6 +174,11 @@ class DataGrid extends HTMLElement {
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Name"', `<input class="form-control" type="text" id="Name" value="${data[row]['Name']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="desc"', `<input class="form-control" type="text" id="desc" value="${data[row]['Desc']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="owner"', `<input class="form-control" type="text" id="owner" value="${data[row]['Owner']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="LogInURL"', `<input class="form-control" type="text" id="LogInURL" value="${data[row]['LogInURL']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Username"', `<input class="form-control" type="text" id="Username" value="${data[row]['Username']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="UsernameElement"', `<input class="form-control" type="text" id="UsernameElement" value="${data[row]['UsernameElement']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Password"', `<input class="form-control" type="text" id="Password" value="${data[row]['Password']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="PasswordElement"', `<input class="form-control" type="text" id="PasswordElement" value="${data[row]['PasswordElement']}"`);
                 cell.classList.add("center");
 
                 cell = newRow.insertCell(columnHeaders.length - 1);
@@ -192,7 +201,9 @@ class DataGrid extends HTMLElement {
               cell.innerHTML = cell.innerHTML.replace('<input type="hidden" id="app" name="App">', `<input type="hidden" id="APP" name="App" value="${data[row]['AppID']}">`);
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="url"', `<input class="form-control" type="text" id="url" value="${data[row]['URL']}"`);
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="action"', `<input class="form-control" type="text" id="action" value="${data[row]['Action']}"`);
-              cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="auth"', `<input class="form-control" type="text" id="auth" value="${data[row]['Auth']}"`);
+              if (data[row]['NeedAuth']) {
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="checkbox" id="NeedAuth" name="NeedAuth">', `<input class="form-control" type="checkbox" id="NeedAuth" name="NeedAuth" checked>`);
+              }
               cell.classList.add("center");
 
               cell = newRow.insertCell(columnHeaders.length - 1);

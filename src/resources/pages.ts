@@ -54,14 +54,14 @@ router.post('/', async (req: Request, res: Response) => {
     const URL: string = req.body.URL;
     const Title: string = req.body.Title;
     const Action: string = req.body.Action;
-    const Auth: string = req.body.Auth;
+    const NeedAuth: boolean = (req.body.NeedAuth == "on") ? true : false;
     const App: number = Number(req.body.App);
     const result = await prisma.page.create({
       data: {
         URL,
         Title,
         Action,
-        Auth,
+        NeedAuth,
         App: {
           connect: { id: App},
         } 
@@ -104,7 +104,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
     const URL: string = req.body.URL;
     const Title: string = req.body.Title;
     const Action: string = req.body.Action;
-    const Auth: string = req.body.Auth;
+    const NeedAuth: boolean = (req.body.NeedAuth == "on") ? true : false;
     const App: number = Number(req.body.App);
 
     const result = await prisma.page.update({
@@ -115,7 +115,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
         URL,
         Title,
         Action,
-        Auth,
+        NeedAuth,
         App: {
           connect: { id: App},
         } 

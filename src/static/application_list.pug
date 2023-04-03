@@ -20,6 +20,30 @@ block content
           div.form-group
             label(for="owner") Owner 
             input(type="text", id="Owner", placeholder="Enter owner name", style="width: 100%;", name="Owner", required).form-control
+          br
+          strong Additional Information For Accessibility Testing Purposes 
+          br
+          //- small //- maybe this should go in the docs instead
+          //-   | If some of the pages of this application requires authentication, please add the username and password to be used for authentication.
+          //-   | If only the Login URL, Username, and Password fields are provided, the tester assumes that there is an automatic authentication system 
+          //-   | in place. (OAuth, Active Directory)
+          //-   | If this is not the case, please provide the element ID or class name of the input elements for Username and Password as well as the ID of the 
+          //-   | submit button.
+          div.form-group
+            label(for="LogInURL") Log In URL
+            input(type="text", id="LogInURL", placeholder="Enter URL for the login page", style="width: 100%;", name="LogInURL").form-control
+          div.form-group
+            label(for="username") Username
+            input(type="text", id="Username", placeholder="Enter Username", style="width: 100%;", name="Username").form-control
+          div.form-group
+            label(for="usernameElement") Username Input Element (example #id_username)
+            input(type="text", id="UsernameElement", placeholder="Enter CSS selector reffering to the Username input element", style="width: 100%;", name="UsernameElement").form-control
+          div.form-group
+            label(for="Password") Password
+            input(type="text", id="Password", placeholder="Enter Password", style="width: 100%;", name="Password").form-control
+          div.form-group
+            label(for="PasswordElement") Password Input Element (example #id_password)
+            input(type="text", id="PasswordElement", placeholder="Enter CSS selector reffering to the Password input element", style="width: 100%;", name="PasswordElement").form-control       
           div.form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editApp")
@@ -40,6 +64,29 @@ block content
             label(for="owner") Owner
             br
             input(type="text", id="owner", placeholder="Enter owner name", style="width: 90%;", name="Owner", required).form-control
+          br
+          strong Additional Information For Accessibility Testing Purposes 
+          br
+          div.form-group
+            label(for="LogInURL") Log In URL
+            br
+            input(type="text", id="LogInURL", placeholder="Enter URL for the login page", style="width: 90%;", name="LogInURL").form-control
+          div.form-group
+            label(for="username") Username
+            br
+            input(type="text", id="Username", placeholder="Enter Username", style="width: 90%;", name="Username").form-control
+          div.form-group
+            label(for="usernameElement") Username Input Element (example #id_username)
+            br
+            input(type="text", id="UsernameElement", placeholder="Enter CSS selector reffering to the Username input element", style="width: 90%;", name="UsernameElement").form-control
+          div.form-group
+            label(for="Password") Password
+            br
+            input(type="text", id="Password", placeholder="Enter Password", style="width: 90%;", name="Password").form-control
+          div.form-group
+            label(for="PasswordElement") Password Input Element (example #id_password)
+            br
+            input(type="text", id="PasswordElement", placeholder="Enter CSS selector reffering to the Password input element", style="width: 90%;", name="PasswordElement").form-control 
           div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit", id="test" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editPage")
@@ -58,13 +105,13 @@ block content
             br
             input(type="text", id="url", placeholder="Enter page URL", style="width: 90%;", name="URL").form-control
           div.form-group
+            label(for="NeedAuth") Requires Authentication
+            br
+            input(type="checkbox", id="NeedAuth", name="NeedAuth").form-control
+          div.form-group
             label(for="action") Page Action
             br
-            input(type="text", id="action", placeholder="Enter page action", style="width: 90%;", name="Action", required).form-control
-          div.form-group
-            label(for="Auth") Page Auth
-            br
-            input(type="text", id="auth", placeholder="Enter page auth", style="width: 90%;", name="Auth", required).form-control
+            input(type="text", id="action", placeholder="Enter page action", style="width: 90%;", name="Action").form-control
           div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="deleteApp")
@@ -135,7 +182,7 @@ block content
 
   template(id="dataGrid")
     data-grid(dataurl="/pages",
-      dataheaders='["ID","URL", "Title", "Action" , "Auth", "App ID", "-" , "-" , "-" ]', tableName="Pages")
+      dataheaders='["ID","URL", "Title", "Action", "Requires Auth", "App ID", "-" , "-" , "-" ]', tableName="Pages")
 
   block script 
     script(type="text/javascript", src="static/components/modal.js") 

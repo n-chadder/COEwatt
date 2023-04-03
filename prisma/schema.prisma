@@ -13,20 +13,25 @@ model Testm {
 }
 
 model Application {
-  id       Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
-  Name    String
-  Desc    String
-  Owner   String
-  Events  Event[] 
-  Pages   Page[]
-}
+  id              Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
+  Name            String
+  Desc            String
+  Owner           String
+  Events          Event[] 
+  Pages           Page[]
+  LogInURL        String
+  Username        String
+  UsernameElement String
+  Password        String
+  PasswordElement String
+}//TO_DO add submit button ID
 
 model Page {
   id       Int      @id @unique(map: "sqlite_autoindex_Page_1") @default(autoincrement())
   URL      String
   Title    String?
   Action   String?
-  Auth     String?
+  NeedAuth Boolean
   Report   Report[]
   App     Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
   AppID   Int
