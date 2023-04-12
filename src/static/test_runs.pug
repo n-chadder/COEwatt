@@ -1,0 +1,18 @@
+extends base.pug
+
+block content
+  h1(id="wb-cont" property="name") Test Runs
+  table.table.table-bordered 
+    thead
+      tr 
+        th Application Name
+        th Time Completed
+        th 
+    tbody 
+      each run in testRuns
+        tr
+          td #{run.App.Name}
+          td #{run.Created}
+          td
+            a(href=`/testrun/${run.id}`) View Details
+    // - this page needs pagination!!

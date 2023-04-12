@@ -1,0 +1,60 @@
+extends base.pug
+
+block content
+
+  h1(id="wb-cont" property="name" style="margin-top: 10px;") #{testRun.App.Name}
+  h2(style="margin-top: 2px;") Test Run ##{testRun.id} on #{testRun.Created} 
+
+  div(id="testResults")
+
+
+  script.
+    let testResults = document.getElementById("testResults");
+    let reports = !{JSON.stringify(testRun.Reports)};
+
+    for (let page = 0; page < reports.length; page++) {
+      let currPage = JSON.parse(reports[page].data);
+      let currPageIssues = currPage.issues;
+
+      let detailsElement = document.createElement('details');
+      let summaryElement = document.createElement('summary');
+      detailsElement.setAttribute('id', 'id_details_' + page);
+      summaryElement.setAttribute('id', 'id_summary_' + page);
+
+      let summaryText = `Page Title: ${reports[page].Page.Title} - No WCAG Violations`;
+      if (currPageIssues.length > 0) {
+        summaryText = `Page Title: ${reports[page].Page.Title} - WCAG Violations (${currPageIssues.length})`;
+      }
+      else {
+        let p = document.createElement('p');
+        p.textContent = "No WCAG Violations";
+        detailsElement.appendChild(p);  
+      }
+      summaryElement.textContent = summaryText;
+      detailsElement.appendChild(summaryElement);
+      
+      for (let issue = 0; issue < currPageIssues.length; issue++) {
+        let innerDetails = document.createElement('details');
+        let innerSummary = document.createElement('summary');
+        innerDetails.setAttribute('id', `id_d_${page}_${issue}`);
+        innerSummary.setAttribute('id', `id_s_${page}_${issue}`);
+        innerSummary.textContent = `WCAG Violation Code: ${currPageIssues[issue].code}`;
+        let p1 = document.createElement('p');
+        let p2 = document.createElement('p');
+        let p3 = document.createElement('p');
+        let p4 = document.createElement('p');
+        p1.textContent = `Code: ${currPageIssues[issue].code}`;
+        p2.textContent = `Message: ${currPageIssues[issue].message}`;
+        p3.textContent = `Context: ${currPageIssues[issue].context}`;
+        p4.textContent = `Selector: ${currPageIssues[issue].selector}`;
+
+        innerDetails.appendChild(innerSummary);
+        innerDetails.appendChild(p1);
+        innerDetails.appendChild(p2);
+        innerDetails.appendChild(p3);
+        innerDetails.appendChild(p4);
+        detailsElement.appendChild(innerDetails);
+      }
+
+      testResults.appendChild(detailsElement);
+    }

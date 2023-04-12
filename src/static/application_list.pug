@@ -20,15 +20,7 @@ block content
           div.form-group
             label(for="owner") Owner 
             input(type="text", id="Owner", placeholder="Enter owner name", style="width: 100%;", name="Owner", required).form-control
-          br
           strong Additional Information For Accessibility Testing Purposes 
-          br
-          //- small //- maybe this should go in the docs instead
-          //-   | If some of the pages of this application requires authentication, please add the username and password to be used for authentication.
-          //-   | If only the Login URL, Username, and Password fields are provided, the tester assumes that there is an automatic authentication system 
-          //-   | in place. (OAuth, Active Directory)
-          //-   | If this is not the case, please provide the element ID or class name of the input elements for Username and Password as well as the ID of the 
-          //-   | submit button.
           div.form-group
             label(for="LogInURL") Log In URL
             input(type="text", id="LogInURL", placeholder="Enter URL for the login page", style="width: 100%;", name="LogInURL").form-control
@@ -44,6 +36,10 @@ block content
           div.form-group
             label(for="PasswordElement") Password Input Element (example #id_password)
             input(type="text", id="PasswordElement", placeholder="Enter CSS selector reffering to the Password input element", style="width: 100%;", name="PasswordElement").form-control       
+          div.form-group
+            label(for="SubmitButtonElement") Submit/Login Button Element (example #id_submit)
+            br
+            input(type="text", id="SubmitButtonElement", placeholder="Enter CSS selector reffering to the submit/login button element", style="width: 100%;", name="SubmitButtonElement").form-control          
           div.form-group.AddPageButtonDiv
             button(type="submit" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editApp")
@@ -87,6 +83,10 @@ block content
             label(for="PasswordElement") Password Input Element (example #id_password)
             br
             input(type="text", id="PasswordElement", placeholder="Enter CSS selector reffering to the Password input element", style="width: 90%;", name="PasswordElement").form-control 
+          div.form-group
+            label(for="SubmitButtonElement") Submit/Login Button Element (example #id_submit)
+            br
+            input(type="text", id="SubmitButtonElement", placeholder="Enter CSS selector reffering to the submit/login button element", style="width: 90%;", name="SubmitButtonElement").form-control
           div(style="padding-top: 10px").form-group.AddPageButtonDiv
             button(type="submit", id="test" style).btn.btn-success.mrgn-rght-sm Save
   template(id="editPage")
@@ -103,7 +103,7 @@ block content
           div.form-group
             label(for="URL") Page URL 
             br
-            input(type="text", id="url", placeholder="Enter page URL", style="width: 90%;", name="URL").form-control
+            input(type="text", id="url", placeholder="Enter page URL", style="width: 90%;", name="URL", required).form-control
           div.form-group
             label(for="NeedAuth") Requires Authentication
             br
@@ -145,6 +145,7 @@ block content
       span(slot="formContent")
         div
           strong(id="testingAppName" style="font-size:20px;")
+          a(href="#" id="testAppReport" style="display: none;")
           br
           div(style="display: none;", id="progress").progress
             div(role="progressbar", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100", style="width:0%;", id="progress-bar").progress-bar 
@@ -164,7 +165,8 @@ block content
       p(slot="header") Test Page 
       span(slot="formContent")
         div
-          p(id="currPageURL")    
+          p(id="currPageURL")  
+          a(href="#" id="testPageReport" style="display: none;")  
           div(style="display: none;", id="page-progress").progress
             div(role="progressbar", aria-valuenow="0", aria-valuemin="0", aria-valuemax="100", style="width:0%;", id="page-progress-bar").progress-bar 
           div(id="WCAGSelectDivPage")

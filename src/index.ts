@@ -13,6 +13,7 @@ import { applications } from './resources/applications';
 import { events } from './resources/events';
 import { appElements } from "./resources/appElement";
 import {pages} from "./resources/pages";
+import { testrun } from "./resources/TestRun";
 import { hostname } from "os";
 import * as pug from "pug";
 import axios, { AxiosError } from 'axios';
@@ -66,6 +67,7 @@ app.use(methodOverride('_method'));
 app.use('/applications', applications);
 app.use('/events', events);
 app.use('/pages', pages);
+app.use('/testrun', testrun);
 
 // app.use('/roles', roles);
 // app.use('/users', users);

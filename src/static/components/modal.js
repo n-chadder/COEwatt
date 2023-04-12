@@ -78,7 +78,7 @@ class Modal extends HTMLElement {
 
       </style>
       <button><slot name="buttonText">Button Text</button>
-      <div class="modal">
+      <div class="modal" id="id_modal">
           <div class="modal-content">
               <div class="modal-header">
                   <span class="close">&times;</span>
@@ -113,6 +113,10 @@ class Modal extends HTMLElement {
       this.shadowRoot.querySelector(".close").removeEventListener('click', this._hideModal);
   }
   _showModal() {
+      if (this.getAttribute("id") == "addButtonModal" || this.getAttribute("id") == "editAppModal") {
+        let modal_div = this.shadowRoot.getElementById("id_modal");
+        modal_div.style.position = 'absolute';
+      }
       if (this.getAttribute("dataurl").includes('/applications/')) {
         // regex to isolate the number from dataurl - this is the app id
         var regex = /\d+/g;

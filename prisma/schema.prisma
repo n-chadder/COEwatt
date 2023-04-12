@@ -13,18 +13,20 @@ model Testm {
 }
 
 model Application {
-  id              Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
-  Name            String
-  Desc            String
-  Owner           String
-  Events          Event[] 
-  Pages           Page[]
-  LogInURL        String
-  Username        String
-  UsernameElement String
-  Password        String
-  PasswordElement String
-}//TO_DO add submit button ID
+  id                  Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
+  Name                String
+  Desc                String
+  Owner               String
+  Events              Event[] 
+  Pages               Page[]
+  LogInURL            String
+  Username            String
+  UsernameElement     String
+  Password            String
+  PasswordElement     String
+  SubmitButtonElement String
+  Tests               TestRun[]
+}
 
 model Page {
   id       Int      @id @unique(map: "sqlite_autoindex_Page_1") @default(autoincrement())
@@ -37,14 +39,14 @@ model Page {
   AppID   Int
 }
 
-model Report {
-  id       Int    @id @unique(map: "sqlite_autoindex_Report_1") @default(autoincrement())
-  DataTime String
-  PageId   Int
-  Page     Page   @relation(fields: [PageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+// model Report {
+//   id       Int    @id @unique(map: "sqlite_autoindex_Report_1") @default(autoincrement())
+//   DataTime String
+//   PageId   Int
+//   Page     Page   @relation(fields: [PageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@unique([DataTime, PageId], map: "sqlite_autoindex_Report_2")
-}
+//   @@unique([DataTime, PageId], map: "sqlite_autoindex_Report_2")
+// }
 
 model Event {
   id       Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
@@ -63,4 +65,21 @@ model EventStatus {
   id      Int      @id @unique(map: "sqlite_autoindex_EventStatus_1") @default(autoincrement())
   Status  String
   Events  Event[]
+}
+
+model Report {
+  id        Int    @id @unique(map: "sqlite_autoindex_Report_1") @default(autoincrement())
+  PageId    Int
+  Page      Page   @relation(fields: [PageId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  TestRunId Int
+  TestRun   TestRun @relation(fields: [TestRunId], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  data      String
+}
+
+model TestRun {
+  id       Int      @id @unique(map: "sqlite_autoindex_TestRun_1") @default(autoincrement())
+  AppID    Int 
+  App      Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
+  Created  DateTime // for getting the most recent TestRun for an appliction
+  Reports  Report[]
 }

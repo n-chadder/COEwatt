@@ -179,6 +179,7 @@ class DataGrid extends HTMLElement {
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="UsernameElement"', `<input class="form-control" type="text" id="UsernameElement" value="${data[row]['UsernameElement']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Password"', `<input class="form-control" type="text" id="Password" value="${data[row]['Password']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="PasswordElement"', `<input class="form-control" type="text" id="PasswordElement" value="${data[row]['PasswordElement']}"`);
+                cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="SubmitButtonElement"', `<input class="form-control" type="text" id="SubmitButtonElement" value="${data[row]['SubmitButtonElement']}"`);
                 cell.classList.add("center");
 
                 cell = newRow.insertCell(columnHeaders.length - 1);

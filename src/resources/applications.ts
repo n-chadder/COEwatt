@@ -82,6 +82,7 @@ router.post('/', async (req: Request, res: Response) => {
         const UsernameElement: string = req.body.UsernameElement;
         const Password: string = req.body.Password;
         const PasswordElement: string = req.body.PasswordElement;
+        const SubmitButtonElement: string = req.body.SubmitButtonElement;
         const result = await prisma.application.create({
             data: {
                 Name,
@@ -91,7 +92,8 @@ router.post('/', async (req: Request, res: Response) => {
                 Username,
                 UsernameElement,
                 Password,
-                PasswordElement
+                PasswordElement,
+                SubmitButtonElement
             },
         });
         res.format({
@@ -130,6 +132,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
         const UsernameElement: string = req.body.UsernameElement;
         const Password: string = req.body.Password;
         const PasswordElement: string = req.body.PasswordElement;
+        const SubmitButtonElement: string = req.body.SubmitButtonElement;
         const result = await prisma.application.update({
             where: {
                 id: Number(id),
@@ -142,7 +145,8 @@ router.patch('/:id', async (req: Request, res: Response) => {
                 Username,
                 UsernameElement,
                 Password,
-                PasswordElement
+                PasswordElement,
+                SubmitButtonElement
             },
         })
         res.format({

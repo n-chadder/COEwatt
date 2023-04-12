@@ -16,9 +16,11 @@ let WCAGSelectDivPage = document.getElementById("WCAGSelectDivPage");
 let WCAGPageSelect = document.getElementById("WCAGPageSelect");
 let testPageStart = document.getElementById("testPageStart");
 let testPageHelpText = document.getElementById("testPageHelpText");
+let testPageReport = document.getElementById("testPageReport");
+let testAppReport = document.getElementById("testAppReport");
 let TestInProgress = false;
 let regex = /\d+/g;
-let currAppPages = null;
+let currAppData = null;
 let currPageData = null;
 
 testAppCancel.addEventListener('click', cancelAppTest);
@@ -48,10 +50,9 @@ async function showAppModal(appID) {
 
   let response = await fetch(`/applications/${id}`);
   let data = await response.json();
-  let pages = data.Pages;
   testingAppName.innerHTML = `Testing: ${data.Name}`;
-  currAppPages = pages;
-  if (pages.length == 0) {
+  currAppData = data;
+  if (data.Pages.length == 0) {
     currAppURL.innerHTML = 'No Pages To Test';
     currAppURL.style.color = 'red';
     WCAGSelectDivApp.style.display = 'none';
@@ -72,17 +73,63 @@ async function testApplication(appID){
   // this should not happen but just in case
   if (TestInProgress) {
     alert('There is already a test in progress. Please wait it is done.');
+    return;
   }
   TestInProgress = true;
-  for (let i = 0; i < currAppPages.length; i++) {
+  let TestRunID = null;
+  for (let i = 0; i < currAppData.Pages.length; i++) {
+    console.log(`i=${i}, TestRunID=${TestRunID}`);
     if (!TestInProgress) {   
       currAppURL.innerHTML = 'Test cancelled';
       return;   
     }
-    currAppURL.innerHTML = `Currently testing URL: ${currAppPages[i].URL}`;
-    // call tester
-    await delay(1000);
-    let percentDone = Math.round(((i+1) / currAppPages.length) * 100); 
+    currAppURL.innerHTML = `Currently testing URL: ${currAppData.Pages[i].URL}`;
+
+    let data = {
+      "PageID": currAppData.Pages[i].id,
+      "pageURL": currAppData.Pages[i].URL,
+      "WCAGVersion": WCAG_version,
+      "NeedAuth": currAppData.Pages[i].NeedAuth,
+      "Action": currAppData.Pages[i].Action,
+      "TestRunID": TestRunID,
+      "AppID": currAppData.id
+    }
+
+    try {
+      let response = await fetch('/testrun', {
+        method: "POST", 
+        mode: "cors", // not sure
+        cache: "no-store", // esponse should not be cached by the browser, a new request should be made to the server every time the request is made
+        credentials: "same-origin", // browser should include cookies, authentication credentials or client-side SSL certificates with the request only if the
+                                    // request is being made to the same origin as the requesting page.
+        headers: {
+          "Content-Type": "application/json",
+        },
+        redirect: "manual", // do not automatically follow HTTP redirects
+        referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+        body: JSON.stringify(data), // body data type must match "Content-Type" header
+      });
+      if (!response.ok) {
+        currAppURL.innerHTML = 'Something Went wrong while Testing URL: ' + currAppData.Pages[i].URL + '\n Please refresh this page and try again';
+        currAppURL.style.color = 'red';
+        TestInProgress = false;
+        currAppData = null;
+        return;
+      }
+      else if (response.ok) {
+        let jsonResponse = await response.json();
+        TestRunID = jsonResponse.TestRunID;
+      }
+    }
+    catch {
+      currAppURL.innerHTML = 'Something Went wrong while Testing URL: ' + currAppData.Pages[i].URL + '\n Please refresh this page and try again';
+      currAppURL.style.color = 'red';
+      TestInProgress = false;
+      currAppData = null;
+      return;
+    }
+
+    let percentDone = Math.round(((i+1) / currAppData.Pages.length) * 100); 
     progressBar.ariaValueNow = percentDone;
     progressBar.style.width = `${percentDone.toString()}%`;
     progressBar.innerHTML = ` ${percentDone.toString()}%`;
@@ -91,7 +138,10 @@ async function testApplication(appID){
   TestInProgress = false;
 
   currAppURL.innerHTML = 'Test Complete';
-  
+  testAppReport.setAttribute('href', `/testrun/${TestRunID}`);
+  testAppReport.innerHTML = 'View Results';
+  testAppReport.style.display = 'block';
+  currAppData = null;
   return;
 }
 
@@ -117,6 +167,7 @@ async function testPage(pageID) {
 
   if (TestInProgress) {
     alert('There is already a test in progress. Please wait it is done.');
+    return;
   }
 
   WCAGSelectDivPage.style.display = 'none';
@@ -128,14 +179,54 @@ async function testPage(pageID) {
   pageProgressBar.style.width  = '0%';
   pageProgressBar.innerHTML = '0%'
   pageProgress.style.display = 'block';
-  // call tester
-  await delay(5000);
 
-  currPageURL.innerHTML = 'Test Completed';
-  pageProgressBar.ariaValueNow = '100';
-  pageProgressBar.style.width = '100%';
-  pageProgressBar.innerHTML = '100%'
-  TestInProgress = false;
+  // build json post data for calling tester
+  let data = {
+    "PageID": currPageData.id,
+    "pageURL": currPageData.URL,
+    "WCAGVersion": WCAG_version,
+    "NeedAuth": currPageData.NeedAuth,
+    "Action": currPageData.Action,
+    "TestRunID": null,
+    "AppID": currPageData.AppID
+  }
+  try {
+    let response = await fetch('/testrun', {
+      method: "POST", 
+      mode: "cors", // not sure
+      cache: "no-store", // esponse should not be cached by the browser, a new request should be made to the server every time the request is made
+      credentials: "same-origin", // browser should include cookies, authentication credentials or client-side SSL certificates with the request only if the
+                                  // request is being made to the same origin as the requesting page.
+      headers: {
+        "Content-Type": "application/json",
+      },
+      redirect: "manual", // do not automatically follow HTTP redirects
+      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data), // body data type must match "Content-Type" header
+    });
+    if (!response.ok) {
+      currPageURL.innerHTML = 'Something Went wrong while Testing URL: ' + currPageData.URL + '\n Please refresh this page and try again';
+      currPageURL.style.color = 'red';
+      TestInProgress = false;
+    }
+    else {
+      let jsonResponse = await response.json();
+      currPageURL.innerHTML = 'Test Completed'; 
+      testPageReport.setAttribute('href', `/testrun/${jsonResponse.TestRunID}`);
+      testPageReport.innerHTML = 'View Results';
+      testPageReport.style.display = 'block';
+      pageProgressBar.ariaValueNow = '100';
+      pageProgressBar.style.width = '100%';
+      pageProgressBar.innerHTML = '100%'
+      TestInProgress = false;
+    }
+  }
+  catch {
+    currPageURL.innerHTML = 'Something Went wrong while Testing URL: ' + currPageData.URL + '\n Please refresh this page and try again';
+    currPageURL.style.color = 'red';
+    TestInProgress = false;
+  }
+  currPageData = null;
   return;
 }
 
@@ -158,16 +249,20 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 function resetAppModal(){
+  testAppReport.setAttribute('href', '#');
+  testAppReport.style.display = 'none';
   WCAGSelectDivApp.style.display = '';
   progress.style.display = 'none';
   testAppStart.disabled = false;
   currAppURL.innerHTML = '';
   currAppURL.style.color = '';
-  currAppPages = null;
+  currAppData = null;
   testAppHelpText.style.display = '';
 }
 
 function resetPageModal() {
+  testPageReport.setAttribute('href', '#');
+  testPageReport.style.display = 'none';
   pageProgress.style.display = 'none';
   currPageData = null;
   WCAGSelectDivPage.style.display = '';
