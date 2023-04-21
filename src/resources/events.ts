@@ -10,32 +10,52 @@ const router = express.Router()
 
 
 router.get('/', async (req: Request, res: Response) => {
-  const events = await prisma.event.findMany({
-    include: {
-      App: true,
-      Status: true,
-    },
-  });  
+  try {
+    let events = req.query.year ?
+    await prisma.event.findMany({
+      where: {
+        Start: {
+          lte: new Date(`${req.query.year}-12-31`).toISOString(),
+          gte: new Date(`${req.query.year}-01-01`).toISOString()
+        }
+      },
+      include: {
+        App: true,
+        Status: true,
+      },
+    }) :
+    await prisma.event.findMany({
+      include: {
+        App: true,
+        Status: true,
+      },
+    });
 
-  let success = req.flash('success');
-  let error   = req.flash('error');
-  let result  = {
-    "events": events,
-    "success": success,
-    "error": error
+    let success = req.flash('success');
+    let error   = req.flash('error');
+    let result  = {
+      "events": events,
+      "success": success,
+      "error": error
+    }
+
+    res.format({
+      'application/json': function(){
+        res.status(200).json(events);
+        return;
+      },
+      'text/html': function(){
+        let page = compiledSchedule({result});
+        res.status(200).send(page);
+        return;
+      }
+    });
+  }
+  catch(e: any) {
+    console.log(e);
+    res.status(500).send('<h1>Something Went Wrong</h1>');
   }
 
-  res.format({
-    'application/json': function(){
-      res.status(200).json(events);
-      return;
-    },
-    'text/html': function(){
-      let page = compiledSchedule({result});
-      res.status(200).send(page);
-      return;
-    }
-  })
 });
 
 router.post('/', async (req: Request, res: Response) => {
@@ -102,7 +122,6 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.patch('/:id', async (req: Request, res: Response) => {
   try {
     const id = req.params.id;
-    // const Title: string = req.body.Title;
     const App: number   = Number(req.body.App);
     const Start: Date   = new Date(req.body.Start);
     const End: Date     = new Date(req.body.End);
@@ -114,7 +133,6 @@ router.patch('/:id', async (req: Request, res: Response) => {
           id: Number(id),
       },
       data: {
-          // Title,
           App: {
             connect: { id: App },
           },

@@ -39,3 +39,7 @@ ul.color-legend {
   display: flex;
   justify-content: center;
 }
+
+h1 {
+  margin-top: 10px;
+}

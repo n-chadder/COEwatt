@@ -1,0 +1,192 @@
+extends base.pug
+
+block content
+  h1 COE Accessibility Checker Dashboard
+
+  div(style="border: 1px solid #ccc; padding: 10px;")
+    div.row
+      div.col-xs-4
+        button(type="button" id="id_prev_year" aria-label="Previous Year").btn.btn-default.pull-left < Previous
+      div.col-xs-4.text-center
+        h2(id="id_year" style="margin-top: 0px;") 
+      div.col-xs-4.text-right
+        button(type="button" id="id_next_year" aria-label="Next Year" disabled).btn.btn-default.pull-right Next >
+    hr(style="margin-bottom: 0px; margin-top: 5px;")
+    div(style="height:40vh;")
+      canvas(id="id_pie_chart" style="display: block; margin: 0 auto; height:40vh; width:80vw;")
+  br
+  div(style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;")
+    div.row
+      div.text-center
+        h2(id="id_portfolio_status" style="margin-top: 0px;") Accessibility Status of Application Portfolio
+    hr(style="margin-bottom: 0px; margin-top: 5px;")
+    div(style="")
+      canvas(id="id_bar_chart")
+
+  block script 
+    script(type="text/javascript" src="static/js/ChartJs/chart.umd.js")
+    script(type="text/javascript" src="static/js/ChartJs/plugins/chartjs-plugin-datalabels.min.js") 
+  script.
+    let today = new Date();
+    let currYear = new Date().getFullYear();
+    let pieChart = null;
+    let barChart = null;
+
+    const pieChartEl = document.getElementById('id_pie_chart');
+    const barChartEl = document.getElementById('id_bar_chart');
+    const prevYearButton = document.getElementById('id_prev_year');
+    const nextYearButton = document.getElementById('id_next_year');
+    const currYearText = document.getElementById('id_year');
+
+    prevYearButton.addEventListener('click', loadPrevYear);
+    nextYearButton.addEventListener('click', loadNextYear);
+
+    currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
+    buildPieChart(currYear);
+    buildBarChart();
+
+    function loadPrevYear() {
+      currYear -= 1;
+      currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
+      pieChart.destroy();
+      buildPieChart(currYear);
+      if (currYear <  today.getFullYear()) {
+        nextYearButton.disabled = false;
+      }
+    }
+
+    function loadNextYear() {
+      currYear += 1;
+      currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
+      pieChart.destroy();
+      buildPieChart(currYear);
+      if (currYear >=  today.getFullYear()) {
+        nextYearButton.disabled = true;
+      }
+    }
+
+    async function buildPieChart(year) {
+      let response = await fetch(`/events?year=${year}`);
+      let responseData = await response.json();
+      let parsedData = {
+        "numScheduled": 0,
+        "numInProgress": 0,
+        "numCompleted": 0,
+        "numPastDue": 0,
+        "numTotal": responseData.length
+      };
+
+      for (let i = 0; i < responseData.length; i++) {
+        let endDateArr = responseData[i].End.replace('T00:00:00.000Z', '').split("-");
+        let endDate = new Date(endDateArr[0], endDateArr[1]-1, endDateArr[2]);
+
+        if ((today>endDate) && (responseData[i].StatusID != 3)) {
+          parsedData.numPastDue += 1;
+        }
+        else if (responseData[i].StatusID == 1) {
+          parsedData.numScheduled += 1;
+        }
+        else if (responseData[i].StatusID == 2) {
+          parsedData.numInProgress += 1;
+        }
+        else if (responseData[i].StatusID == 3) {
+          parsedData.numCompleted += 1;
+        }
+      }
+      pieChart = new Chart(pieChartEl, {
+        type: 'pie',
+        data: {
+          labels: ['Scheduled', 'In Progress', 'Completed', 'Past Due'],
+          datasets: [{
+            label: ['Number of Projects'],
+            data: [parsedData.numScheduled, parsedData.numInProgress, parsedData.numCompleted, parsedData.numPastDue],
+            backgroundColor: [
+              'rgb(128, 128, 128)', 'rgb(54, 162, 235)', 'Green', 'rgb(255, 99, 132)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            datalabels: {
+              color: 'rgb(0, 0, 0)',
+              formatter: function(context, args) {
+                let percentVal = (context / parsedData.numTotal) * 100;
+                return `${percentVal}%`;
+              }
+            }
+          },
+        },
+        plugins: [ChartDataLabels]
+      });
+      return;
+    }
+
+    async function buildBarChart() {
+      let response = await fetch('/applications');
+      let responseData = await response.json();
+      let parsedData = {
+        "numTotal": 0,
+        "numCompliant": 0,
+        "numNonCompliant": 0,
+        "numUnknown": 0
+      }
+
+      for (let i = 0; i < responseData.length; i++) {
+        parsedData.numTotal++;
+        if (responseData[i].Tests.length == 0 || responseData[i].Pages.length == 0) {
+          parsedData.numUnknown++;
+          continue;
+        }
+        let compliant = true;
+        for (let j = 0; j < responseData[i].Pages.length; j++) {
+          if (!(responseData[i].Pages[j].ComplianceID == 1)) {
+            compliant = false;
+            parsedData.numNonCompliant++;
+            break;
+          }
+        }
+        if (compliant) {
+          parsedData.numCompliant++;
+        }
+      }
+
+      barChart = new Chart(barChartEl, {
+        type: 'bar',
+        data: {
+          labels: ['WCAG Compliant', 'WCAG Non-Compliant', 'Unknown (Not Yet Tested)'],
+          datasets: [{
+            data: [parsedData.numCompliant, parsedData.numNonCompliant, parsedData.numUnknown],
+            backgroundColor: [
+              'rgb(54, 162, 235)', 'rgb(255, 99, 132)', 'rgb(128, 128, 128)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              title: {
+                display: true,
+                text: "Number of Applications"
+              }
+            }
+          },
+          plugins: {
+            datalabels: {
+              color: 'rgb(0, 0, 0)',
+              formatter: function(context, args) {
+                let percentVal = (context / parsedData.numTotal) * 100;
+                return `${percentVal}%`;
+              }
+            },
+            legend: {
+              display: false
+            }
+          }
+        },
+        plugins: [ChartDataLabels]
+      });
+    }
+

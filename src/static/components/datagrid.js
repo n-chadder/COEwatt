@@ -157,6 +157,18 @@ class DataGrid extends HTMLElement {
                   continue;
                 }
                 let cell = newRow.insertCell(newRow.length);
+                if (this.dataurl.includes('/pages') && (col == "ComplianceID")) {
+                  if (data[row][col] == 1) {
+                    cell.innerHTML = 'Compliant';
+                  }
+                  else if (data[row][col] == 2) {
+                    cell.innerHTML = 'Non-Compliant';
+                  }
+                  else {
+                    cell.innerHTML = "Unknown";
+                  }
+                  continue;
+                }
                 cell.innerHTML = data[row][col];
             }
             if (this.getAttribute("dataurl") == "/applications") {

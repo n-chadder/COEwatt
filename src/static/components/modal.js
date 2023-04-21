@@ -106,7 +106,6 @@ class Modal extends HTMLElement {
       this._modal = this.shadowRoot.querySelector(".modal");
       this.shadowRoot.querySelector("button").addEventListener('click', this._showModal.bind(this));
       this.shadowRoot.querySelector(".close").addEventListener('click', this._hideModal.bind(this));
-      // console.log(this.getAttribute("dataurl"));
   }
   disconnectedCallback() {
       this.shadowRoot.querySelector("button").removeEventListener('click', this._showModal);
@@ -130,7 +129,6 @@ class Modal extends HTMLElement {
         // add a button allowing adding pages to current app
         let buttonDiv = this.shadowRoot.getElementById("addPageButton");
         let addPageTemplate = document.getElementById("editPage");
-        // addPageTemplate = addPageTemplate.innerHTML.replace('<form id="UpdatePageForm" action="#" method="post">', `<form id="AddPageForm" action="pages" method="post">`);
         buttonDiv.innerHTML = addPageTemplate.innerHTML.replace('<form id="UpdatePageForm" action="#" method="post">', `<form id="AddPageForm" style="text-align: center" action="pages" method="post">`);
         buttonDiv.innerHTML = buttonDiv.innerHTML.replace('<span slot="buttonText">Edit </span>', '<span slot="buttonText">Add Page</span>');
         buttonDiv.innerHTML = buttonDiv.innerHTML.replace('<p slot="header">Edit Page</p>', '<p slot="header">Add Page</p>');
@@ -148,7 +146,6 @@ class Modal extends HTMLElement {
         let close = window.confirmExit(this.id);
         if (!close) {   return;   }
       }
-      // console.log(this.shadowRoot.innerHTML);
       this._modalVisible = false;
       this._modal.style.display = 'none';
   }

@@ -29,24 +29,23 @@ model Application {
 }
 
 model Page {
-  id       Int      @id @unique(map: "sqlite_autoindex_Page_1") @default(autoincrement())
-  URL      String
-  Title    String?
-  Action   String?
-  NeedAuth Boolean
-  Report   Report[]
-  App     Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
-  AppID   Int
+  id            Int      @id @unique(map: "sqlite_autoindex_Page_1") @default(autoincrement())
+  URL           String
+  Title         String?
+  Action        String?
+  NeedAuth      Boolean
+  Report        Report[]
+  App           Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
+  AppID         Int
+  Compliance    WCAGStatus? @relation(fields: [ComplianceID], references: [id], onDelete: Cascade)
+  ComplianceID  Int? @default(3) //Unknown
 }
 
-// model Report {
-//   id       Int    @id @unique(map: "sqlite_autoindex_Report_1") @default(autoincrement())
-//   DataTime String
-//   PageId   Int
-//   Page     Page   @relation(fields: [PageId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-
-//   @@unique([DataTime, PageId], map: "sqlite_autoindex_Report_2")
-// }
+model WCAGStatus {
+  id      Int @id @unique(map: "sqlite_autoindex_WCAGStatus_1") @default(autoincrement())
+  Status  String
+  Pages   Page[]
+}
 
 model Event {
   id       Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())

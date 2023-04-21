@@ -193,16 +193,16 @@ async function testPage(pageID) {
   try {
     let response = await fetch('/testrun', {
       method: "POST", 
-      mode: "cors", // not sure
-      cache: "no-store", // esponse should not be cached by the browser, a new request should be made to the server every time the request is made
-      credentials: "same-origin", // browser should include cookies, authentication credentials or client-side SSL certificates with the request only if the
-                                  // request is being made to the same origin as the requesting page.
+      mode: "cors", 
+      cache: "no-store", 
+      credentials: "same-origin",
+                                 
       headers: {
         "Content-Type": "application/json",
       },
-      redirect: "manual", // do not automatically follow HTTP redirects
-      referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
+      redirect: "manual", 
+      referrerPolicy: "no-referrer", 
+      body: JSON.stringify(data), 
     });
     if (!response.ok) {
       currPageURL.innerHTML = 'Something Went wrong while Testing URL: ' + currPageData.URL + '\n Please refresh this page and try again';

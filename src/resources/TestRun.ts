@@ -2,7 +2,6 @@ import * as express from "express";
 import { Request, Response, NextFunction } from "express";
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as pug from "pug";
-// import fetch from "node-fetch";
 
 const prisma = new PrismaClient()
 const router = express.Router()
@@ -80,16 +79,15 @@ router.post('/', async (req: Request, res: Response) => {
     let data = await buildTesterPostData(req);
     let testResult = await fetch('http://0.0.0.0:8080/', { // temp url for tester
       method: "POST", 
-      // mode: "cors", // not sure
-      // cache: "no-store", // esponse should not be cached by the browser, a new request should be made to the server every time the request is made
-      // credentials: "same-origin", // browser should include cookies, authentication credentials or client-side SSL certificates with the request only if the
-                                  // request is being made to the same origin as the requesting page.
+      mode: "cors",
+      cache: "no-store", 
+      credentials: "same-origin",
       headers: {
         "Content-Type": "application/json",
       },
-      // redirect: "manual", // do not automatically follow HTTP redirects
-      // referrerPolicy: "no-referrer", // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
-      body: JSON.stringify(data), // body data type must match "Content-Type" header
+      redirect: "manual",
+      referrerPolicy: "no-referrer",
+      body: JSON.stringify(data),
     });
     let result = await testResult.json();
     let TestRunID = await saveTestRun(req, result);
@@ -98,13 +96,9 @@ router.post('/', async (req: Request, res: Response) => {
   }
   catch(e: any){    
     console.log(e);
-    console.log("at catch");
-    
-    // send 500 response and handle that from the front end
     res.status(500).send({"error": "error"});
   }
   
-
 });
 
 async function buildTesterPostData(req: Request) {
@@ -162,6 +156,13 @@ async function saveTestRun(req: Request, testResult: any) {
     // i.e. when a user clicks Test on an app where all of the app's pages will be tested - in this case all the pages tested 
     // should have the same TestRunID that way they can be identified as part of a single test run.
     const TestRunID: number = req.body.TestRunID == null ? -1: Number(req.body.TestRunID);
+    let pageComplianceID = testResult.issues.length == 0 ? 1: 2;
+    let updatedPage = await prisma.page.update({
+      where: { id: PageID},
+      data: {
+        ComplianceID: pageComplianceID
+      }
+    });
     if (TestRunID == -1) {
       // build new TestRun obj and save info to it
       let TestRun = await prisma.testRun.create({
@@ -205,7 +206,6 @@ async function saveTestRun(req: Request, testResult: any) {
   catch (err: any) {
     throw err;
   }
-  
   
 }
 

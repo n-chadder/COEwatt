@@ -3,8 +3,7 @@ import { Request, Response, NextFunction } from "express";
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as pug from "pug";
 
-// Compiled pug templates
-const compiledBase = pug.compileFile("src/static/base.pug");
+
 const compiledApplicationList = pug.compileFile("src/static/application_list.pug");
 
 const prisma = new PrismaClient()
@@ -19,6 +18,14 @@ router.use((req, res, next) => {
 router.get('/', async (req: Request, res: Response) => {
 
     const applications = await prisma.application.findMany({
+      include: {
+        Tests: true,
+        Pages: {
+          include: {
+            Compliance: true
+          }
+        }
+      }
     });
 
     applications.sort((a,b) => {
