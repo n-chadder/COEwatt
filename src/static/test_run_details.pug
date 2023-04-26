@@ -36,23 +36,29 @@ block content
       for (let issue = 0; issue < currPageIssues.length; issue++) {
         let innerDetails = document.createElement('details');
         let innerSummary = document.createElement('summary');
+        let violationCode = currPageIssues[issue].code.split('.')[4];
         innerDetails.setAttribute('id', `id_d_${page}_${issue}`);
         innerSummary.setAttribute('id', `id_s_${page}_${issue}`);
-        innerSummary.textContent = `WCAG Violation Code: ${currPageIssues[issue].code}`;
+        innerSummary.textContent = `WCAG Violation Code: ${violationCode}`;
         let p1 = document.createElement('p');
         let p2 = document.createElement('p');
         let p3 = document.createElement('p');
         let p4 = document.createElement('p');
-        p1.textContent = `Code: ${currPageIssues[issue].code}`;
+        let a1 = document.createElement('a');
+        a1.href = `https://www.w3.org/TR/WCAG20-TECHS/${violationCode}`;
+        p1.textContent = `Code: ${violationCode}`;
         p2.textContent = `Message: ${currPageIssues[issue].message}`;
         p3.textContent = `Context: ${currPageIssues[issue].context}`;
         p4.textContent = `Selector: ${currPageIssues[issue].selector}`;
+        a1.textContent = 'Get Help';
 
         innerDetails.appendChild(innerSummary);
         innerDetails.appendChild(p1);
         innerDetails.appendChild(p2);
         innerDetails.appendChild(p3);
         innerDetails.appendChild(p4);
+        innerDetails.appendChild(a1);
+
         detailsElement.appendChild(innerDetails);
       }
 
