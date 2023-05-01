@@ -24,6 +24,7 @@ const host = process.env.HOST || "127.0.0.1";
 
 const compiledHome = pug.compileFile("src/static/home.pug");
 const compiledDashboard = pug.compileFile("src/static/dashboard.pug");
+const compiledFeedback = pug.compileFile("src/static/feedback.pug");
 
 app.ws('/', (ws: { on: (arg0: string, arg1: (message: any) => Promise<void>) => void; send: (arg0: string) => void; }) => {
     console.log("Got websocket connection")
@@ -56,6 +57,10 @@ app.use('/testrun', testrun);
 
 app.get('/dashboard', (req: Request, res: Response) => {
   res.status(200).send(compiledDashboard({}));
+});
+
+app.get('/feedback', (req: Request, res: Response) => {
+  res.status(200).send(compiledFeedback({}));
 });
 
 server.listen(port);
