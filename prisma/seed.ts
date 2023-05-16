@@ -5,6 +5,7 @@ async function main() {
   try {
     let EventStatusData = await generateEventStatusData();
     let WCAGStatusData = await generateWCAGStatusData();
+    let pageEnvData = await generatePageEnvironment();
   }
   catch (e: any) {
     console.log(e);
@@ -77,6 +78,38 @@ async function generateWCAGStatusData() {
     throw e;
   }
   return true;
+}
+
+async function generatePageEnvironment() {
+  try{
+    const Prod = await prisma.environment.upsert({
+      where: {id: 1},
+      update: {},
+      create: {
+        id: 1,
+        env: "Prod"
+      },
+    });
+    const QA = await prisma.environment.upsert({
+      where: {id: 2},
+      update: {},
+      create: {
+        id: 2,
+        env: "QA"
+      },
+    });
+    const Dev = await prisma.environment.upsert({
+      where: {id: 3},
+      update: {},
+      create: {
+        id: 3,
+        env: "Dev"
+      },
+    });
+  }
+  catch (e: any) {
+    throw e;
+  }
 }
 
 main()

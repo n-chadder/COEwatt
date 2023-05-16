@@ -7,11 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Testm {
-  id    Int   @id @unique @default(autoincrement())
-  Name String
-}
-
 model Application {
   id                  Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
   Name                String
@@ -37,8 +32,10 @@ model Page {
   Report        Report[]
   App           Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
   AppID         Int
-  Compliance    WCAGStatus? @relation(fields: [ComplianceID], references: [id], onDelete: Cascade)
+  Compliance    WCAGStatus? @relation(fields: [ComplianceID], references: [id])
   ComplianceID  Int? @default(3) //Unknown
+  env           Environment @relation(fields: [envID], references: [id])
+  envID         Int 
 }
 
 model WCAGStatus {
@@ -48,14 +45,15 @@ model WCAGStatus {
 }
 
 model Event {
-  id       Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
-  App      Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
-  AppID    Int
-  Start    DateTime
-  End      DateTime
-  Notes    String
-  Status   EventStatus @relation(fields: [StatusID], references: [id])
-  StatusID Int   
+  id                  Int      @id @unique(map: "sqlite_autoindex_Event_1") @default(autoincrement())
+  App                 Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
+  AppID               Int
+  Start               DateTime
+  EstimatedCompletion DateTime
+  ActualCompletion    DateTime?
+  Notes               String
+  Status              EventStatus @relation(fields: [StatusID], references: [id])
+  StatusID            Int   
 }
 
 // run 'npx prisma db seed' to apply the default values - this should be added to the .dockerfile
@@ -81,4 +79,10 @@ model TestRun {
   App      Application @relation(fields: [AppID], references: [id], onDelete: Cascade)
   Created  DateTime // for getting the most recent TestRun for an appliction
   Reports  Report[]
+}
+
+model Environment {
+  id      Int @id @unique(map: "sqlite_autoindex_Environment_1") @default(autoincrement())
+  env     String
+  pages   Page[]
 }

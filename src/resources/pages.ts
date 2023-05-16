@@ -56,6 +56,7 @@ router.post('/', async (req: Request, res: Response) => {
     const Action: string = req.body.Action;
     const NeedAuth: boolean = (req.body.NeedAuth == "on") ? true : false;
     const App: number = Number(req.body.App);
+    const env: number = Number(req.body.env);
     const result = await prisma.page.create({
       data: {
         URL,
@@ -64,7 +65,10 @@ router.post('/', async (req: Request, res: Response) => {
         NeedAuth,
         App: {
           connect: { id: App},
-        } 
+        },
+        env: {
+          connect: { id: env },
+        }
       },
     });
     res.format({
@@ -106,6 +110,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
     const Action: string = req.body.Action;
     const NeedAuth: boolean = (req.body.NeedAuth == "on") ? true : false;
     const App: number = Number(req.body.App);
+    const env: number = Number(req.body.env);
 
     const result = await prisma.page.update({
       where: {
@@ -118,7 +123,10 @@ router.patch('/:id', async (req: Request, res: Response) => {
         NeedAuth,
         App: {
           connect: { id: App},
-        } 
+        },
+        env: {
+          connect: {id: env},
+        }
       },
     });
 

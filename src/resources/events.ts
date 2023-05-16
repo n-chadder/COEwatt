@@ -63,7 +63,8 @@ router.post('/', async (req: Request, res: Response) => {
   try {
     const App: number      = Number(req.body.App);
     const Start: Date      = new Date(req.body.Start);
-    const End: Date        = new Date(req.body.End);
+    const EstimatedCompletion: Date = new Date(req.body.EstimatedCompletion);
+    const ActualCompletion: Date = new Date(req.body.ActualCompletion);
     const Notes: string    = req.body.Notes;
     const StatusID: number = Number(req.body.status);
     
@@ -73,7 +74,8 @@ router.post('/', async (req: Request, res: Response) => {
           connect: { id: App },
         },
         Start: Start,
-        End: End,
+        EstimatedCompletion: EstimatedCompletion,
+        ActualCompletion: ActualCompletion,
         Notes: Notes,
         Status: {
           connect: { id: StatusID },
@@ -124,7 +126,8 @@ router.patch('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const App: number   = Number(req.body.App);
     const Start: Date   = new Date(req.body.Start);
-    const End: Date     = new Date(req.body.End);
+    const EstimatedCompletion: Date = new Date(req.body.EstimatedCompletion);
+    const ActualCompletion: Date = new Date(req.body.ActualCompletion);
     const Notes: string = req.body.Notes;
     const StatusID: number = Number(req.body.status);
 
@@ -137,7 +140,8 @@ router.patch('/:id', async (req: Request, res: Response) => {
             connect: { id: App },
           },
           Start, 
-          End,
+          EstimatedCompletion: EstimatedCompletion,
+          ActualCompletion: ActualCompletion,
           Notes,
           Status: {
             connect: { id: StatusID },
