@@ -249,8 +249,9 @@ window.addEventListener('beforeunload', function (e) {
 });
 
 function resetAppModal(){
-  testAppReport.setAttribute('href', '#');
+  testAppReport.setAttribute('href', 'javascript: return null;');
   testAppReport.style.display = 'none';
+  testAppReport.innerHTML = 'empty link';
   WCAGSelectDivApp.style.display = '';
   progress.style.display = 'none';
   testAppStart.disabled = false;
@@ -261,8 +262,9 @@ function resetAppModal(){
 }
 
 function resetPageModal() {
-  testPageReport.setAttribute('href', '#');
+  testPageReport.setAttribute('href', 'javascript: return null;');
   testPageReport.style.display = 'none';
+  testPageReport.innerHTML = 'empty link';
   pageProgress.style.display = 'none';
   currPageData = null;
   WCAGSelectDivPage.style.display = '';

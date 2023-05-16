@@ -16,24 +16,28 @@ block content
   div(id="addEvent")
     pp-modal(dataurl="/schedule", id="modal", buttonDisplay="none")
       span(slot="buttonText") Add Event
-      p(slot="header") Schedule Event
+      p(slot="header" style="color: #767676;") Schedule Event
       span(slot="formContent")
         form(id="addSceduleEventForm", action="/events", method="post")
           div.form-group
-            label(for="App") Application  
+            label(for="addAppSelect") Application  
             br
             select(name="App", style="width: 100%;", id="addAppSelect", required)
               option(disabled selected value) -- select an option -- 
           div.form-group
-            label(for="start") Event start date 
+            label(for="start") Start date 
             br
             input(type="date", id="start", style="width: 100%;", name="Start", min="2018-01-01", max="2050-01-01", required).form-control
           div.form-group
-            label(for="end") Event end date 
+            label(for="EstimatedCompletion") Estimated Completion Date
             br
-            input(type="date", id="end", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
+            input(type="date", id="EstimatedCompletion", style="width: 100%;", name="EstimatedCompletion", min="2018-01-01", max="2050-01-01", required).form-control
           div.form-group
-            label(for="status") Event Status 
+            label(for="ActualCompletion") Actual Completion Date
+            br
+            input(type="date", id="ActualCompletion", style="width: 100%;", name="ActualCompletion", min="2018-01-01", max="2050-01-01").form-control
+          div.form-group
+            label(for="addStatusSelect") Event Status 
             br
             select(name="status", style="width: 100%;", id="addStatusSelect", required)
               option(value="1" selected) Scheduled
@@ -49,31 +53,35 @@ block content
   div(id="editEvent")
     pp-modal(dataurl="/schedule", id="editModal", buttonDisplay="none")
       span(slot="buttonText") Edit Event
-      p(slot="header") Edit Event
+      p(slot="header" style="color: #767676;") Edit Event
       span(slot="formContent")
         form(id="editSceduleEventForm", action="/events", method="post")
           div.form-group
-            label(for="App") Application  
+            label(for="editAppSelect") Application  
             br
             select(name="App", style="width: 100%;", id="editAppSelect")
             input(type="hidden", id="editID") 
           div.form-group
-            label(for="start") Event start date 
+            label(for="editStart") Start date 
             br
             input(type="date", id="editStart", style="width: 100%;", name="Start", min="2018-01-01", max="2050-01-01", required).form-control
           div.form-group
-            label(for="end") Event end date 
+            label(for="editEstimatedCompletion") Estimated Completion Date
             br
-            input(type="date", id="editEnd", style="width: 100%;", name="End", min="2018-01-01", max="2050-01-01", required).form-control
+            input(type="date", id="editEstimatedCompletion", style="width: 100%;", name="EstimatedCompletion", min="2018-01-01", max="2050-01-01", required).form-control
           div.form-group
-            label(for="status") Event Status 
+            label(for="editActualCompletion") Actual Completion Date
+            br
+            input(type="date", id="editActualCompletion", style="width: 100%;", name="ActualCompletion", min="2018-01-01", max="2050-01-01").form-control          
+          div.form-group
+            label(for="editStatusSelect") Event Status 
             br
             select(name="status", style="width: 100%;", id="editStatusSelect", required)
               option(value="1") Scheduled
               option(value="2") In Progress
               option(value="3") Completed
           div.form-group
-            label(for="Desc") Notes
+            label(for="editNotes") Notes
             br 
             textarea(type="text", id="editNotes", placeholder="Any notes about the event", style="width: 100%;", name="Notes").form-control
           div(style="padding-top: 10px").form-group.AddEventButtonDiv
@@ -82,7 +90,7 @@ block content
   div(id="deleteEvent")
     pp-modal(method="delete", dataurl="/schedule", id="deleteModal", buttonDisplay="none")
       span(slot="buttonText") Delete Event
-      p(slot="header") Delete Event
+      p(slot="header" style="color: #767676;") Delete Event
       span(slot="formContent")
         form(id="deleteSceduleEventForm", action="/events", method="post")
           fieldset.form-group 
@@ -146,19 +154,27 @@ block content
         let parsedData = [];
         for (let i = 0; i < data.length; i++) {
           let today = new Date();
-          let endDateArr = data[i].End.replace('T00:00:00.000Z', '').split("-");
-          let endDate = new Date(endDateArr[0], endDateArr[1]-1, endDateArr[2]);
+          let estCompleteDateArr = data[i].EstimatedCompletion.replace('T00:00:00.000Z', '').split("-");
+          let estCompleteDate = new Date(estCompleteDateArr[0], estCompleteDateArr[1]-1, estCompleteDateArr[2]);
+          let actCompleteDateArr = data[i].ActualCompletion.replace('T00:00:00.000Z', '').split("-");
+          let actCompleteDate = new Date(actCompleteDateArr[0], actCompleteDateArr[1]-1, actCompleteDateArr[2]);
           
           let eventColor = '#808080'; // event scheduled
-          if ((today>endDate) && (data[i].StatusID != 3)) {   eventColor = '#D0312D';   } // past due   
+          if ((today>estCompleteDate) && (today>actCompleteDate) && (data[i].StatusID != 3)) {   eventColor = '#D0312D';   } // past due   
           else if (data[i].StatusID == 2) {   eventColor = '#3788d8';   } // in progress
           else if (data[i].StatusID == 3) { eventColor = '#008000';   }  // completed
-
+          let currEventEnd = null;
+          if (data[i].ActualCompletion && data[i].ActualCompletion > data[i].EstimatedCompletion) {
+            currEventEnd = data[i].ActualCompletion;
+          }
+          else {
+            currEventEnd = data[i].EstimatedCompletion;
+          }
           let currEvent = { 
             id: data[i].id, 
             "title": data[i].App.Name,
             "start": data[i].Start.replace('T00:00:00.000Z', ''),
-            "end":   data[i].End.replace('T00:00:00.000Z', 'T23:59:59'),
+            "end":   currEventEnd.replace('T00:00:00.000Z', 'T23:59:59'),
             "notes": data[i].Notes,
             "color": eventColor
           };
@@ -197,7 +213,8 @@ block content
                   console.log(data); 
                   //- document.getElementById("editTitle").value = data.Title; 
                   document.getElementById("editStart").value = data.Start.replace('T00:00:00.000Z', '');
-                  document.getElementById("editEnd").value   = data.End.replace('T00:00:00.000Z', ''); 
+                  document.getElementById("editEstimatedCompletion").value = data.EstimatedCompletion.replace('T00:00:00.000Z', '');
+                  document.getElementById("editActualCompletion").value = data.ActualCompletion ? data.ActualCompletion.replace('T00:00:00.000Z', '') : null;
                   document.getElementById("editNotes").value = data.Notes;
                   document.getElementById("editID").value    = data.id;
                   document.getElementById("editStatusSelect").value = data.StatusID;

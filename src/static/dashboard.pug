@@ -77,7 +77,14 @@ block content
       };
 
       for (let i = 0; i < responseData.length; i++) {
-        let endDateArr = responseData[i].End.replace('T00:00:00.000Z', '').split("-");
+        let currEventEnd = null;
+        if (responseData[i].ActualCompletion && responseData[i].ActualCompletion > responseData[i].EstimatedCompletion) {
+          currEventEnd = responseData[i].ActualCompletion;
+        }
+        else {
+          currEventEnd = responseData[i].EstimatedCompletion;
+        }
+        let endDateArr = currEventEnd.replace('T00:00:00.000Z', '').split("-");
         let endDate = new Date(endDateArr[0], endDateArr[1]-1, endDateArr[2]);
 
         if ((today>endDate) && (responseData[i].StatusID != 3)) {
@@ -177,8 +184,7 @@ block content
             datalabels: {
               color: 'rgb(0, 0, 0)',
               formatter: function(context, args) {
-                let percentVal = (context / parsedData.numTotal) * 100;
-                return `${percentVal}%`;
+                return context;
               }
             },
             legend: {
