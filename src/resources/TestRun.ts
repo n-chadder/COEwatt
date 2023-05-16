@@ -111,13 +111,13 @@ async function buildTesterPostData(req: Request) {
     
     // if the page NeedAuth, then we need to build the json obj 'authenticationData' that is used by the tester code.
     let authenticationData = {
-      "uName": null,
-      "uNameElement": null,
-      "uPword": null,
-      "uPwordElement": null,
-      "submitNameID": null,
-      "loginUrl": null,
-      "additionalActions": null // seems this is different from the other 'Actions' that the page may have
+      "uName": "",
+      "uNameElement": "",
+      "uPword": "",
+      "uPwordElement": "",
+      "submitNameID": "",
+      "loginUrl": "",
+      "additionalActions": "" // seems this is different from the other 'Actions' that the page may have
     };                          // this one is purely for actions needed when loggin in, might have to add
                                 // another column to the database for this. 
     
