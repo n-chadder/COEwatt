@@ -116,14 +116,17 @@ function getAuthActions(authenticationData) {
   let passwordString = "set field " + passwordElement + " to " + password;
   let screenShot = "screen capture loginScreenShot.png";
   let AuthActions = [];
+  
+  if (additionalActionString != ""){
+    authenticationAction.push(additionalActionString);
+    console.log(additionalActionString);
+  }
+
   authenticationAction.push(usernameString);
   authenticationAction.push(passwordString);
   authenticationAction.push(screenShot);
   authenticationAction.push(submitString);
-  
-  if (additionalActionString != ""){
-    authenticationAction.push(additionalActionString);
-  }
+
   for (let i = 0; i < authenticationAction.length; i++) {
     if (pa11y.isValidAction(authenticationAction[i])) {
       AuthActions.push(authenticationAction[i]);
@@ -137,6 +140,7 @@ function getAuthActions(authenticationData) {
 
 async function runLoginTest(loginUrl, AuthActions) {
   try {
+    console.log(AuthActions);
     const browser = await puppeteer.launch({
       ignoreHTTPSErrors: true,
       headless: true,
@@ -152,9 +156,6 @@ async function runLoginTest(loginUrl, AuthActions) {
       timeout: 80000,
       userAgent: userAgentString,
    });
-
-  
-   cookies = await page.cookies(loginUrl);
 
    return browser;
   }
