@@ -156,8 +156,17 @@ block content
           let today = new Date();
           let estCompleteDateArr = data[i].EstimatedCompletion.replace('T00:00:00.000Z', '').split("-");
           let estCompleteDate = new Date(estCompleteDateArr[0], estCompleteDateArr[1]-1, estCompleteDateArr[2]);
-          let actCompleteDateArr = data[i].ActualCompletion.replace('T00:00:00.000Z', '').split("-");
-          let actCompleteDate = new Date(actCompleteDateArr[0], actCompleteDateArr[1]-1, actCompleteDateArr[2]);
+          let actCompleteDateArr = null;
+          let actCompleteDate = 0;
+          try{
+            actCompleteDateArr = data[i].ActualCompletion.replace('T00:00:00.000Z', '').split("-");
+            actCompleteDate = new Date(actCompleteDateArr[0], actCompleteDateArr[1]-1, actCompleteDateArr[2]);
+          }
+          catch{
+            console.log("");
+          }
+          
+          
           
           let eventColor = '#808080'; // event scheduled
           if ((today>estCompleteDate) && (today>actCompleteDate) && (data[i].StatusID != 3)) {   eventColor = '#D0312D';   } // past due   
