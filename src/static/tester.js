@@ -147,7 +147,7 @@ async function runLoginTest(loginUrl, AuthActions) {
       args: ["--ignore-certificate-errors"],
    });
    page = await browser.newPage();
-   console.log("RUNNING LOGIN SCRIPT")
+   console.log("RUNNING LOGIN SCRIPT");
    const testPage = loginUrl;
    await pa11y(testPage, {
       actions: AuthActions,
@@ -178,8 +178,9 @@ async function runAuthLoginTest(loginUrl, AuthActions, username, password) {
 
     const testPage = loginUrl;
     await page.setUserAgent(userAgentString);
-    await page.authenticate({'username':username, 'password':password})
-    await page.goto (testPage)
+    await page.authenticate({'username':username, 'password':password});
+    await page.goto (testPage);
+    await page.waitForNavigation();
     await pa11y(testPage, {
        actions: AuthActions,
        browser,

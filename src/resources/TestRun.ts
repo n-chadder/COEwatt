@@ -6,7 +6,7 @@ import * as pug from "pug";
 const prisma = new PrismaClient()
 const router = express.Router()
 
-const appURL = 'http://localhost:3000/'; // temp to be used in fetch, maybe Jim knows how to not hard-code this
+const appURL = 'http://localhost:3000/'; 
 
 const compiledTestRunsPage = pug.compileFile("src/static/test_runs.pug");
 const compiledTestRunDetailsPage = pug.compileFile("src/static/test_run_details.pug");
@@ -70,7 +70,7 @@ router.get('/:id', async (req: Request, res: Response) => {
   }
   catch (err: any) {
     console.log(err);
-    res.status(404).send('<h1>Sorry the Test Run you requested cannot be found</h1>'); // why doesnt this HTML show up in browser? 
+    res.status(404).send('<h1>Sorry the Test Run you requested cannot be found</h1>'); 
   }
 });
 
@@ -117,20 +117,21 @@ async function buildTesterPostData(req: Request) {
       "uPwordElement": "",
       "submitNameID": "",
       "loginUrl": "",
-      "additionalActions": "" // seems this is different from the other 'Actions' that the page may have
-    };                          // this one is purely for actions needed when loggin in, might have to add
-                                // another column to the database for this. 
+      "additionalActions": "" 
+    };                          
     
     if (NeedAuth) {
-      let data = await fetch(`${appURL}applications/${AppID}`,);
-      let AppData = await data.json();
-      authenticationData.loginUrl = AppData.LogInURL;
-      authenticationData.uName = AppData.Username;
-      authenticationData.uNameElement = AppData.UsernameElement;
-      authenticationData.uPword = AppData.Password;
-      authenticationData.uPwordElement = AppData.PasswordElement;
-      authenticationData.submitNameID = AppData.SubmitButtonElement;
+      // let data = await fetch(`${appURL}applications/${AppID}`,);
+      // let AppData = await data.json();
+      authenticationData.loginUrl = req.body.authenticationData.loginUrl;
+      authenticationData.uName = req.body.authenticationData.uName;
+      authenticationData.uNameElement = req.body.authenticationData.uNameElement;
+      authenticationData.uPword = req.body.authenticationData.uPword;
+      authenticationData.uPwordElement = req.body.authenticationData.uPwordElement;
+      authenticationData.submitNameID = req.body.authenticationData.submitNameID;
+      authenticationData.additionalActions = req.body.authenticationData.additionalActions;
     }  
+    
     let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"; // prefilled in IMSIS test app form
     let postData = {
       "url": pageURL,

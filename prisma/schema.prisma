@@ -14,12 +14,12 @@ model Application {
   Owner               String
   Events              Event[] 
   Pages               Page[]
-  LogInURL            String
-  Username            String
-  UsernameElement     String
-  Password            String
-  PasswordElement     String
-  SubmitButtonElement String
+  // LogInURL            String
+  // Username            String
+  // UsernameElement     String
+  // Password            String
+  // PasswordElement     String
+  // SubmitButtonElement String
   Tests               TestRun[]
 }
 

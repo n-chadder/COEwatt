@@ -18,10 +18,30 @@ let testPageStart = document.getElementById("testPageStart");
 let testPageHelpText = document.getElementById("testPageHelpText");
 let testPageReport = document.getElementById("testPageReport");
 let testAppReport = document.getElementById("testAppReport");
+let id_app_auth_data = document.getElementById("id_app_auth_data");
+let id_submit_app_auth_data = document.getElementById("id_submit_app_auth_data");
+let id_app_test_loginurl = document.getElementById("id_app_test_loginurl");
+let id_app_test_Username = document.getElementById("id_app_test_Username");
+let id_app_test_usernameElement = document.getElementById("id_app_test_usernameElement");
+let id_app_test_Password = document.getElementById("id_app_test_Password");
+let id_app_test_PasswordElement = document.getElementById("id_app_test_PasswordElement");
+let id_app_test_SubmitButtonElement = document.getElementById("id_app_test_SubmitButtonElement");
+let id_app_test_additionalActions = document.getElementById("id_app_test_additionalActions");
+let id_page_auth_data = document.getElementById("id_page_auth_data");
+let id_submit_page_auth_data = document.getElementById("id_submit_page_auth_data");
+let id_page_test_loginurl = document.getElementById("id_page_test_loginurl");
+let id_page_test_Username = document.getElementById("id_page_test_Username");
+let id_page_test_usernameElement = document.getElementById("id_page_test_usernameElement");
+let id_page_test_Password = document.getElementById("id_page_test_Password");
+let id_page_test_PasswordElement = document.getElementById("id_page_test_PasswordElement");
+let id_page_test_SubmitButtonElement = document.getElementById("id_page_test_SubmitButtonElement");
+let id_page_test_additionalActions = document.getElementById("id_page_test_additionalActions");
+let id_app_test_saveAuth = document.getElementById("id_app_test_saveAuth");
 let TestInProgress = false;
 let regex = /\d+/g;
 let currAppData = null;
 let currPageData = null;
+let appAuthData = null;
 
 testAppCancel.addEventListener('click', cancelAppTest);
 testPageCancel.addEventListener('click', cancelPageTest);
@@ -76,12 +96,43 @@ async function testApplication(appID){
     return;
   }
   TestInProgress = true;
+  testAppStart.disabled = true;
   let TestRunID = null;
   for (let i = 0; i < currAppData.Pages.length; i++) {
-    console.log(`i=${i}, TestRunID=${TestRunID}`);
+    let authenticationData = {
+      "uName": "",
+      "uNameElement": "",
+      "uPword": "",
+      "uPwordElement": "",
+      "submitNameID": "",
+      "loginUrl": "",
+      "additionalActions": "" 
+    };   
     if (!TestInProgress) {   
       currAppURL.innerHTML = 'Test cancelled';
       return;   
+    }
+    else if (currAppData.Pages[i].NeedAuth) {
+      if (appAuthData == null) {
+        await new Promise(resolve => {
+          id_submit_app_auth_data.addEventListener('click', resolve);
+          id_app_auth_data.style.display = '';
+        });
+        authenticationData.uName = id_app_test_Username.value;
+        authenticationData.uNameElement = id_app_test_usernameElement.value;
+        authenticationData.uPword = id_app_test_Password.value;
+        authenticationData.uPwordElement = id_app_test_PasswordElement.value;
+        authenticationData.submitNameID = id_app_test_SubmitButtonElement.value;
+        authenticationData.loginUrl = id_app_test_loginurl.value;
+        authenticationData.additionalActions = id_app_test_additionalActions.value;
+        if (id_app_test_saveAuth.checked) {
+          appAuthData = JSON.parse(JSON.stringify(authenticationData));
+        }
+        id_app_auth_data.style.display = 'none';
+      }
+      else {
+        authenticationData = JSON.parse(JSON.stringify(appAuthData));
+      }
     }
     currAppURL.innerHTML = `Currently testing URL: ${currAppData.Pages[i].URL}`;
 
@@ -92,13 +143,14 @@ async function testApplication(appID){
       "NeedAuth": currAppData.Pages[i].NeedAuth,
       "Action": currAppData.Pages[i].Action,
       "TestRunID": TestRunID,
-      "AppID": currAppData.id
+      "AppID": currAppData.id,
+      "authenticationData": authenticationData
     }
 
     try {
       let response = await fetch('/testrun', {
         method: "POST", 
-        mode: "cors", // not sure
+        mode: "cors",
         cache: "no-store", // esponse should not be cached by the browser, a new request should be made to the server every time the request is made
         credentials: "same-origin", // browser should include cookies, authentication credentials or client-side SSL certificates with the request only if the
                                     // request is being made to the same origin as the requesting page.
@@ -141,6 +193,7 @@ async function testApplication(appID){
   testAppReport.setAttribute('href', `/testrun/${TestRunID}`);
   testAppReport.innerHTML = 'View Results';
   testAppReport.style.display = 'block';
+  appAuthData = null;
   currAppData = null;
   return;
 }
@@ -161,17 +214,39 @@ async function showPageModal(pageID) {
 
 }
 
-// this gets a bit weird when a test is cancelled and
-// another is started right away.
 async function testPage(pageID) {
+
+  let authenticationData = {
+    "uName": "",
+    "uNameElement": "",
+    "uPword": "",
+    "uPwordElement": "",
+    "submitNameID": "",
+    "loginUrl": "",
+    "additionalActions": "" 
+  };   
 
   if (TestInProgress) {
     alert('There is already a test in progress. Please wait it is done.');
     return;
   }
-
   WCAGSelectDivPage.style.display = 'none';
   testPageHelpText.style.display = 'none';
+  testPageStart.disabled =  true;
+  if (currPageData.NeedAuth) {
+    await new Promise(resolve => {
+      id_submit_page_auth_data.addEventListener('click', resolve);
+      id_page_auth_data.style.display = '';
+    });
+    authenticationData.uName = id_page_test_Username.value;
+    authenticationData.uNameElement = id_page_test_usernameElement.value;
+    authenticationData.uPword = id_page_test_Password.value;
+    authenticationData.uPwordElement = id_page_test_PasswordElement.value;
+    authenticationData.submitNameID = id_page_test_SubmitButtonElement.value;
+    authenticationData.loginUrl = id_page_test_loginurl.value;
+    authenticationData.additionalActions = id_page_test_additionalActions.value;
+    id_page_auth_data.style.display = 'none';
+  }
   let WCAG_version = WCAGPageSelect.value;
 
   TestInProgress = true;
@@ -188,7 +263,8 @@ async function testPage(pageID) {
     "NeedAuth": currPageData.NeedAuth,
     "Action": currPageData.Action,
     "TestRunID": null,
-    "AppID": currPageData.AppID
+    "AppID": currPageData.AppID,
+    "authenticationData": authenticationData
   }
   try {
     let response = await fetch('/testrun', {
@@ -259,6 +335,9 @@ function resetAppModal(){
   currAppURL.style.color = '';
   currAppData = null;
   testAppHelpText.style.display = '';
+  testAppStart.disabled = false;
+  id_app_auth_data.style.display = 'none';
+  appAuthData = null;
 }
 
 function resetPageModal() {
@@ -269,4 +348,6 @@ function resetPageModal() {
   currPageData = null;
   WCAGSelectDivPage.style.display = '';
   testPageHelpText.style.display = '';
+  testPageStart.disabled = false;
+  id_page_auth_data.style.display = 'none';
 }
