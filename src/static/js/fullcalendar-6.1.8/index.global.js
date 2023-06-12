@@ -6314,7 +6314,7 @@ var FullCalendar = (function (exports) {
         let content = typeof chunkConfig.content === 'function' ?
             chunkConfig.content(arg) :
             y('table', {
-                role: 'presentation',
+                role: '',
                 className: [
                     chunkConfig.tableClassName,
                     sectionConfig.syncRowHeights ? 'fc-scrollgrid-sync-table' : '',
@@ -6325,7 +6325,7 @@ var FullCalendar = (function (exports) {
                     height: expandRows ? arg.clientHeight : '', // css `height` on a <table> serves as a min-height
                 },
             }, arg.tableColGroupNode, y(isHeader ? 'thead' : 'tbody', {
-                role: 'presentation',
+                role: '',
             }, typeof chunkConfig.rowContent === 'function'
                 ? chunkConfig.rowContent(arg)
                 : chunkConfig.rowContent));
@@ -6473,7 +6473,7 @@ var FullCalendar = (function (exports) {
             if ('outerContent' in sectionConfig) {
                 return (y(_, { key: sectionConfig.key }, sectionConfig.outerContent));
             }
-            return (y("tr", { key: sectionConfig.key, role: "presentation", className: getSectionClassNames(sectionConfig, this.props.liquid).join(' ') }, this.renderChunkTd(sectionConfig, microColGroupNode, sectionConfig.chunk, isHeader)));
+            return (y("tr", { key: sectionConfig.key, role: "", className: getSectionClassNames(sectionConfig, this.props.liquid).join(' ') }, this.renderChunkTd(sectionConfig, microColGroupNode, sectionConfig.chunk, isHeader)));
         }
         renderChunkTd(sectionConfig, microColGroupNode, chunkConfig, isHeader) {
             if ('outerContent' in chunkConfig) {
@@ -6502,7 +6502,7 @@ var FullCalendar = (function (exports) {
             }, isHeader);
             return y(isHeader ? 'th' : 'td', {
                 ref: chunkConfig.elRef,
-                role: 'presentation',
+                role: '',
             }, y("div", { className: `fc-scroller-harness${isLiquid ? ' fc-scroller-harness-liquid' : ''}` },
                 y(Scroller, { ref: this.scrollerRefs.createRef(sectionKey), elRef: this.scrollerElRefs.createRef(sectionKey), overflowY: overflowY, overflowX: !props.liquid ? 'visible' : 'hidden' /* natural height? */, maxHeight: sectionConfig.maxHeight, liquid: isLiquid, liquidIsAbsolute // because its within a harness
                     : true }, content)));
@@ -12641,13 +12641,13 @@ var FullCalendar = (function (exports) {
                     width: props.clientWidth,
                     minWidth: props.tableMinWidth,
                 } },
-                y("table", { role: "presentation", className: "fc-scrollgrid-sync-table", style: {
+                y("table", { role: "", className: "fc-scrollgrid-sync-table", style: {
                         width: props.clientWidth,
                         minWidth: props.tableMinWidth,
                         height: expandRows ? props.clientHeight : '',
                     } },
                     props.colGroupNode,
-                    y("tbody", { role: "presentation" },
+                    y("tbody", { role: "" },
                         y(TableRows, { dateProfile: props.dateProfile, cells: props.cells, renderRowIntro: props.renderRowIntro, showWeekNumbers: props.showWeekNumbers, clientWidth: props.clientWidth, clientHeight: props.clientHeight, businessHourSegs: props.businessHourSegs, bgEventSegs: props.bgEventSegs, fgEventSegs: props.fgEventSegs, dateSelectionSegs: props.dateSelectionSegs, eventSelection: props.eventSelection, eventDrag: props.eventDrag, eventResize: props.eventResize, dayMaxEvents: dayMaxEvents, dayMaxEventRows: dayMaxEventRows, forPrint: props.forPrint, isHitComboAllowed: props.isHitComboAllowed })))));
         }
         componentDidMount() {
@@ -13071,7 +13071,7 @@ var FullCalendar = (function (exports) {
                     type: 'body',
                     key: 'all-day-divider',
                     outerContent: ( // TODO: rename to cellContent so don't need to define <tr>?
-                    y("tr", { role: "presentation", className: "fc-scrollgrid-section" },
+                    y("tr", { role: "", className: "fc-scrollgrid-section" },
                         y("td", { className: 'fc-timegrid-divider ' + context.theme.getClass('tableCellShaded') }))),
                 });
             }
@@ -13106,7 +13106,7 @@ var FullCalendar = (function (exports) {
                     chunks: [
                         {
                             key: 'axis',
-                            rowContent: (arg) => (y("tr", { role: "presentation" }, this.renderHeadAxis('day', arg.rowSyncHeights[0]))),
+                            rowContent: (arg) => (y("tr", { role: "" }, this.renderHeadAxis('day', arg.rowSyncHeights[0]))),
                         },
                         {
                             key: 'cols',
@@ -13125,7 +13125,7 @@ var FullCalendar = (function (exports) {
                     chunks: [
                         {
                             key: 'axis',
-                            rowContent: (contentArg) => (y("tr", { role: "presentation" }, this.renderTableRowAxis(contentArg.rowSyncHeights[0]))),
+                            rowContent: (contentArg) => (y("tr", { role: "" }, this.renderTableRowAxis(contentArg.rowSyncHeights[0]))),
                         },
                         {
                             key: 'cols',
@@ -13137,7 +13137,7 @@ var FullCalendar = (function (exports) {
                     key: 'all-day-divider',
                     type: 'body',
                     outerContent: ( // TODO: rename to cellContent so don't need to define <tr>?
-                    y("tr", { role: "presentation", className: "fc-scrollgrid-section" },
+                    y("tr", { role: "", className: "fc-scrollgrid-section" },
                         y("td", { colSpan: 2, className: 'fc-timegrid-divider ' + context.theme.getClass('tableCellShaded') }))),
                 });
             }
@@ -13761,12 +13761,12 @@ var FullCalendar = (function (exports) {
             let eventDragByRow = this.splitEventDrag(props.eventDrag, colCnt);
             let eventResizeByRow = this.splitEventResize(props.eventResize, colCnt);
             return (y("div", { className: "fc-timegrid-cols", ref: this.rootElRef },
-                y("table", { role: "presentation", style: {
+                y("table", { role: "", style: {
                         minWidth: props.tableMinWidth,
                         width: props.clientWidth,
                     } },
                     props.tableColGroupNode,
-                    y("tbody", { role: "presentation" },
+                    y("tbody", { role: "" },
                         y("tr", { role: "row" },
                             props.axis && (y("td", { "aria-hidden": true, className: "fc-timegrid-col fc-timegrid-axis" },
                                 y("div", { className: "fc-timegrid-col-frame" },
@@ -14383,12 +14383,12 @@ var FullCalendar = (function (exports) {
             const rowCnt = dayTableModel.cells.length;
             const rowHeight = tableHeight != null ? tableHeight / rowCnt : null;
             return (y("div", { ref: props.elRef, "data-date": props.isoDateStr, className: "fc-multimonth-month", style: { width: props.width }, role: "grid", "aria-labelledby": state.labelId },
-                y("div", { className: "fc-multimonth-header", style: { marginBottom: rowHeight }, role: "presentation" },
+                y("div", { className: "fc-multimonth-header", style: { marginBottom: rowHeight }, role: "" },
                     y("div", { className: "fc-multimonth-title", id: state.labelId }, context.dateEnv.format(props.dateProfile.currentRange.start, props.titleFormat)),
                     y("table", { className: [
                             'fc-multimonth-header-table',
                             context.theme.getClass('table'),
-                        ].join(' '), role: "presentation" },
+                        ].join(' '), role: "" },
                         y("thead", { role: "rowgroup" },
                             y(DayHeader, { dateProfile: props.dateProfile, dates: dayTableModel.headerDates, datesRepDistinctDays: false })))),
                 y("div", { className: [
@@ -14402,7 +14402,7 @@ var FullCalendar = (function (exports) {
                     y("table", { className: [
                             'fc-multimonth-daygrid-table',
                             context.theme.getClass('table'),
-                        ].join(' '), style: { height: forPrint ? '' : tableHeight }, role: "presentation" },
+                        ].join(' '), style: { height: forPrint ? '' : tableHeight }, role: "" },
                         y("tbody", { role: "rowgroup" },
                             y(TableRows, Object.assign({}, slicedProps, { dateProfile: dateProfile, cells: dayTableModel.cells, eventSelection: props.eventSelection, dayMaxEvents: !forPrint, dayMaxEventRows: !forPrint, showWeekNumbers: options.weekNumbers, clientWidth: props.clientWidth, clientHeight: props.clientHeight, forPrint: forPrint })))))));
         }

@@ -101,7 +101,7 @@ block content
             button(type="button", id="cancelDeleteButton").btn.btn.default Cancel
 
   block script 
-    script(src="/static/js/fullcalendar-6.1.8/index.global.min.js")
+    script(src="/static/js/fullcalendar-6.1.8/index.global.js")
     script(type="text/javascript", src="../static/components/modal.js") 
     script(type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js")
     script(nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js")
@@ -157,15 +157,10 @@ block content
           let estCompleteDate = new Date(estCompleteDateArr[0], estCompleteDateArr[1]-1, estCompleteDateArr[2]);
           let actCompleteDateArr = null;
           let actCompleteDate = 0;
-          try{
+          if (!data[i].ActualCompletion == null) {
             actCompleteDateArr = data[i].ActualCompletion.replace('T00:00:00.000Z', '').split("-");
             actCompleteDate = new Date(actCompleteDateArr[0], actCompleteDateArr[1]-1, actCompleteDateArr[2]);
           }
-          catch{
-            console.log("");
-          }
-          
-          
           
           let eventColor = '#808080'; // event scheduled
           if ((today>estCompleteDate) && (today>actCompleteDate) && (data[i].StatusID != 3)) {   eventColor = '#D0312D';   } // past due   
@@ -218,8 +213,6 @@ block content
               fetch(`/events/${info.event.id}`)
                 .then(function(response){   return response.json();   })
                 .then(function(data){  
-                  console.log(data); 
-                  //- document.getElementById("editTitle").value = data.Title; 
                   document.getElementById("editStart").value = data.Start.replace('T00:00:00.000Z', '');
                   document.getElementById("editEstimatedCompletion").value = data.EstimatedCompletion.replace('T00:00:00.000Z', '');
                   document.getElementById("editActualCompletion").value = data.ActualCompletion ? data.ActualCompletion.replace('T00:00:00.000Z', '') : null;
