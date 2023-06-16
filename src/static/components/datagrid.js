@@ -152,7 +152,7 @@ class DataGrid extends HTMLElement {
         for (let row in data) {
             let newRow = tableBody.insertRow(row);
             for (let col in data[row]) {
-                let condition =  (col == "id") || (col == "Name") || (col == "Desc") || (col == "Owner");
+                let condition =  (col == "id") || (col == "Name") || (col == "Desc") || (col == "Owner") || (col == "envID");
                 if ((this.dataurl == '/applications') && !condition) {
                   continue;
                 }
@@ -169,7 +169,7 @@ class DataGrid extends HTMLElement {
                   }
                   continue;
                 }
-                if (this.dataurl.includes('/pages') && (col == "envID")) {
+                if (this.getAttribute("dataurl") == "/applications" && (col == "envID")) {
                   if (data[row][col] == 1) {
                     cell.innerHTML = "Prod";
                   }
@@ -204,6 +204,20 @@ class DataGrid extends HTMLElement {
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="Password"', `<input class="form-control" type="text" id="Password" value="${data[row]['Password']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="PasswordElement"', `<input class="form-control" type="text" id="PasswordElement" value="${data[row]['PasswordElement']}"`);
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="SubmitButtonElement"', `<input class="form-control" type="text" id="SubmitButtonElement" value="${data[row]['SubmitButtonElement']}"`);
+                if (data[row]['envID']) {
+                  cell.innerHTML = cell.innerHTML.replace('<option selected value="1">Prod</option>', '<option value="1">Prod</option>')
+                  
+                  if (data[row]['envID'] == 1) {
+                    cell.innerHTML = cell.innerHTML.replace('<option value="1">Prod</option>', '<option selected value="1">Prod</option>');
+                  }
+                  else if (data[row]['envID'] == 2) {
+                    cell.innerHTML = cell.innerHTML.replace('<option value="2">QA</option>', '<option selected value="2">QA</option>');
+                  }
+                  else if (data[row]['envID'] == 3) {
+                    cell.innerHTML = cell.innerHTML.replace('<option value="3">Dev</option>', '<option selected value="3">Dev</option>');
+                  }
+                }
+                
                 cell.classList.add("center");
 
                 cell = newRow.insertCell(columnHeaders.length - 1);
@@ -228,21 +242,6 @@ class DataGrid extends HTMLElement {
               cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="text" id="action"', `<input class="form-control" type="text" id="action" value="${data[row]['Action']}"`);
               if (data[row]['NeedAuth']) {
                 cell.innerHTML = cell.innerHTML.replace('<input class="form-control" type="checkbox" id="NeedAuth" name="NeedAuth">', `<input class="form-control" type="checkbox" id="NeedAuth" name="NeedAuth" checked>`);
-              }
-              else if (data[row]['envID']) {
-                cell.innerHTML = cell.innerHTML.replace('<option selected value="1">Prod</option>', '<option value="1">Prod</option>')
-                
-                if (data[row]['envID'] == 1) {
-                  cell.innerHTML = cell.innerHTML.replace('<option value="1">Prod</option>', '<option selected value="1">Prod</option>');
-                }
-                else if (data[row]['envID'] == 2) {
-                  cell.innerHTML = cell.innerHTML.replace('<option value="2">QA</option>', '<option selected value="2">QA</option>');
-                  console.log(data[row]['envID'] == 2);
-                }
-                else if (data[row]['envID'] == 3) {
-                  cell.innerHTML = cell.innerHTML.replace('<option value="3">Dev</option>', '<option selected value="3">Dev</option>');
-                }
-                // cell.innerHTML = cell.innerHTML.replace('<option selected value="1">Prod</option>', '<option value="1">Prod</option>')
               }
               cell.classList.add("center");
 

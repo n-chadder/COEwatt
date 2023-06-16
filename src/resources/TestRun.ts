@@ -20,7 +20,11 @@ router.use((req, res, next) => {
 router.get('/', async (req: Request, res: Response) => {
   let testRuns = await prisma.testRun.findMany({
     include: {
-      App: true
+      App: {
+        include: {
+          env: true,
+        }
+      }
     },
     orderBy: {
       Created: "desc",

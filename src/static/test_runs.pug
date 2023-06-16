@@ -41,9 +41,11 @@ block content
       let th1 = document.createElement('th');
       let th2 = document.createElement('th');
       let th3 = document.createElement('th');
+      let th4 = document.createElement('th');
       let text1 = document.createTextNode("Application Name");
-      let text2 = document.createTextNode("Time Completed");
-      let text3 = document.createTextNode("");
+      let text2 = document.createTextNode("Application Environment");
+      let text3 = document.createTextNode("Time Completed");
+      let text4 = document.createTextNode("");
       testRunTable.innerHTML = "";
 
       th1.appendChild(text1);
@@ -53,6 +55,7 @@ block content
       tr.appendChild(th1);
       tr.appendChild(th2);
       tr.appendChild(th3);
+      tr.appendChild(th4);
 
       thead.appendChild(tr);
       testRunTable.appendChild(thead);
@@ -62,13 +65,15 @@ block content
         let newCell1 = newRow.insertCell();
         let newCell2 = newRow.insertCell();
         let newCell3 = newRow.insertCell();
+        let newCell4 = newRow.insertCell();
         let a1 = document.createElement('a');
         a1.href = `/testrun/${testRuns[i].id}`;
         a1.textContent = 'View Details';
 
-        newCell1.innerHTML = testRuns[i].App.Name;
-        newCell2.innerHTML = testRuns[i].Created;
-        newCell3.appendChild(a1);
+        newCell1.innerHTML = `${testRuns[i].App.Name}`;
+        newCell2.innerHTML = testRuns[i].App.env.env;
+        newCell3.innerHTML = testRuns[i].Created;
+        newCell4.appendChild(a1);
       }
     }
 

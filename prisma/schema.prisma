@@ -8,19 +8,15 @@ datasource db {
 }
 
 model Application {
-  id                  Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
-  Name                String
-  Desc                String
-  Owner               String
-  Events              Event[] 
-  Pages               Page[]
-  // LogInURL            String
-  // Username            String
-  // UsernameElement     String
-  // Password            String
-  // PasswordElement     String
-  // SubmitButtonElement String
-  Tests               TestRun[]
+  id            Int      @id @unique(map: "sqlite_autoindex_Application_1") @default(autoincrement())
+  Name          String
+  Desc          String
+  Owner         String
+  Events        Event[] 
+  Pages         Page[]
+  env           Environment @relation(fields: [envID], references: [id])
+  envID         Int 
+  Tests         TestRun[]
 }
 
 model Page {
@@ -34,8 +30,6 @@ model Page {
   AppID         Int
   Compliance    WCAGStatus? @relation(fields: [ComplianceID], references: [id])
   ComplianceID  Int? @default(3) //Unknown
-  env           Environment @relation(fields: [envID], references: [id])
-  envID         Int 
 }
 
 model WCAGStatus {
@@ -84,5 +78,5 @@ model TestRun {
 model Environment {
   id      Int @id @unique(map: "sqlite_autoindex_Environment_1") @default(autoincrement())
   env     String
-  pages   Page[]
+  pages   Application[]
 }

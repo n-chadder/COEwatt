@@ -84,23 +84,15 @@ router.post('/', async (req: Request, res: Response) => {
         const Name: string = req.body.Name;
         const Desc: string = req.body.Desc;
         const Owner: string = req.body.Owner;
-//         const LogInURL: string = req.body.LogInURL;
-//         const Username: string = req.body.Username;
-//         const UsernameElement: string = req.body.UsernameElement;
-//         const Password: string = req.body.Password;
-//         const PasswordElement: string = req.body.PasswordElement;
-        // const SubmitButtonElement: string = req.body.SubmitButtonElement;
+        const env: number = Number(req.body.env);
         const result = await prisma.application.create({
             data: {
                 Name,
                 Desc,
                 Owner,
-                // LogInURL,
-                // Username,
-                // UsernameElement,
-                // Password,
-                // PasswordElement,
-                // SubmitButtonElement
+                env: {
+                  connect: {id: env},
+                }
             },
         });
         res.format({
@@ -134,12 +126,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
         const Name: string = req.body.Name;
         const Desc: string = req.body.Desc;
         const Owner: string = req.body.Owner;
-        // const LogInURL: string = req.body.LogInURL;
-        // const Username: string = req.body.Username;
-        // const UsernameElement: string = req.body.UsernameElement;
-        // const Password: string = req.body.Password;
-        // const PasswordElement: string = req.body.PasswordElement;
-        // const SubmitButtonElement: string = req.body.SubmitButtonElement;
+        const env: number = Number(req.body.env);
         const result = await prisma.application.update({
             where: {
                 id: Number(id),
@@ -148,12 +135,9 @@ router.patch('/:id', async (req: Request, res: Response) => {
                 Name,
                 Desc, 
                 Owner,
-                // LogInURL,
-                // Username,
-                // UsernameElement,
-                // Password,
-                // PasswordElement,
-                // SubmitButtonElement
+                env: {
+                  connect: {id: env},
+                }
             },
         })
         res.format({
