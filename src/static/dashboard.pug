@@ -14,6 +14,14 @@ block content
     hr(style="margin-bottom: 0px; margin-top: 5px;")
     div(style="height:40vh;")
       canvas(id="id_pie_chart" style="display: block; margin: 0 auto; height:40vh; width:80vw;")
+    div(style="display: none;" id="id_pie_chart_table")
+      table(id="id_table")
+        thead 
+          tr 
+            th Application Name
+            th Application Environment
+            th Application Owner
+
   br
   div(style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;")
     div.row
@@ -24,6 +32,11 @@ block content
       canvas(id="id_bar_chart")
 
   block script 
+    script(src="/static/js/jquery/jquery-3.7.0.min.js")
+    //- link(rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css")
+    //- script(src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js")
+    link(rel="stylesheet" href="/static/js/DataTables-1.13.4/css/jquery.dataTables.css")
+    script(src="/static/js/DataTables-1.13.4/js/jquery.dataTables.js") 
     script(type="text/javascript" src="static/js/ChartJs/chart.umd.js")
     script(type="text/javascript" src="static/js/ChartJs/plugins/chartjs-plugin-datalabels.min.js") 
   script.
@@ -31,19 +44,26 @@ block content
     let currYear = new Date().getFullYear();
     let pieChart = null;
     let barChart = null;
+    let pieTable = null;
 
     const pieChartEl = document.getElementById('id_pie_chart');
     const barChartEl = document.getElementById('id_bar_chart');
     const prevYearButton = document.getElementById('id_prev_year');
     const nextYearButton = document.getElementById('id_next_year');
     const currYearText = document.getElementById('id_year');
+    const pieChartTable = document.getElementById('id_pie_chart_table');
 
     prevYearButton.addEventListener('click', loadPrevYear);
     nextYearButton.addEventListener('click', loadNextYear);
 
-    currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
-    buildPieChart(currYear);
-    buildBarChart();
+    async function initializePage() {
+      currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
+      await buildPieChart(currYear);
+      await buildBarChart();
+      await buildTableForPieChart(-1);
+    }
+    initializePage();
+
 
     function loadPrevYear() {
       currYear -= 1;
@@ -52,6 +72,9 @@ block content
       buildPieChart(currYear);
       if (currYear <  today.getFullYear()) {
         nextYearButton.disabled = false;
+      }
+      if (currYear <= 2022) {
+        prevYearButton.disabled = true;
       }
     }
 
@@ -63,7 +86,16 @@ block content
       if (currYear >=  today.getFullYear()) {
         nextYearButton.disabled = true;
       }
+      if (currYear >= 2022) {
+        prevYearButton.disabled = false;
+      }
     }
+
+    let pastDueArr = [];
+    let scheduledArr = [];
+    let inProgressArr = [];
+    let completedArr = [];
+    let allEvents = [];
 
     async function buildPieChart(year) {
       let response = await fetch(`/events?year=${year}`);
@@ -78,6 +110,7 @@ block content
 
       for (let i = 0; i < responseData.length; i++) {
         let currEventEnd = null;
+        allEvents.push(responseData[i]);
         if (responseData[i].ActualCompletion && responseData[i].ActualCompletion > responseData[i].EstimatedCompletion) {
           currEventEnd = responseData[i].ActualCompletion;
         }
@@ -89,15 +122,19 @@ block content
 
         if ((today>endDate) && (responseData[i].StatusID != 3)) {
           parsedData.numPastDue += 1;
+          pastDueArr.push(responseData[i]);
         }
         else if (responseData[i].StatusID == 1) {
           parsedData.numScheduled += 1;
+          scheduledArr.push(responseData[i]);
         }
         else if (responseData[i].StatusID == 2) {
           parsedData.numInProgress += 1;
+          inProgressArr.push(responseData[i]);
         }
         else if (responseData[i].StatusID == 3) {
           parsedData.numCompleted += 1;
+          completedArr.push(responseData[i]);
         }
       }
       pieChart = new Chart(pieChartEl, {
@@ -119,7 +156,7 @@ block content
               color: 'rgb(0, 0, 0)',
               formatter: function(context, args) {
                 let percentVal = (context / parsedData.numTotal) * 100;
-                return `${percentVal}%`;
+                return `${parseFloat(percentVal).toPrecision(3)}%`;
               }
             }
           },
@@ -196,3 +233,56 @@ block content
       });
     }
 
+    pieChartEl.onclick = async function(evt) {
+      let slice = pieChart.getElementsAtEventForMode(
+          evt,
+          'nearest',
+          { intersect: true },
+          true
+      );
+      await buildTableForPieChart(slice[0].index);
+    }
+
+    async function buildTableForPieChart(index) {
+      console.log(index);
+      try{
+        pieTable.destroy();
+      }
+      catch {
+        console.log("DataTables not initialized");
+      }
+      let data = [];
+      if (index == 0) {
+        console.log(scheduledArr);
+        data = scheduledArr;
+      }
+      else if (index == 1) {
+        console.log(inProgressArr);
+        data = inProgressArr;
+      }
+      else if (index == 2) {
+        console.log(completedArr);
+        data = completedArr;
+      }
+      else if (index == 3) {
+        console.log(pastDueArr);
+        data = pastDueArr;
+      }
+      else {
+        data = allEvents;
+      }
+
+      pieTable = new DataTable('#id_table', {
+        data: data,
+        "columns": [
+          { "data": "App.Name" },
+          { "data": "App.env.env" },
+          { "data": "App.Owner" }
+        ]
+      });
+      pieChartTable.style.display = 'block';
+    } 
+
+    //- async function buildTableForBarChart() {
+
+    //- }

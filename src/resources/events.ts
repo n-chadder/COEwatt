@@ -20,7 +20,11 @@ router.get('/', async (req: Request, res: Response) => {
         }
       },
       include: {
-        App: true,
+        App: {
+          include: {
+            env: true
+          }
+        },
         Status: true,
       },
     }) :
