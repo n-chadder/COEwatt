@@ -30,7 +30,14 @@ block content
     hr(style="margin-bottom: 0px; margin-top: 5px;")
     div(style="")
       canvas(id="id_bar_chart")
-
+    div(style="display: none;" id="id_bar_chart_table")
+      table(id="id_bar_table")
+        thead 
+          tr 
+            th Application Name
+            th Application Environment
+            th Application Owner
+    
   block script 
     script(src="/static/js/jquery/jquery-3.7.0.min.js")
     //- link(rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css")
@@ -45,6 +52,7 @@ block content
     let pieChart = null;
     let barChart = null;
     let pieTable = null;
+    let barTable = null;
 
     const pieChartEl = document.getElementById('id_pie_chart');
     const barChartEl = document.getElementById('id_bar_chart');
@@ -52,6 +60,7 @@ block content
     const nextYearButton = document.getElementById('id_next_year');
     const currYearText = document.getElementById('id_year');
     const pieChartTable = document.getElementById('id_pie_chart_table');
+    const barChartTable = document.getElementById('id_bar_chart_table');
 
     prevYearButton.addEventListener('click', loadPrevYear);
     nextYearButton.addEventListener('click', loadNextYear);
@@ -61,6 +70,7 @@ block content
       await buildPieChart(currYear);
       await buildBarChart();
       await buildTableForPieChart(-1);
+      await buildTableForBarChart(-1)
     }
     initializePage();
 
@@ -166,6 +176,11 @@ block content
       return;
     }
 
+    let allApps = [];
+    let compliantApps = [];
+    let nonCompliantApps = [];
+    let unknownApps = [];
+
     async function buildBarChart() {
       let response = await fetch('/applications');
       let responseData = await response.json();
@@ -177,9 +192,11 @@ block content
       }
 
       for (let i = 0; i < responseData.length; i++) {
+        allApps.push(responseData[i]);
         parsedData.numTotal++;
         if (responseData[i].Tests.length == 0 || responseData[i].Pages.length == 0) {
           parsedData.numUnknown++;
+          unknownApps.push(responseData[i]);
           continue;
         }
         let compliant = true;
@@ -187,11 +204,13 @@ block content
           if (!(responseData[i].Pages[j].ComplianceID == 1)) {
             compliant = false;
             parsedData.numNonCompliant++;
+            nonCompliantApps.push(parsedData[i]);
             break;
           }
         }
         if (compliant) {
           parsedData.numCompliant++;
+          compliantApps.push(responseData[i]);
         }
       }
 
@@ -243,8 +262,17 @@ block content
       await buildTableForPieChart(slice[0].index);
     }
 
+    barChartEl.onclick = async function(evt) {
+      let bar = barChart.getElementsAtEventForMode(
+          evt,
+          'nearest',
+          { intersect: true },
+          true
+      );
+      await buildTableForBarChart(bar[0].index);
+    }
+
     async function buildTableForPieChart(index) {
-      console.log(index);
       try{
         pieTable.destroy();
       }
@@ -283,6 +311,36 @@ block content
       pieChartTable.style.display = 'block';
     } 
 
-    //- async function buildTableForBarChart() {
+    async function buildTableForBarChart(index) {
+      try{
+        barTable.destroy();
+      }
+      catch {
+        console.log("DataTables not initialized");
+      }
+      let data = [];
 
-    //- }
+      if (index == 0) {
+        data = compliantApps;
+      }
+      else if (index == 1) {
+        data = nonCompliantApps;
+      }
+      else if (index == 2) {
+        data = unknownApps;
+      }
+      else {
+        data = allApps;
+      }
+      console.log(index);
+      console.log(compliantApps);
+      barTable = new DataTable('#id_bar_table', {
+        data: data,
+        "columns": [
+          { "data": "Name" },
+          { "data": "env.env" },
+          { "data": "Owner" }
+        ]
+      });
+      barChartTable.style.display = 'block';
+    }
