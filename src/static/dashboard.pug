@@ -21,6 +21,7 @@ block content
             th Application Name
             th Application Environment
             th Application Owner
+            th Application Status
 
   br
   div(style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;")
@@ -37,11 +38,10 @@ block content
             th Application Name
             th Application Environment
             th Application Owner
+            th Application Status 
     
   block script 
     script(src="/static/js/jquery/jquery-3.7.0.min.js")
-    //- link(rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css")
-    //- script(src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js")
     link(rel="stylesheet" href="/static/js/DataTables-1.13.4/css/jquery.dataTables.css")
     script(src="/static/js/DataTables-1.13.4/js/jquery.dataTables.js") 
     script(type="text/javascript" src="static/js/ChartJs/chart.umd.js")
@@ -75,11 +75,17 @@ block content
     initializePage();
 
 
-    function loadPrevYear() {
+    async function loadPrevYear() {
       currYear -= 1;
       currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
       pieChart.destroy();
-      buildPieChart(currYear);
+      pastDueArr = [];
+      scheduledArr = [];
+      inProgressArr = [];
+      completedArr = [];
+      allEvents = [];
+      await buildPieChart(currYear);
+      await buildTableForPieChart(-1);
       if (currYear <  today.getFullYear()) {
         nextYearButton.disabled = false;
       }
@@ -88,11 +94,17 @@ block content
       }
     }
 
-    function loadNextYear() {
+    async function loadNextYear() {
       currYear += 1;
       currYearText.innerHTML = `${currYear} Accessibility Compliance Programme Status`;
       pieChart.destroy();
-      buildPieChart(currYear);
+      pastDueArr = [];
+      scheduledArr = [];
+      inProgressArr = [];
+      completedArr = [];
+      allEvents = [];
+      await buildPieChart(currYear);
+      await buildTableForPieChart(-1);
       if (currYear >=  today.getFullYear()) {
         nextYearButton.disabled = true;
       }
@@ -132,18 +144,22 @@ block content
 
         if ((today>endDate) && (responseData[i].StatusID != 3)) {
           parsedData.numPastDue += 1;
+          responseData[i].status = "Past-Due";
           pastDueArr.push(responseData[i]);
         }
         else if (responseData[i].StatusID == 1) {
           parsedData.numScheduled += 1;
+          responseData[i].status = "Scheduled";
           scheduledArr.push(responseData[i]);
         }
         else if (responseData[i].StatusID == 2) {
           parsedData.numInProgress += 1;
+          responseData[i].status = "In Progress";
           inProgressArr.push(responseData[i]);
         }
         else if (responseData[i].StatusID == 3) {
           parsedData.numCompleted += 1;
+          responseData[i].status = "Completed";
           completedArr.push(responseData[i]);
         }
       }
@@ -196,6 +212,7 @@ block content
         parsedData.numTotal++;
         if (responseData[i].Tests.length == 0 || responseData[i].Pages.length == 0) {
           parsedData.numUnknown++;
+          responseData[i].status = "Unknown";
           unknownApps.push(responseData[i]);
           continue;
         }
@@ -204,12 +221,14 @@ block content
           if (!(responseData[i].Pages[j].ComplianceID == 1)) {
             compliant = false;
             parsedData.numNonCompliant++;
+            responseData[i].status = "Non-Compliant";
             nonCompliantApps.push(parsedData[i]);
             break;
           }
         }
         if (compliant) {
           parsedData.numCompliant++;
+          responseData[i].status = "Compliant";
           compliantApps.push(responseData[i]);
         }
       }
@@ -281,19 +300,15 @@ block content
       }
       let data = [];
       if (index == 0) {
-        console.log(scheduledArr);
         data = scheduledArr;
       }
       else if (index == 1) {
-        console.log(inProgressArr);
         data = inProgressArr;
       }
       else if (index == 2) {
-        console.log(completedArr);
         data = completedArr;
       }
       else if (index == 3) {
-        console.log(pastDueArr);
         data = pastDueArr;
       }
       else {
@@ -305,7 +320,8 @@ block content
         "columns": [
           { "data": "App.Name" },
           { "data": "App.env.env" },
-          { "data": "App.Owner" }
+          { "data": "App.Owner" },
+          { "data": "status"}
         ]
       });
       pieChartTable.style.display = 'block';
@@ -332,14 +348,13 @@ block content
       else {
         data = allApps;
       }
-      console.log(index);
-      console.log(compliantApps);
       barTable = new DataTable('#id_bar_table', {
         data: data,
         "columns": [
           { "data": "Name" },
           { "data": "env.env" },
-          { "data": "Owner" }
+          { "data": "Owner" },
+          { "data": "status"}
         ]
       });
       barChartTable.style.display = 'block';
