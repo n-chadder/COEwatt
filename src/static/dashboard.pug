@@ -22,6 +22,7 @@ block content
             th Application Environment
             th Application Owner
             th Application Status
+      button(id="id_table_reload" onclick="buildTableForPieChart(-1)").btn.btn-primary Reload Table Data
 
   br
   div(style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;")
@@ -39,7 +40,8 @@ block content
             th Application Environment
             th Application Owner
             th Application Status 
-    
+      button(id="id_bar_table_reload" onclick="buildTableForBarChart(-1)").btn.btn-primary Reload Table Data
+  
   block script 
     script(src="/static/js/jquery/jquery-3.7.0.min.js")
     link(rel="stylesheet" href="/static/js/DataTables-1.13.4/css/jquery.dataTables.css")
