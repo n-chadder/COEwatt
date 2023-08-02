@@ -60,8 +60,6 @@ function cancelPageTest(e) {
   }
 }
 
-const delay = ms => new Promise(res => setTimeout(res, ms));
-
 async function showAppModal(appID) {
   resetAppModal();
   let testingAppName = document.getElementById("testingAppName");
