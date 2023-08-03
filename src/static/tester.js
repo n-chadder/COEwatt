@@ -196,27 +196,11 @@ async function runAuthLoginTest(loginUrl, AuthActions, username, password) {
 
 async function testUrl(inBrowser, req, validatedActions) {
   console.log(`Testing url: ${req.body.url}`);
-  let rules = [
-    'Principle1.Guideline1_1.1_1_1',
-    'Principle1.Guideline1_2.1_2_1',
-    'Principle1.Guideline1_3.1_3_1',
-    'Principle1.Guideline1_4.1_4_1',
-    'Principle2.Guideline2_1.2_1_1',
-    'Principle2.Guideline2_1.2_1_1', //Principle 2: Operable
-    // 'Principle2.Guideline2_2.2_2_1',
-    // 'Principle2.Guideline2_3.2_3_1',
-    'Principle2.Guideline2_4.2_4_1',
-    // 'Principle1.Guideline2_5.2_5_1',
-    'Principle3.Guideline3_1.3_1_1', //Principle 3: Understandable
-    'Principle3.Guideline3_2.3_2_1', 
-    'Principle3.Guideline3_3.3_3_1',
-    'Principle4.Guideline4_1.4_1_1' //Principle 4: Robust
-  ]
+
   try {
     let page = await inBrowser.newPage();
     const results = await pa11y(req.body.url, {
       browser: inBrowser,
-      rules: req.body.WCAG_version == "2.1" ? rules : [],
       page: page,
       timeout: 120000,
       actions: validatedActions,
