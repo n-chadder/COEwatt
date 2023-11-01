@@ -16,4 +16,8 @@ The type npm run buildwatt
 
 Then type npm run package.
 
-This will create a folder called 
+This will create a folder called dist.
+
+Then type npm run serve to start the cooe and tester.
+
+To stop the coe and tester type npm run stop.
