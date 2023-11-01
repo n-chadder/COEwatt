@@ -13,7 +13,7 @@
     "clean": "rmdir /s ..\\coewatt && echo done",
     "stop": "npx pm2 delete coewatt",
     "buildwatt": "npx prisma migrate dev --create-only --name watt && npx prisma migrate deploy && npx prisma db seed && npm run build",
-    "package": "copyfiles -u 1 --all \"dist/**/*\" ../coewatt && copyfiles -u 1 --all \"data/**/*\" ../coewatt/data && copyfiles -u 1 --all \"prisma/**/*\" ../coewatt/prisma && copyfiles -u 1 --all \"node_modules/**/*\" ../coewatt/node_modules && copy /y \".env\" ..\\coewatt && copy /y \"package*.*\" ..\\coewatt  && copyfiles -u 1 --all \"src/static/**/*\" ../coewatt/src/static && copyfiles -u 1 --all \"src/static/css/**/*\" ../coewatt/src/static/css && copy /y \"src\\static\\*.pug\" ..\\coewatt\\src\\static\\"
+    "package": "copyfiles -u 1 --all \"dist/**/*\" ../coewatt && copyfiles -u 1 --all \"data/**/*\" ../coewatt/data && copyfiles -u 1 --all \"prisma/**/*\" ../coewatt/prisma && copyfiles -u 1 --all \"node_modules/**/*\" ../coewatt/node_modules && copyfiles /y \".env\" ..\\coewatt && copyfiles /y \"package*.*\" ..\\coewatt  && copyfiles -u 1 --all \"src/static/**/*\" ../coewatt/src/static && copyfiles -u 1 --all \"src/static/css/**/*\" ../coewatt/src/static/css && copyfiles /y \"src\\static\\*.pug\" ..\\coewatt\\src\\static\\"
   },
   "author": "",
   "license": "ISC",
