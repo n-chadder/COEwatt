@@ -3,7 +3,6 @@ import { Request, Response, NextFunction } from "express";
 import { PrismaClient, Prisma } from '@prisma/client';
 import * as pug from "pug";
 
-
 const compiledApplicationList = pug.compileFile("src/static/application_list.pug");
 
 const prisma = new PrismaClient()

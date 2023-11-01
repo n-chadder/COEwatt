@@ -8,7 +8,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "npx tsc src/index.ts --outdir ./dist/ && copyfiles -u 1 --all \"src/static/**/*\" dist/"
+    "build": "npx tsc src/index.ts --outdir dist/ && copyfiles -u 1 --all \"src/static/**/*\" dist",
+    "serve": "npx pm2 start index.js --name coewatt -i 3",
+    "clean": "rmdir /s ..\\coewatt && echo done",
+    "stop": "npx pm2 delete coewatt",
+    "buildwatt": "npx prisma migrate dev --create-only --name watt && npx prisma migrate deploy && npx prisma db seed && npm run build",
+    "package": "copyfiles -u 1 --all \"dist/**/*\" ../coewatt && copyfiles -u 1 --all \"data/**/*\" ../coewatt/data && copyfiles -u 1 --all \"prisma/**/*\" ../coewatt/prisma && copyfiles -u 1 --all \"node_modules/**/*\" ../coewatt/node_modules && copy /y \".env\" ..\\coewatt && copy /y \"package*.*\" ..\\coewatt  && copyfiles -u 1 --all \"src/static/**/*\" ../coewatt/src/static && copyfiles -u 1 --all \"src/static/css/**/*\" ../coewatt/src/static/css && copy /y \"src\\static\\*.pug\" ..\\coewatt\\src\\static\\"
   },
   "author": "",
   "license": "ISC",
@@ -23,13 +28,13 @@
     "jest": "^29.3.1",
     "jest-mock-extended": "^3.0.1",
     "nodemon": "^2.0.20",
-    "prisma": "^4.8.0",
+    "prisma": "^5.2.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1"
   },
   "dependencies": {
-    "@prisma/client": "^4.8.0",
+    "@prisma/client": "^5.2.0",
     "@types/bcrypt": "^5.0.0",
     "@types/body-parser": "^1.19.2",
     "@types/connect-flash": "^0.0.37",
@@ -46,6 +51,7 @@
     "express-ws": "^5.0.2",
     "helmet": "^6.0.1",
     "method-override": "^3.0.0",
+    "pm2": "^5.3.0",
     "pug": "^3.0.2",
     "uuid": "^9.0.0"
   },

@@ -1,20 +1,19 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+## Packaging instructions
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+To create a clean build of the WATT to provide to a client, perform these steps. (You may have to run npm install before these steps.)
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+If the gollowing direct directories exist, delete them:
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+1. data
+2. the migrations folder in the prisma directory.
+3. dist
+
+If your drive contains a previous package, delete it by typing npm run clean
+
+The type npm run buildwatt
+
+Then type npm run package.
+
+This will create a folder called 
