@@ -12,6 +12,8 @@ If the gollowing direct directories exist, delete them:
 
 If your drive contains a previous package, delete it by typing npm run clean
 
+First type npm install to install the dependencies for the project.
+
 The type npm run buildwatt
 
 Then type npm run package.
