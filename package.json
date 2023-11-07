@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx tsc src/index.ts --outdir dist/ && copyfiles -u 1 --all \"src/static/**/*\" dist",
-    "serve": "npx pm2 start index.js --name coewatt -i 3 && npx pm2 start static/tester.js --name tester -i 3",
+    "serve": "npx pm2 start dist/index.js --name coewatt -i 3 && npx pm2 start dist/static/tester.js --name tester -i 3",
     "clean": "rmdir /s ..\\coewatt && echo done",
     "stop": "npx pm2 delete coewatt && npx pm2 delete tester",
     "buildwatt": "npx prisma migrate dev --create-only --name watt && npx prisma migrate deploy && npx prisma db seed && npm run build",
