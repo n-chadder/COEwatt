@@ -14,12 +14,13 @@ If your drive contains a previous package, delete it by typing npm run clean
 
 First type npm install to install the dependencies for the project.
 
-The type npm run buildwatt
+The type npm run buildwatt.
 
 Then type npm run package.
 
 This will create a folder called dist.
 
-Then type npm run serve to start the cooe and tester.
+Then type npm run serve to start the coewatt and tester.
+The coewatt will be running at http://127.0.0.1:3000/. (tester runs at port 8080 by default)
 
 To stop the coe and tester type npm run stop.
