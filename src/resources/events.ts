@@ -79,7 +79,7 @@ router.post('/', async (req: Request, res: Response) => {
         },
         Start: Start,
         EstimatedCompletion: EstimatedCompletion,
-        ActualCompletion: ActualCompletion,
+        ActualCompletion: (req.body.ActualCompletion == "") ? null : ActualCompletion,
         Notes: Notes,
         Status: {
           connect: { id: StatusID },
@@ -145,7 +145,7 @@ router.patch('/:id', async (req: Request, res: Response) => {
           },
           Start, 
           EstimatedCompletion: EstimatedCompletion,
-          ActualCompletion: ActualCompletion,
+          ActualCompletion: (req.body.ActualCompletion == "") ? null : ActualCompletion,
           Notes,
           Status: {
             connect: { id: StatusID },
