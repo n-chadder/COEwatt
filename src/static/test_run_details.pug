@@ -21,9 +21,12 @@ block content
       detailsElement.setAttribute('id', 'id_details_' + page);
       summaryElement.setAttribute('id', 'id_summary_' + page);
 
-      let summaryText = `Page Title: ${reports[page].Page.Title} - No WCAG Violations`;
+      let summaryText = `Page URL: ${reports[page].Page.URL} - No WCAG Violations`;
+      let p = document.createElement('p');
+      p.textContent = `Page Title: ${reports[page].Page.Title}`;
+      detailsElement.appendChild(p);  
       if (currPageIssues.length > 0) {
-        summaryText = `Page Title: ${reports[page].Page.Title} - WCAG Violations (${currPageIssues.length})`;
+        summaryText = `Page URL: ${reports[page].Page.URL} - WCAG Violations (${currPageIssues.length})`;
       }
       else {
         let p = document.createElement('p');
