@@ -66,6 +66,7 @@ async function runPa11y(req) {
 }
 
 function validateActions(action) {
+  action = action.map(item => item.trimStart());
   let actions = [];
   
   if (action.length == 0) {   return actions;   }

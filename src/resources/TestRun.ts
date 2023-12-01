@@ -110,6 +110,7 @@ async function buildTesterPostData(req: Request) {
     const AppID: string = req.body.AppID;
     const pageURL: string = req.body.pageURL;
     const WCAGVersion: string = req.body.WCAGVersion;
+    //if there are multiple actions they should be seperated by commas
     const Action: string = req.body.Action;
     const NeedAuth: boolean = req.body.NeedAuth;
     
@@ -143,7 +144,7 @@ async function buildTesterPostData(req: Request) {
       "runner_name": "pally", // hard coded for now, at least in IMSIS there is pally, pally-axe, and axe
       "authenticationData": authenticationData,
       "userAgentString": userAgent,
-      "action": Action,
+      "action": Action.split(","),
     };
     return postData;
   }
