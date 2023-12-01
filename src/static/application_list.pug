@@ -146,10 +146,12 @@ block content
               br
               input(type="text" id="id_app_test_SubmitButtonElement" placeholder="Enter CSS selector reffering to the submit/login button element" style="width: 100%;" name="SubmitButtonElement").form-control
             div.form-group
-              label(for="id_app_test_additionalActions") Additional Actions
-              br
+              label(for="id_app_test_additionalActions") Additional Actions (Separated in commas Ex/screen capture a.png, screen capture b.png)
               input(type="text" id="id_app_test_additionalActions" placeholder="Enter any additional actions to be performed by the tester" style="width: 100%;" name="additionalActions").form-control
             div.form-group
+              small By default Additional Actions are performed before authenticating 
+              label(for="id_app_test_before_after") Run Additional Actions After Authenticating
+              input(type="checkbox" id="id_app_test_after" name="additionalActionsAfter" style="margin-left: 10px;")
               label(for="id_app_test_saveAuth") Use this authentication data for other pages during this test run
               input(type="checkbox" id="id_app_test_saveAuth" name="id_app_test_saveAuth" style="margin-left: 10px;")
             div 
@@ -201,9 +203,13 @@ block content
               br
               input(type="text" id="id_page_test_SubmitButtonElement" placeholder="Enter CSS selector reffering to the submit/login button element" style="width: 100%;" name="SubmitButtonElement").form-control
             div.form-group
-              label(for="id_page_test_additionalActions") Additional Actions
+              label(for="id_page_test_additionalActions") Additional Actions (Separated in commas Ex/screen capture a.png, screen capture b.png)
               br
               input(type="text" id="id_page_test_additionalActions" placeholder="Enter any additional actions to be performed by the tester" style="width: 100%;" name="additionalActions").form-control
+            div.form-group
+              small By default Additional Actions are performed before authenticating 
+              label(for="id_page_test_before_after") Run Additional Actions After Authenticating
+              input(type="checkbox" id="id_page_test_after" name="additionalActionsAfter" style="margin-left: 10px;")
             div 
               button(id="id_submit_page_auth_data").btn.btn-success Submit
           div(id="WCAGSelectDivPage")

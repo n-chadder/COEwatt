@@ -122,7 +122,8 @@ async function buildTesterPostData(req: Request) {
       "uPwordElement": "",
       "submitNameID": "",
       "loginUrl": "",
-      "additionalActions": "" 
+      "additionalActions": "",
+      "additionalActionsAfter": ""
     };                          
     
     if (NeedAuth) {
@@ -134,7 +135,8 @@ async function buildTesterPostData(req: Request) {
       authenticationData.uPword = req.body.authenticationData.uPword;
       authenticationData.uPwordElement = req.body.authenticationData.uPwordElement;
       authenticationData.submitNameID = req.body.authenticationData.submitNameID;
-      authenticationData.additionalActions = req.body.authenticationData.additionalActions;
+      authenticationData.additionalActions = req.body.authenticationData.additionalActions.split(",");
+      authenticationData.additionalActionsAfter = req.body.authenticationData.additionalActionsAfter;
     }  
     
     let userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"; // prefilled in IMSIS test app form

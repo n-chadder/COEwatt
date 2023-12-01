@@ -37,6 +37,8 @@ let id_page_test_PasswordElement = document.getElementById("id_page_test_Passwor
 let id_page_test_SubmitButtonElement = document.getElementById("id_page_test_SubmitButtonElement");
 let id_page_test_additionalActions = document.getElementById("id_page_test_additionalActions");
 let id_app_test_saveAuth = document.getElementById("id_app_test_saveAuth");
+let id_app_test_after = document.getElementById("id_app_test_after");
+let id_page_test_after = document.getElementById("id_page_test_after");
 let TestInProgress = false;
 let regex = /\d+/g;
 let currAppData = null;
@@ -104,7 +106,8 @@ async function testApplication(appID){
       "uPwordElement": "",
       "submitNameID": "",
       "loginUrl": "",
-      "additionalActions": "" 
+      "additionalActions": "", 
+      "additionalActionsAfter": ""
     };   
     if (!TestInProgress) {   
       currAppURL.innerHTML = 'Test cancelled';
@@ -123,6 +126,12 @@ async function testApplication(appID){
         authenticationData.submitNameID = id_app_test_SubmitButtonElement.value;
         authenticationData.loginUrl = id_app_test_loginurl.value;
         authenticationData.additionalActions = id_app_test_additionalActions.value;
+        if (id_app_test_after.checked) {
+          authenticationData.additionalActionsAfter = "true";
+        }
+        else{
+          authenticationData.additionalActionsAfter = "false";
+        }
         if (id_app_test_saveAuth.checked) {
           appAuthData = JSON.parse(JSON.stringify(authenticationData));
         }
@@ -221,7 +230,8 @@ async function testPage(pageID) {
     "uPwordElement": "",
     "submitNameID": "",
     "loginUrl": "",
-    "additionalActions": "" 
+    "additionalActions": "",
+    "additionalActionsAfter": ""
   };   
 
   if (TestInProgress) {
@@ -243,6 +253,12 @@ async function testPage(pageID) {
     authenticationData.submitNameID = id_page_test_SubmitButtonElement.value;
     authenticationData.loginUrl = id_page_test_loginurl.value;
     authenticationData.additionalActions = id_page_test_additionalActions.value;
+    if (id_page_test_after.checked){
+      authenticationData.additionalActionsAfter = "true";
+    }
+    else{
+      authenticationData.additionalActionsAfter = "false";
+    }
     id_page_auth_data.style.display = 'none';
   }
   let WCAG_version = WCAGPageSelect.value;

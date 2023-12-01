@@ -109,7 +109,8 @@ function getAuthActions(authenticationData) {
   let password = authenticationData['uPword'];
   let passwordElement = authenticationData['uPwordElement'];
   let submitElement = authenticationData['submitNameID'];
-  let additionalActionString = authenticationData['additionalActions'];
+  let additionalActions = authenticationData['additionalActions'];
+  let additionalActionsAfter = authenticationData['additionalActionsAfter'];
 
   let authenticationAction = [];
   let submitString = "click element " + submitElement;
@@ -117,12 +118,15 @@ function getAuthActions(authenticationData) {
   let passwordString = "set field " + passwordElement + " to " + password;
   let screenShot = "screen capture loginScreenShot.png";
   let AuthActions = [];
-  
-  if (additionalActionString != ""){
-    authenticationAction.push(additionalActionString);
-    console.log(additionalActionString);
-  }
 
+  if (additionalActions.length != 0 && additionalActionsAfter != "true"){
+    additionalActions = additionalActions.map(item => item.trimStart());
+    for (let i = 0; i < additionalActions.length; i++) {
+      authenticationAction.push(additionalActions[i]);
+    }
+    
+  }
+  
   authenticationAction.push(usernameString);
   authenticationAction.push(passwordString);
   authenticationAction.push(screenShot);
@@ -135,6 +139,20 @@ function getAuthActions(authenticationData) {
     else {
       console.log(`invalid Auth action: ${authenticationAction[i]}`);
     }
+  }
+
+  if (additionalActions.length != 0 && additionalActionsAfter == "true"){
+    additionalActions = additionalActions.map(item => item.trimStart());
+    for (let i = 0; i < additionalActions.length; i++) {
+      if(pa11y.isValidAction(additionalActions[i])) {
+        AuthActions.push(additionalActions[i]);
+        console.log("Valid additional action: " + additionalActions[i]);
+      }
+      else{
+        console.log("Invalid additional action: " + additionalActions[i]);
+      }
+    }
+    
   }
   return AuthActions;
 }
